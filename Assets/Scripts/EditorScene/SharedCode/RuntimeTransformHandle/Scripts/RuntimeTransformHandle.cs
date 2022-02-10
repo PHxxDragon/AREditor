@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
+using EAR;
 
 namespace RuntimeHandle
 {
@@ -27,6 +28,7 @@ namespace RuntimeHandle
         public bool selectionEnabled = false;
 
         public Transform target;
+        public event Action<IUndoRedoCommand> NewCommandEvent;
 
         private Vector3 _previousMousePosition;
         private HandleBase _previousAxis;
@@ -40,6 +42,8 @@ namespace RuntimeHandle
         private PositionHandle _positionHandle;
         private RotationHandle _rotationHandle;
         private ScaleHandle _scaleHandle;
+
+        private TransformData _previousTransformData;
 
         public bool CheckIfMouseOverHandle()
         {
@@ -77,19 +81,24 @@ namespace RuntimeHandle
         void Clear()
         {
             _draggingHandle = null;
-            
+            _previousTarget = null;
+
             if (_positionHandle) _positionHandle.Destroy();
             if (_rotationHandle) _rotationHandle.Destroy();
             if (_scaleHandle) _scaleHandle.Destroy();
         }
 
+        public bool IsEnabled()
+        {
+            return (target != null && toolEnabled && selectionEnabled);
+        }
+
         void Update()
         {
 
-            if (target == null || !toolEnabled || !selectionEnabled)
+            if (!IsEnabled())
             {
                 Clear();
-                _previousTarget = target;
                 return;
             }
 
@@ -114,19 +123,25 @@ namespace RuntimeHandle
 
             if (Input.GetMouseButton(0) && _draggingHandle != null)
             {
-                _draggingHandle.Interact(_previousMousePosition);
+               _draggingHandle.Interact(_previousMousePosition);
+               
             }
 
             if (Input.GetMouseButtonDown(0) && handle != null)
             {
                 _draggingHandle = handle;
                 _draggingHandle.StartInteraction(hitPoint);
+                _previousTransformData = TransformData.TransformToTransformData(target.transform);
             }
 
             if (Input.GetMouseButtonUp(0) && _draggingHandle != null)
             {
                 _draggingHandle.EndInteraction();
                 _draggingHandle = null;
+
+                TransformData current = TransformData.TransformToTransformData(target.transform);
+                IUndoRedoCommand command = new TransformChangeCommand(target, _previousTransformData, current);
+                NewCommandEvent?.Invoke(command);
             }
 
             _previousMousePosition = Input.mousePosition;

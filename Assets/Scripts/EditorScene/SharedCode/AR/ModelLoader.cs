@@ -113,11 +113,21 @@ namespace EAR.AR
 
         void OnProgress(GltfImportStep step, int completed, int total)
         {
-            if (total == 0)
+            if (step == GltfImportStep.Download)
             {
-                OnLoadProgressChanged?.Invoke(completed, string.Format("{0}: {1}", step, completed));
+                float downloadedMB = (float)completed / 1000000;
+                if (total == 0)
+                {
+                    OnLoadProgressChanged?.Invoke(downloadedMB, string.Format("{0}: {1:0.00}MB", step, downloadedMB));
+                } else
+                {
+                    float totalMB = (float)total / 1000000;
+                    OnLoadProgressChanged?.Invoke(downloadedMB/totalMB, string.Format("{0}: {1:0.00}/{2:0.00}MB", step, downloadedMB, totalMB));
+                }
+            } else
+            {
+                OnLoadProgressChanged?.Invoke(((float)completed) / total, string.Format("{0}: {1}/{2}", step, completed, total));
             }
-            OnLoadProgressChanged?.Invoke(((float) completed)/total, string.Format("{0}: {1}/{2}", step, completed, total));
         }
 
         private void OnComplete(GameObject importedModel)

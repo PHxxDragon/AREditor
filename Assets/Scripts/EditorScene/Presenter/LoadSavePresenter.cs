@@ -32,7 +32,7 @@ namespace EAR.Editor.Presenter
         {
             MetadataObject metadataObject = new MetadataObject();
             metadataObject.imageWidthInMeters = imageHolder.widthInMeter;
-            metadataObject.modelTransform = MetadataObject.TransformToTransformData(modelLoader.GetModel().transform);
+            metadataObject.modelTransform = TransformData.TransformToTransformData(modelLoader.GetModel().transform);
             Param param = LocalStorage.Load<Param>("param");
             webRequestHelper.SetModuleMetadata(param.token, param.moduleId, metadataObject, SetModuleMetadataSuccessCallback, SetModuleMetadataErrorCallback);
         }

@@ -7,6 +7,8 @@ namespace EAR.Selection
     {
         public event Action<Selectable> OnObjectSelected;
         public event Action<Selectable> OnObjectDeselected;
+        public event Action<IUndoRedoCommand> NewCommandEvent;
+
         public delegate void IsMouseRaycastBlocked(ref bool isBlocked);
         public event IsMouseRaycastBlocked CheckMouseRaycastBlocked;
 
@@ -30,12 +32,9 @@ namespace EAR.Selection
                     if (selectable != null && _currentSelection != selectable)
                     {
                         hasSelection = true;
-                        if (_currentSelection != null)
-                        {
-                            OnObjectDeselected(_currentSelection);
-                        }
-                        _currentSelection = selectable;
-                        OnObjectSelected(_currentSelection);
+                        SelectObject(selectable);
+                        IUndoRedoCommand command = new SelectCommand(selectable, SelectObject, DeselectObject);
+                        NewCommandEvent?.Invoke(command);
                         break;
                     }
                 }
@@ -45,11 +44,30 @@ namespace EAR.Selection
                 {
                     if (_currentSelection != null)
                     {
-                        OnObjectDeselected(_currentSelection);
-                        _currentSelection = null;
+                        IUndoRedoCommand command = new DeselectCommand(_currentSelection, DeselectObject, SelectObject);
+                        NewCommandEvent?.Invoke(command);
                     }
+                    DeselectObject();
                 }
+            }
+        }
 
+        private void SelectObject(Selectable selectable)
+        {
+            if (_currentSelection != null)
+            {
+                OnObjectDeselected(_currentSelection);
+            }
+            _currentSelection = selectable;
+            OnObjectSelected(_currentSelection);
+        }
+
+        private void DeselectObject()
+        {
+            if (_currentSelection != null)
+            {
+                OnObjectDeselected(_currentSelection);
+                _currentSelection = null;
             }
         }
 

@@ -8,6 +8,14 @@ namespace EAR
     {
         public TransformData modelTransform;
         public float imageWidthInMeters;
+    }
+
+    [Serializable]
+    public class TransformData
+    {
+        public Vector3 position;
+        public Quaternion rotation;
+        public Vector3 scale;
 
         public static TransformData TransformToTransformData(Transform transform)
         {
@@ -24,14 +32,6 @@ namespace EAR
             transform.rotation = transformData.rotation;
             transform.localScale = transformData.scale;
         }
-    }
-
-    [Serializable]
-    public class TransformData
-    {
-        public Vector3 position;
-        public Quaternion rotation;
-        public Vector3 scale;
     }
 }
 

@@ -61,7 +61,7 @@ namespace EAR.Editor.Presenter
                 imageHolder.widthInMeter = metadataObject.imageWidthInMeters;
                 if (modelLoader.GetModel() != null)
                 {
-                    MetadataObject.TransformDataToTransfrom(metadataObject.modelTransform, modelLoader.GetModel().transform);
+                    TransformData.TransformDataToTransfrom(metadataObject.modelTransform, modelLoader.GetModel().transform);
                 }
                 else
                 {
@@ -80,7 +80,7 @@ namespace EAR.Editor.Presenter
 
         private void SetDataForModel()
         {
-            MetadataObject.TransformDataToTransfrom(metadata.modelTransform, modelLoader.GetModel().transform);
+            TransformData.TransformDataToTransfrom(metadata.modelTransform, modelLoader.GetModel().transform);
         }
 
         private void InitDataForModel()

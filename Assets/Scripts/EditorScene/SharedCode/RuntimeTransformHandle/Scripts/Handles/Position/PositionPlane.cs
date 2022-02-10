@@ -74,15 +74,11 @@ namespace RuntimeHandle
             _parentTransformHandle.target.position = position;
 
             base.Interact(p_previousPosition);
-
-            RefreshAxis();
         }
 
         public override void EndInteraction()
         {
             base.EndInteraction();
-
-            RefreshAxis();
         }
 
         public override void StartInteraction(Vector3 p_hitPoint)
@@ -103,25 +99,33 @@ namespace RuntimeHandle
             _interactionOffset = _startPosition - hitPoint;
         }
 
+        void Update()
+        {
+            RefreshAxis();
+        }
+
         private void RefreshAxis()
         {
-            Vector3 axis1 = _axis1;
-            Vector3 raxis1 = _parentTransformHandle.space == HandleSpace.LOCAL
-                ? _parentTransformHandle.target.rotation * axis1
-                : axis1;
-            float angle1 = Vector3.Angle(_parentTransformHandle.handleCamera.transform.forward, raxis1);
-            if (angle1 < 90)
-                axis1 = -axis1;
-            
-            Vector3 axis2 = _axis2;
-            Vector3 raxis2 = _parentTransformHandle.space == HandleSpace.LOCAL
-                ? _parentTransformHandle.target.rotation * axis2
-                : axis2;
-            float angle2 = Vector3.Angle(_parentTransformHandle.handleCamera.transform.forward, raxis2);
-            if (angle2 < 90)
-                axis2 = -axis2;
+            if (_parentTransformHandle.IsEnabled())
+            {
+                Vector3 axis1 = _axis1;
+                Vector3 raxis1 = _parentTransformHandle.space == HandleSpace.LOCAL
+                    ? _parentTransformHandle.target.rotation * axis1
+                    : axis1;
+                float angle1 = Vector3.Angle(_parentTransformHandle.handleCamera.transform.forward, raxis1);
+                if (angle1 < 90)
+                    axis1 = -axis1;
 
-            _handle.transform.localPosition = (axis1 + axis2) * .25f;
+                Vector3 axis2 = _axis2;
+                Vector3 raxis2 = _parentTransformHandle.space == HandleSpace.LOCAL
+                    ? _parentTransformHandle.target.rotation * axis2
+                    : axis2;
+                float angle2 = Vector3.Angle(_parentTransformHandle.handleCamera.transform.forward, raxis2);
+                if (angle2 < 90)
+                    axis2 = -axis2;
+
+                _handle.transform.localPosition = (axis1 + axis2) * .25f;
+            }
         }
     }
 }
