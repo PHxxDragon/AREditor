@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using TriLibCore;
 using System;
 
@@ -70,5 +70,62 @@ namespace EAR.AR
             }
         }
     }
+}
+*/
 
+using UnityEngine;
+using System;
+using Piglet;
+namespace EAR.AR
+{
+    public class ModelLoader: MonoBehaviour
+    {
+        public event Action OnLoadStarted;
+        public event Action OnLoadEnded;
+        public event Action<float, string> OnLoadProgressChanged;
+
+        [SerializeField]
+        private GameObject modelContainer;
+
+        private GameObject loadedModel;
+
+        private GltfImportTask task;
+
+        public GameObject GetModel()
+        {
+            return loadedModel;
+        }
+
+        public void LoadModel(string url)
+        {
+            task = RuntimeGltfImporter.GetImportTask(url);
+            task.OnCompleted = OnComplete;
+            task.OnException += OnException;
+            task.OnProgress += OnProgress;
+            OnLoadStarted?.Invoke();
+        }
+
+        void Update()
+        {
+            if (task != null)
+                task.MoveNext();
+        }
+
+        void OnProgress(GltfImportStep step, int completed, int total)
+        {
+            OnLoadProgressChanged?.Invoke(((float) completed)/total, string.Format("{0}: {1}/{2}", step, completed, total));
+        }
+
+        private void OnComplete(GameObject importedModel)
+        {
+            loadedModel = importedModel;
+            loadedModel.transform.parent = modelContainer.transform;
+            OnLoadEnded?.Invoke();
+        }
+
+        private void OnException(Exception e)
+        {
+            Debug.LogError(e.Message);
+        }
+    }
 }

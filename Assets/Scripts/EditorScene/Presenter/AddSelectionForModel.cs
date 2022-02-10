@@ -1,6 +1,7 @@
 using UnityEngine;
 using EAR.AR;
 using EAR.Selection;
+using System.Collections;
 
 namespace EAR.Editor.Presenter
 {
@@ -20,6 +21,30 @@ namespace EAR.Editor.Presenter
         private void AddSelection()
         {
             modelLoader.GetModel().gameObject.AddComponent<Selectable>();
+            StartCoroutine(AddCollider());
+        }
+
+        private IEnumerator AddCollider()
+        {
+            MeshFilter[] meshFilters = modelLoader.GetModel().gameObject.GetComponentsInChildren<MeshFilter>();
+            foreach (MeshFilter meshFilter in meshFilters)
+            {
+                if (meshFilter.GetComponent<Collider>() == null)
+                {
+                    meshFilter.gameObject.AddComponent<BoxCollider>();
+                    yield return null;
+                }
+            }
+
+            SkinnedMeshRenderer[] skinnedMeshRenderers = modelLoader.GetModel().gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+            foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
+            {
+                if (skinnedMeshRenderer.GetComponent<MeshCollider>() == null)
+                {
+                    BoxCollider collider = skinnedMeshRenderer.gameObject.AddComponent<BoxCollider>();
+                    yield return null;
+                }
+            }
         }
     }
 

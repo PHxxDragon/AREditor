@@ -31,9 +31,9 @@ namespace EAR.Editor.Presenter
             progressBar.DisableProgressBar();
         }
 
-        private void ProgressChanged(float percent)
+        private void ProgressChanged(float progress, string text)
         {
-            progressBar.SetProgress(percent);
+            progressBar.SetProgress(progress, text);
         }
     }
 }

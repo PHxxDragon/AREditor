@@ -31,13 +31,15 @@ namespace EAR.Editor.Presenter
             }
         }
 
-/*        void Start()
+#if UNITY_EDITOR == true
+        void Start()
         {
             Param param = new Param();
             param.moduleId = 1;
             param.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQzMTg0NzYzLCJleHAiOjE2NTA5NjA3NjN9.ug48VT5DFJRoIiqc06y57qSzOLsOfJYnY5Mmp--UiOs";
             LoadModelCalledEventSubscriber(param);
-        }*/
+        }
+#endif
 
         private void LoadModelCalledEventSubscriber(Param obj)
         {
@@ -53,18 +55,21 @@ namespace EAR.Editor.Presenter
             MetadataObject metadataObject = JsonUtility.FromJson<MetadataObject>(moduleAR.metadataString);
             if (metadataObject == null)
             {
-                return;
-            }
-            imageHolder.widthInMeter = metadataObject.imageWidthInMeters;
-            if (modelLoader.GetModel() != null)
+                modelLoader.OnLoadEnded += InitDataForModel;
+            } else
             {
-                MetadataObject.TransformDataToTransfrom(metadataObject.modelTransform, modelLoader.GetModel().transform);
+                imageHolder.widthInMeter = metadataObject.imageWidthInMeters;
+                if (modelLoader.GetModel() != null)
+                {
+                    MetadataObject.TransformDataToTransfrom(metadataObject.modelTransform, modelLoader.GetModel().transform);
+                }
+                else
+                {
+                    modelLoader.OnLoadEnded += SetDataForModel;
+                    metadata = metadataObject;
+                }
             }
-            else
-            {
-                modelLoader.OnLoadEnded += SetDataForModel;
-                metadata = metadataObject;
-            }
+            
 
         }
 
@@ -76,6 +81,13 @@ namespace EAR.Editor.Presenter
         private void SetDataForModel()
         {
             MetadataObject.TransformDataToTransfrom(metadata.modelTransform, modelLoader.GetModel().transform);
+        }
+
+        private void InitDataForModel()
+        {
+            Vector3 position = modelLoader.GetModel().transform.position;
+            position.y += 2;
+            modelLoader.GetModel().transform.position = position;
         }
     }
 }

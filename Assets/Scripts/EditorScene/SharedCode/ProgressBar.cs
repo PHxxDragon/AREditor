@@ -21,10 +21,10 @@ namespace EAR.View
             gameObject.SetActive(false);
         }
 
-        public void SetProgress(float percent)
+        public void SetProgress(float percent, string text)
         {
             slider.value = percent;
-            sliderText.text = "Loading Model... " + percent + "%";
+            sliderText.text = text;
         }
     }
 
