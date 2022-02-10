@@ -13,7 +13,6 @@ namespace EAR.UndoRedo
 
         public void AddCommand(IUndoRedoCommand command)
         {
-            Debug.Log("Command added");
             commandStack.Push(command);
             redoStack.Clear();
         }

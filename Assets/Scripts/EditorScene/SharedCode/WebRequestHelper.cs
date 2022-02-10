@@ -89,7 +89,6 @@ namespace EAR.WebRequest
                 {
                     Debug.Log(unityWebRequest.downloadHandler.text);
                     ModuleResponse moduleResponse = JsonUtility.FromJson<ModuleResponse>(unityWebRequest.downloadHandler.text);
-                    Debug.Log("Parse done");
                     using (UnityWebRequest unityWebRequest2 = UnityWebRequest.Get(applicationConfiguration.GetModelPath(moduleResponse.data.modelId)))
                     {
                         Debug.Log(unityWebRequest2.uri);

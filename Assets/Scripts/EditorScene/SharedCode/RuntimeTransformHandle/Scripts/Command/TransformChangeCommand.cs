@@ -14,8 +14,6 @@ namespace RuntimeHandle
             this.target = target;
             this.previous = previous;
             this.current = current;
-            Debug.Log(previous.position);
-            Debug.Log(current.position);
         }
         public void Redo()
         {

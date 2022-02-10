@@ -34,6 +34,33 @@ namespace EAR
             StartCoroutine(GetImageCoroutine(imageUrl, callback, errorCallback, param));
         }
 
+        public static Bounds GetModelBounds(GameObject model)
+        {
+            MeshRenderer[] meshRenderers = model.GetComponentsInChildren<MeshRenderer>();
+            Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
+            if (meshRenderers.Length > 0)
+            {
+                bounds = meshRenderers[0].bounds;
+                foreach (MeshRenderer meshRenderer in meshRenderers)
+                {
+                    bounds.Encapsulate(meshRenderer.bounds);
+                }
+            }
+            SkinnedMeshRenderer[] skinnedMeshRenderers = model.GetComponentsInChildren<SkinnedMeshRenderer>();
+            if (skinnedMeshRenderers.Length > 0)
+            {
+                if (meshRenderers.Length == 0)
+                {
+                    bounds = skinnedMeshRenderers[0].sharedMesh.bounds;
+                }
+                foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
+                {
+                    bounds.Encapsulate(skinnedMeshRenderer.bounds);
+                }
+            }
+            return bounds;
+        }
+
         private IEnumerator GetImageCoroutine(string imageUrl, Action<Texture2D, object> callback, Action<string, object> errorCallback, object param)
         {
             using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(imageUrl))

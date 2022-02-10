@@ -46,6 +46,8 @@ namespace EAR.EARCamera
         private float _StartResetDistance;
         private bool isReseting = false;
 
+        private Camera _camera;
+
         void Start()
         {
             cameraTransform = transform;
@@ -54,6 +56,7 @@ namespace EAR.EARCamera
             _DefaultRotation = cameraAnchorTransform.rotation;
             _DefaultDistance = cameraTransform.position.magnitude;
             _Distance = _DefaultDistance;
+            _camera = cameraTransform.GetComponent<Camera>();
         }
 
         void Update()
@@ -61,6 +64,20 @@ namespace EAR.EARCamera
             ResetBools();
             ProcessInputs();
             UpdateLocals();
+        }
+
+        public void SetDefaultCameraPosition(Bounds bounds)
+        {
+            float radius = bounds.extents.magnitude;
+            float distance = radius / (Mathf.Sin(_camera.fieldOfView * Mathf.Deg2Rad / 2f));
+            Vector3 position = bounds.center;
+            Quaternion rotation = Quaternion.Euler(30, 0, 0);
+
+            _ResetT = 0f;
+            _StartResetPosition = _DefaultPosition = position;
+            _StartResetRotation = _DefaultRotation = rotation;
+            _StartResetDistance = _DefaultDistance = distance;
+            isReseting = true;
         }
 
         private void ProcessInputs()

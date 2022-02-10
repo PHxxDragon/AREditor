@@ -2,19 +2,26 @@ using UnityEngine;
 using EAR.Integration;
 using EAR.WebRequest;
 using EAR.AR;
+using EAR.EARCamera;
 
 namespace EAR.Editor.Presenter
 {
     public class ReactPluginPresenter : MonoBehaviour
     {
         [SerializeField]
-        ReactPlugin reactPlugin;
+        private ReactPlugin reactPlugin;
         [SerializeField]
-        WebRequestHelper webRequestHelper;
+        private WebRequestHelper webRequestHelper;
         [SerializeField]
-        ModelLoader modelLoader;
+        private ModelLoader modelLoader;
         [SerializeField]
-        ImageHolder imageHolder;
+        private ImageHolder imageHolder;
+        [SerializeField]
+        private float scaleToSize = 1f;
+        [SerializeField]
+        private float distanceToPlane = 0.5f;
+        [SerializeField]
+        private CameraController cameraController;
 
         private MetadataObject metadata;
 
@@ -55,22 +62,26 @@ namespace EAR.Editor.Presenter
             MetadataObject metadataObject = JsonUtility.FromJson<MetadataObject>(moduleAR.metadataString);
             if (metadataObject == null)
             {
-                modelLoader.OnLoadEnded += InitDataForModel;
-            } else
-            {
-                imageHolder.widthInMeter = metadataObject.imageWidthInMeters;
-                if (modelLoader.GetModel() != null)
-                {
-                    TransformData.TransformDataToTransfrom(metadataObject.modelTransform, modelLoader.GetModel().transform);
-                }
-                else
-                {
-                    modelLoader.OnLoadEnded += SetDataForModel;
-                    metadata = metadataObject;
-                }
+                InitMetadata();
             }
-            
+            else
+            {
+                ApplyMetadata(metadataObject);
+            }            
+        }
 
+        private void ApplyMetadata(MetadataObject metadataObject)
+        {
+            imageHolder.widthInMeter = metadataObject.imageWidthInMeters;
+            if (modelLoader.GetModel() != null)
+            {
+                TransformData.TransformDataToTransfrom(metadataObject.modelTransform, modelLoader.GetModel().transform);
+            }
+            else
+            {
+                modelLoader.OnLoadEnded += SetDataForModel;
+                metadata = metadataObject;
+            }
         }
 
         private void LoadModuleErrorCallback(string error)
@@ -81,13 +92,22 @@ namespace EAR.Editor.Presenter
         private void SetDataForModel()
         {
             TransformData.TransformDataToTransfrom(metadata.modelTransform, modelLoader.GetModel().transform);
+            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(modelLoader.GetModel()));
         }
 
-        private void InitDataForModel()
+        private void InitMetadata()
         {
-            Vector3 position = modelLoader.GetModel().transform.position;
-            position.y += 2;
-            modelLoader.GetModel().transform.position = position;
+            modelLoader.OnLoadEnded += InitMetadataForModel;
+        }
+
+        private void InitMetadataForModel()
+        {
+            GameObject model = modelLoader.GetModel();
+            Bounds bounds = Utils.GetModelBounds(modelLoader.GetModel());
+            float ratio = scaleToSize / bounds.extents.magnitude;
+            model.transform.position = -(bounds.center * ratio) + new Vector3(0, distanceToPlane + bounds.extents.y * ratio, 0);
+            model.transform.localScale *= ratio;
+            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(model));
         }
     }
 }

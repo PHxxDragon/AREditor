@@ -1843,6 +1843,9 @@ MonoBehaviour:
   webRequestHelper: {fileID: 868952417}
   modelLoader: {fileID: 559619178}
   imageHolder: {fileID: 561207931}
+  scaleToSize: 1
+  distanceToPlane: 0.5
+  cameraController: {fileID: 55876966}
 --- !u!1 &1531939895
 GameObject:
   m_ObjectHideFlags: 0
@@ -1910,7 +1913,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1561589640}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
