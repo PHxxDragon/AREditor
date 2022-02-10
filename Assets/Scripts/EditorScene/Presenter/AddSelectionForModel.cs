@@ -26,12 +26,14 @@ namespace EAR.Editor.Presenter
 
         private IEnumerator AddCollider()
         {
+            Debug.Log("cccc");
             MeshFilter[] meshFilters = modelLoader.GetModel().gameObject.GetComponentsInChildren<MeshFilter>();
             foreach (MeshFilter meshFilter in meshFilters)
             {
                 if (meshFilter.GetComponent<Collider>() == null)
                 {
                     meshFilter.gameObject.AddComponent<BoxCollider>();
+                    Debug.Log("aaaa");
                     yield return null;
                 }
             }
@@ -42,6 +44,7 @@ namespace EAR.Editor.Presenter
                 if (skinnedMeshRenderer.GetComponent<MeshCollider>() == null)
                 {
                     BoxCollider collider = skinnedMeshRenderer.gameObject.AddComponent<BoxCollider>();
+                    Debug.Log("bbbb");
                     yield return null;
                 }
             }

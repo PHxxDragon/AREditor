@@ -113,6 +113,10 @@ namespace EAR.AR
 
         void OnProgress(GltfImportStep step, int completed, int total)
         {
+            if (total == 0)
+            {
+                OnLoadProgressChanged?.Invoke(completed, string.Format("{0}: {1}", step, completed));
+            }
             OnLoadProgressChanged?.Invoke(((float) completed)/total, string.Format("{0}: {1}/{2}", step, completed, total));
         }
 
