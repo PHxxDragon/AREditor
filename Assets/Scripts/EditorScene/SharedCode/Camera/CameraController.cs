@@ -21,6 +21,9 @@ namespace EAR.EARCamera
         public KeyCode LookAroundKey = KeyCode.LeftControl;
         public KeyCode ResetKey = KeyCode.F;
 
+        public delegate void IsMouseRaycastBlocked(ref bool isBlocked);
+        public event IsMouseRaycastBlocked CheckMouseRaycastBlocked;
+
         private Transform cameraTransform;
         private Transform cameraAnchorTransform;
 
@@ -82,27 +85,33 @@ namespace EAR.EARCamera
 
         private void ProcessInputs()
         {
+
             if (Input.GetMouseButton(0))
             {
-                if (Input.GetKey(RotateAroundKey))
+                bool isBlocked = false;
+                CheckMouseRaycastBlocked?.Invoke(ref isBlocked);
+                if (!isBlocked)
                 {
-                    _Rotation.y += Input.GetAxis("Mouse X") * RotateSpeed;
-                    _Rotation.x -= Input.GetAxis("Mouse Y") * RotateSpeed;
-                    _Rotation.x = Mathf.Clamp(_Rotation.x, -90f, 90f);
-                    isRotating = true;
-                }
-                else if (Input.GetKey(LookAroundKey))
-                {
-                    _LookRotationX = -Input.GetAxis("Mouse X") * LookSpeed;
-                    _LookRotationY = Input.GetAxis("Mouse Y") * LookSpeed;
-                    isLooking = true;
-                }
-                else
-                {
-                    Vector3 moveDirection = new Vector3(Input.GetAxis("Mouse X") * MoveSpeed * _Distance * Time.deltaTime, Input.GetAxis("Mouse Y") * MoveSpeed * _Distance * Time.deltaTime, 0);
-                    moveDirection = Quaternion.Euler(_Rotation) * moveDirection;
-                    _AnchorPosition -= moveDirection;
-                    isMoving = true;
+                    if (Input.GetKey(RotateAroundKey))
+                    {
+                        _Rotation.y += Input.GetAxis("Mouse X") * RotateSpeed;
+                        _Rotation.x -= Input.GetAxis("Mouse Y") * RotateSpeed;
+                        _Rotation.x = Mathf.Clamp(_Rotation.x, -90f, 90f);
+                        isRotating = true;
+                    }
+                    else if (Input.GetKey(LookAroundKey))
+                    {
+                        _LookRotationX = -Input.GetAxis("Mouse X") * LookSpeed;
+                        _LookRotationY = Input.GetAxis("Mouse Y") * LookSpeed;
+                        isLooking = true;
+                    }
+                    else
+                    {
+                        Vector3 moveDirection = new Vector3(Input.GetAxis("Mouse X") * MoveSpeed * _Distance * Time.deltaTime, Input.GetAxis("Mouse Y") * MoveSpeed * _Distance * Time.deltaTime, 0);
+                        moveDirection = Quaternion.Euler(_Rotation) * moveDirection;
+                        _AnchorPosition -= moveDirection;
+                        isMoving = true;
+                    }
                 }
             }
 

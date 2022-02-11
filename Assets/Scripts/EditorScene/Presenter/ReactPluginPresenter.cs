@@ -39,13 +39,13 @@ namespace EAR.Editor.Presenter
         }
 
 #if UNITY_EDITOR == true
-        void Start()
+/*        void Start()
         {
             Param param = new Param();
             param.moduleId = 1;
             param.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQzMTg0NzYzLCJleHAiOjE2NTA5NjA3NjN9.ug48VT5DFJRoIiqc06y57qSzOLsOfJYnY5Mmp--UiOs";
             LoadModelCalledEventSubscriber(param);
-        }
+        }*/
 #endif
 
         private void LoadModelCalledEventSubscriber(Param obj)

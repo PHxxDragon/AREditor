@@ -3,13 +3,16 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using EAR.Selection;
+using EAR.EARCamera;
 
 namespace EAR.Editor.Presenter
 {
-    public class BlockSelectionForUI : MonoBehaviour
+    public class BlockRaycastThroughUI : MonoBehaviour
     {
         [SerializeField]
         private SelectionManager selectionManager;
+        [SerializeField]
+        private CameraController cameraController;
         [SerializeField]
         private GraphicRaycaster raycaster;
 
@@ -30,6 +33,10 @@ namespace EAR.Editor.Presenter
             if (selectionManager != null && raycaster != null)
             {
                 selectionManager.CheckMouseRaycastBlocked += CheckIfRaycastBlockedByUI;
+            }
+            if (cameraController != null && raycaster != null)
+            {
+                cameraController.CheckMouseRaycastBlocked += CheckIfRaycastBlockedByUI;
             }
         }
 

@@ -96,6 +96,11 @@ namespace EAR.AR
             return loadedModel;
         }
 
+        void Start()
+        {
+            LoadModel("D:\\Mon hoc\\Nam 4 ky 1\\luan van\\EAR_OLD\\backend\\public\\wolf_with_animations.zip");
+        }
+
         public void LoadModel(string url)
         {
             task = RuntimeGltfImporter.GetImportTask(url);
@@ -133,7 +138,7 @@ namespace EAR.AR
         private void OnComplete(GameObject importedModel)
         {
             loadedModel = importedModel;
-            loadedModel.transform.parent = modelContainer.transform;
+            //loadedModel.transform.parent = modelContainer.transform;
             OnLoadEnded?.Invoke();
         }
 
