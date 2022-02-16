@@ -12,6 +12,7 @@ namespace EAR
     public class ModelDataObject
     {
         public string url;
+        public string extension;
     }
 }
 

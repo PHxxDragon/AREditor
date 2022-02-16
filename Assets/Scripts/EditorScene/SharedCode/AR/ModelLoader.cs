@@ -70,15 +70,16 @@ namespace EAR.AR
             }
         }
     }
-}
-*/
+}*/
+
 
 using UnityEngine;
 using System;
+using TriLibCore;
 using Piglet;
 namespace EAR.AR
 {
-    public class ModelLoader: MonoBehaviour
+    public class ModelLoader : MonoBehaviour
     {
         public event Action OnLoadStarted;
         public event Action OnLoadEnded;
@@ -88,20 +89,36 @@ namespace EAR.AR
         private GameObject modelContainer;
 
         private GameObject loadedModel;
-
         private GltfImportTask task;
+        private string url;
+        private string extension;
 
         public GameObject GetModel()
         {
             return loadedModel;
         }
-
-        void Start()
+/*        void Start()
         {
             LoadModel("D:\\Mon hoc\\Nam 4 ky 1\\luan van\\EAR_OLD\\backend\\public\\wolf_with_animations.zip");
+        }*/
+
+        public void LoadModel(string url, string extension)
+        {
+            this.url = url;
+            this.extension = extension;
+            if (extension == "gltf" || extension == "glb")
+            {
+                LoadModelUsingPiglet(url);
+            } else
+            {
+                LoadModelUsingTrilib(url, extension);
+            }
+            
         }
 
-        public void LoadModel(string url)
+        //======================================piglet================================================
+
+        private void LoadModelUsingPiglet(string url)
         {
             task = RuntimeGltfImporter.GetImportTask(url);
             task.OnCompleted = OnComplete;
@@ -124,12 +141,14 @@ namespace EAR.AR
                 if (total == 0)
                 {
                     OnLoadProgressChanged?.Invoke(downloadedMB, string.Format("{0}: {1:0.00}MB", step, downloadedMB));
-                } else
+                }
+                else
                 {
                     float totalMB = (float)total / 1000000;
-                    OnLoadProgressChanged?.Invoke(downloadedMB/totalMB, string.Format("{0}: {1:0.00}/{2:0.00}MB", step, downloadedMB, totalMB));
+                    OnLoadProgressChanged?.Invoke(downloadedMB / totalMB, string.Format("{0}: {1:0.00}/{2:0.00}MB", step, downloadedMB, totalMB));
                 }
-            } else
+            }
+            else
             {
                 OnLoadProgressChanged?.Invoke(((float)completed) / total, string.Format("{0}: {1}/{2}", step, completed, total));
             }
@@ -144,7 +163,36 @@ namespace EAR.AR
 
         private void OnException(Exception e)
         {
-            Debug.LogError(e.Message);
+            Debug.LogError("Cannot load model using piglet: " + e.Message);
+        }
+
+        //===========================================Trilib==========================================
+
+        private void LoadModelUsingTrilib(string url, string extension)
+        {
+            var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
+            var webRequest = AssetDownloader.CreateWebRequest(url);
+            AssetDownloader.LoadModelFromUri(webRequest, OnLoad, OnMaterialsLoad, OnProgress, OnError, modelContainer, assetLoaderOptions, null, extension);
+        }
+
+        private void OnError(IContextualizedError obj)
+        {
+            Debug.LogError($"An error occurred while loading your Model: {obj.GetInnerException()}");
+        }
+
+        private void OnProgress(AssetLoaderContext arg1, float arg2)
+        {
+            OnLoadProgressChanged?.Invoke(arg2, "Loading...");
+        }
+
+        private void OnMaterialsLoad(AssetLoaderContext obj)
+        {
+            OnLoadEnded?.Invoke();
+        }
+
+        private void OnLoad(AssetLoaderContext obj)
+        {
+            loadedModel = obj.RootGameObject;
         }
     }
 }

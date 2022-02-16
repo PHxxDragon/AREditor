@@ -16,6 +16,8 @@ namespace EAR.AnimationPlayer
         private AnimationList _animationList;
 
         private AnimationState _currentAnimationState;
+        private int _currentIndex = -1;
+        private int _clipCount = -1;
 
         public void ToggleAnimationPlay(bool play)
         {
@@ -43,6 +45,8 @@ namespace EAR.AnimationPlayer
             _animationList = model.GetComponent<AnimationList>();
             if (_animation == null || _animationList == null)
             {
+                _currentIndex = -1;
+                _clipCount = -1;
                 return false;
             }
             if (!_animation.isPlaying)
@@ -51,13 +55,18 @@ namespace EAR.AnimationPlayer
                 _animation.Stop();
                 AnimationStartEvent?.Invoke(false);
                 _currentAnimationState = _animation[_animationList.Clips[0].name];
-            } else
+                _currentIndex = 0;
+            }
+            else
             {
+                _currentIndex = -1;
                 foreach (AnimationState state in _animation)
                 {
+                    _currentIndex++;
                     if (state.weight == 1)
                     {
                         _currentAnimationState = state;
+                        break;
                     }
                 }
                 if (_currentAnimationState == null)
@@ -65,6 +74,7 @@ namespace EAR.AnimationPlayer
                     Debug.LogError("Cannot find active animation state ");
                 }
             }
+            _clipCount = _animation.GetClipCount();
             return true;
         }
 
@@ -99,10 +109,22 @@ namespace EAR.AnimationPlayer
             {
                 _animation.Stop();
                 AnimationStartEvent?.Invoke(false);
-            } else
+            }
+            else
             {
                 AnimationStartEvent?.Invoke(true);
             }
+            _currentIndex = index;
+        }
+
+        public int GetCurrentIndex()
+        {
+            return _currentIndex;
+        }
+
+        public int GetMaxIndex()
+        {
+            return _clipCount;
         }
 
         void Update()

@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.39119795, g: 0.43801087, b: 0.5566038, a: 1}
+  m_SubtractiveShadowColor: {r: 1, g: 1, b: 1, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -297,12 +297,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 103344740}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -147.0471, y: -172.02226, z: 589.53314}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1189331361}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &138014812
 GameObject:
@@ -1916,7 +1916,6 @@ Transform:
   - {fileID: 1890050570}
   - {fileID: 1636624439}
   - {fileID: 1695644621}
-  - {fileID: 1433018031}
   - {fileID: 865263912}
   - {fileID: 2047606200}
   - {fileID: 1059282193}
@@ -1952,7 +1951,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 781915154}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &865263913
 MonoBehaviour:
@@ -2408,7 +2407,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 781915154}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1059282194
 MonoBehaviour:
@@ -2984,7 +2983,7 @@ GameObject:
   - component: {fileID: 1433018031}
   - component: {fileID: 1433018032}
   m_Layer: 0
-  m_Name: ReactPlugin
+  m_Name: Initialize
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2997,12 +2996,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1433018030}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 781915154}
-  m_RootOrder: 6
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1433018032
 MonoBehaviour:
@@ -3023,6 +3022,10 @@ MonoBehaviour:
   scaleToSize: 1
   distanceToPlane: 0.5
   cameraController: {fileID: 55876966}
+  toolBar: {fileID: 1622898299}
+  selectionManager: {fileID: 1608426110}
+  runtimeTransformHandle: {fileID: 705176986}
+  undoRedoManager: {fileID: 1531939897}
 --- !u!1 &1448530605
 GameObject:
   m_ObjectHideFlags: 0
@@ -3132,7 +3135,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.9563904, y: -0.5}
+  m_AnchoredPosition: {x: 2.956421, y: -0.5}
   m_SizeDelta: {x: -55.9128, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1487245243
@@ -3687,7 +3690,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 10.042389, y: -0.5}
+  m_AnchoredPosition: {x: 10.042358, y: -0.5}
   m_SizeDelta: {x: -40.0848, y: -3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1672494312
@@ -4382,7 +4385,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 781915154}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2047606201
 MonoBehaviour:

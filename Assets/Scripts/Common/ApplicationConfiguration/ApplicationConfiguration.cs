@@ -22,17 +22,17 @@ namespace EAR
 
         public string GetServerName()
         {
-            return "http://localhost:3000/";
+            return serverName;
         }
 
         public string GetLoginPath()
         {
-            return "http://localhost:3000/" + loginPath;
+            return serverName + loginPath;
         }
 
         public string GetProfilePath()
         {
-            return "http://localhost:3000/" + profilePath;
+            return serverName + profilePath;
         }
 
         public string GetWorkspacePath()
@@ -42,12 +42,12 @@ namespace EAR
 
         public string GetARModulePath(int moduleId)
         {
-            return "http://localhost:3000/" + "api/v1/modules/ar" + "/" + moduleId;
+            return serverName + armodulePath + "/" + moduleId;
         }
 
         public string GetModelPath(int modelId)
         {
-            return "http://localhost:3000/" + "api/v1/models" + "/" + modelId;
+            return serverName + modelPath + "/" + modelId;
         }
     }
 }

@@ -3,10 +3,14 @@ using EAR.Integration;
 using EAR.WebRequest;
 using EAR.AR;
 using EAR.EARCamera;
+using EAR.View;
+using EAR.Selection;
+using RuntimeHandle;
+using EAR.UndoRedo;
 
 namespace EAR.Editor.Presenter
 {
-    public class ReactPluginPresenter : MonoBehaviour
+    public class InitializePresenter : MonoBehaviour
     {
         [SerializeField]
         private ReactPlugin reactPlugin;
@@ -23,6 +27,17 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private CameraController cameraController;
 
+        // for disable when not used
+        [SerializeField]
+        private ToolBar toolBar;
+        [SerializeField]
+        private SelectionManager selectionManager;
+        [SerializeField]
+        private RuntimeTransformHandle runtimeTransformHandle;
+        [SerializeField]
+        private UndoRedoManager undoRedoManager;
+
+
         private MetadataObject metadata;
 
         void Awake()
@@ -30,6 +45,7 @@ namespace EAR.Editor.Presenter
             Debug.Log("start in presenter");
             if (reactPlugin != null)
             {
+                reactPlugin.LoadModuleCalledEvent += LoadModuleCalledEventSubscriber;
                 reactPlugin.LoadModelCalledEvent += LoadModelCalledEventSubscriber;
             }
             else
@@ -38,17 +54,33 @@ namespace EAR.Editor.Presenter
             }
         }
 
+        private void LoadModelCalledEventSubscriber(ModelParam obj)
+        {
+            Debug.Log("Event called!" + obj.url + " extension: " + obj.extension);
+            modelLoader.LoadModel(obj.url, obj.extension);
+            modelLoader.OnLoadEnded += InitMetadataForModel;
+            DisableUnusedComponents();
+        }
+
+        private void DisableUnusedComponents()
+        {
+            toolBar.gameObject.SetActive(false);
+            selectionManager.gameObject.SetActive(false);
+            runtimeTransformHandle.gameObject.SetActive(false);
+            undoRedoManager.gameObject.SetActive(false);
+        }
+
 #if UNITY_EDITOR == true
 /*        void Start()
         {
-            Param param = new Param();
+            ModuleParam param = new ModuleParam();
             param.moduleId = 1;
-            param.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQzMTg0NzYzLCJleHAiOjE2NTA5NjA3NjN9.ug48VT5DFJRoIiqc06y57qSzOLsOfJYnY5Mmp--UiOs";
-            LoadModelCalledEventSubscriber(param);
+            param.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ0NTc5MTE3LCJleHAiOjE2NTIzNTUxMTd9.z8zYBiJ684KiF0xv4CHLJQhQBWxu0ZBEMzGfqJq99X0";
+            LoadModuleCalledEventSubscriber(param);
         }*/
 #endif
 
-        private void LoadModelCalledEventSubscriber(Param obj)
+        private void LoadModuleCalledEventSubscriber(ModuleParam obj)
         {
             Debug.Log("called in presenter: " + obj.token + " Module id: " + obj.moduleId);
             LocalStorage.Save("param", obj);
@@ -57,7 +89,7 @@ namespace EAR.Editor.Presenter
 
         private void LoadModuleCallback(ModuleARInformation moduleAR)
         {
-            modelLoader.LoadModel(moduleAR.modelUrl);
+            modelLoader.LoadModel(moduleAR.modelUrl, moduleAR.extension);
             imageHolder.LoadImage(moduleAR.imageUrl);
             MetadataObject metadataObject = JsonUtility.FromJson<MetadataObject>(moduleAR.metadataString);
             if (metadataObject == null)

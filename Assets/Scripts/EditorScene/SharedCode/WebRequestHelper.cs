@@ -50,7 +50,7 @@ namespace EAR.WebRequest
             StartCoroutine(SetModuleMetadataCoroutine(token, moduleId, metadata, callback, errorCallback));
         }
 
-        void Start()
+        void Awake()
         {
             applicationConfiguration = ApplicationConfigurationHolder.Instance.GetApplicationConfiguration();
         }
@@ -59,6 +59,7 @@ namespace EAR.WebRequest
         {
             List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
             formData.Add(new MultipartFormDataSection("metadata", JsonUtility.ToJson(metadata)));
+            Debug.Log(JsonUtility.ToJson(metadata));
             using (UnityWebRequest unityWebRequest = UnityWebRequest.Post(applicationConfiguration.GetARModulePath(moduleId), formData))
             {
                 unityWebRequest.method = "PUT";
@@ -79,8 +80,11 @@ namespace EAR.WebRequest
         {
             using(UnityWebRequest unityWebRequest = UnityWebRequest.Get(applicationConfiguration.GetARModulePath(moduleId)))
             {
+                Debug.Log("aaa");
                 Debug.Log(applicationConfiguration.GetARModulePath(moduleId));
+                Debug.Log("bbb");
                 Debug.Log(unityWebRequest.uri);
+                Debug.Log("ccc");
                 yield return unityWebRequest.SendWebRequest();
                 if (unityWebRequest.result != UnityWebRequest.Result.Success)
                 {
@@ -91,6 +95,7 @@ namespace EAR.WebRequest
                     ModuleResponse moduleResponse = JsonUtility.FromJson<ModuleResponse>(unityWebRequest.downloadHandler.text);
                     using (UnityWebRequest unityWebRequest2 = UnityWebRequest.Get(applicationConfiguration.GetModelPath(moduleResponse.data.modelId)))
                     {
+                        Debug.Log("ddd");
                         Debug.Log(unityWebRequest2.uri);
                         unityWebRequest2.SetRequestHeader("Authorization", "Bearer " + token);
                         yield return unityWebRequest2.SendWebRequest();
@@ -106,6 +111,7 @@ namespace EAR.WebRequest
                             moduleARInformation.imageUrl = moduleResponse.data.image;
                             moduleARInformation.metadataString = moduleResponse.data.metadata;
                             moduleARInformation.modelUrl = modelData.data.url;
+                            moduleARInformation.extension = modelData.data.extension;
                             callback?.Invoke(moduleARInformation);
                         }
                     }

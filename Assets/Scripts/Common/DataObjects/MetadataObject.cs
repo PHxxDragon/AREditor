@@ -20,16 +20,16 @@ namespace EAR
         public static TransformData TransformToTransformData(Transform transform)
         {
             TransformData transformData = new TransformData();
-            transformData.position = transform.position;
-            transformData.rotation = transform.rotation;
+            transformData.position = transform.localPosition;
+            transformData.rotation = transform.localRotation;
             transformData.scale = transform.localScale;
             return transformData;
         }
 
         public static void TransformDataToTransfrom(TransformData transformData, Transform transform)
         {
-            transform.position = transformData.position;
-            transform.rotation = transformData.rotation;
+            transform.localPosition = transformData.position;
+            transform.localRotation = transformData.rotation;
             transform.localScale = transformData.scale;
         }
     }

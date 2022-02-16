@@ -4,7 +4,6 @@ namespace EAR
 {
     public class ApplicationConfigurationHolder : MonoBehaviour
     {
-        [SerializeField]
         private ApplicationConfiguration applicationConfiguration;
 
         private static ApplicationConfigurationHolder instance;
@@ -16,8 +15,11 @@ namespace EAR
                 if (instance == null)
                 {
                     instance = new GameObject().AddComponent<ApplicationConfigurationHolder>();
-                    instance.applicationConfiguration = Resources.FindObjectsOfTypeAll<ApplicationConfiguration>()[0];
+
+                    instance.applicationConfiguration = Resources.Load<ApplicationConfiguration>("ApplicationConfiguration");
                     Debug.Log(instance.applicationConfiguration.GetServerName());
+                    Debug.Log(instance.applicationConfiguration.GetARModulePath(5));
+                    Debug.Log(instance.applicationConfiguration.GetModelPath(5));
                 }
                 return instance;
             }
