@@ -69,13 +69,18 @@ namespace EAR
 
                 if (uwr.result != UnityWebRequest.Result.Success)
                 {
-                    Debug.Log(uwr.error);
                     errorCallback?.Invoke(uwr.error, param);
                 }
                 else
                 {
                     // Get downloaded texture once the web request completes
                     Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
+                    // https://answers.unity.com/questions/391612/any-way-to-validate-wwwtexture.html
+                    if (texture.width < 10 && texture.height < 10)
+                    {
+                        errorCallback?.Invoke("Error loading texture", param);
+                        yield break;
+                    }
                     callback?.Invoke(texture, param);
                 }
             }

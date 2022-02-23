@@ -1,6 +1,5 @@
 using UnityEngine;
 using EAR.Integration;
-using EAR.WebRequest;
 using EAR.AR;
 using EAR.EARCamera;
 using EAR.View;
@@ -15,15 +14,13 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private ReactPlugin reactPlugin;
         [SerializeField]
-        private WebRequestHelper webRequestHelper;
-        [SerializeField]
         private ModelLoader modelLoader;
         [SerializeField]
         private ImageHolder imageHolder;
         [SerializeField]
-        private float scaleToSize = 1f;
+        private float scaleToSize = 0.5f;
         [SerializeField]
-        private float distanceToPlane = 0.5f;
+        private float distanceToPlane = 0f;
         [SerializeField]
         private CameraController cameraController;
 
@@ -37,6 +34,11 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private UndoRedoManager undoRedoManager;
 
+        [SerializeField]
+        private Modal modalPrefab;
+        [SerializeField]
+        private GameObject canvas;
+
 
         private MetadataObject metadata;
 
@@ -45,7 +47,7 @@ namespace EAR.Editor.Presenter
             Debug.Log("start in presenter");
             if (reactPlugin != null)
             {
-                reactPlugin.LoadModuleCalledEvent += LoadModuleCalledEventSubscriber;
+                reactPlugin.LoadModuleCalledEvent += LoadModuleCallback;
                 reactPlugin.LoadModelCalledEvent += LoadModelCalledEventSubscriber;
             }
             else
@@ -70,26 +72,14 @@ namespace EAR.Editor.Presenter
             undoRedoManager.gameObject.SetActive(false);
         }
 
-#if UNITY_EDITOR == true
-/*        void Start()
-        {
-            ModuleParam param = new ModuleParam();
-            param.moduleId = 1;
-            param.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ0NTc5MTE3LCJleHAiOjE2NTIzNTUxMTd9.z8zYBiJ684KiF0xv4CHLJQhQBWxu0ZBEMzGfqJq99X0";
-            LoadModuleCalledEventSubscriber(param);
-        }*/
-#endif
-
-        private void LoadModuleCalledEventSubscriber(ModuleParam obj)
-        {
-            Debug.Log("called in presenter: " + obj.token + " Module id: " + obj.moduleId);
-            LocalStorage.Save("param", obj);
-            webRequestHelper.GetModuleInformation(obj.token, obj.moduleId, LoadModuleCallback, LoadModuleErrorCallback);
-        }
-
         private void LoadModuleCallback(ModuleARInformation moduleAR)
         {
+            if (!moduleAR.enableEditor)
+            {
+                //DisableUnusedComponents();
+            }
             modelLoader.LoadModel(moduleAR.modelUrl, moduleAR.extension);
+            modelLoader.OnLoadError += OnLoadError;
             imageHolder.LoadImage(moduleAR.imageUrl);
             MetadataObject metadataObject = JsonUtility.FromJson<MetadataObject>(moduleAR.metadataString);
             if (metadataObject == null)
@@ -100,6 +90,13 @@ namespace EAR.Editor.Presenter
             {
                 ApplyMetadata(metadataObject);
             }            
+        }
+
+        private void OnLoadError(string error)
+        {
+            Modal modal = Instantiate(modalPrefab, canvas.transform);
+            modal.SetModalContent("Error", error);
+            modal.DisableCancelButton();
         }
 
         private void ApplyMetadata(MetadataObject metadataObject)
@@ -114,11 +111,6 @@ namespace EAR.Editor.Presenter
                 modelLoader.OnLoadEnded += SetDataForModel;
                 metadata = metadataObject;
             }
-        }
-
-        private void LoadModuleErrorCallback(string error)
-        {
-            Debug.LogError(error);
         }
 
         private void SetDataForModel()

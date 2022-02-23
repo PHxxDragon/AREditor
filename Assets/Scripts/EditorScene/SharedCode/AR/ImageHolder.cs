@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace EAR.AR
@@ -14,7 +15,12 @@ namespace EAR.AR
 
         public void LoadImage(string imageUrl)
         {
-            Utils.Instance.GetImageAsTexture2D(imageUrl, GenerateMesh);
+            Utils.Instance.GetImageAsTexture2D(imageUrl, GenerateMesh, SetActiveFalse);
+        }
+
+        private void SetActiveFalse(string arg1, object arg2)
+        {
+            gameObject.SetActive(false);
         }
 
         void Update()

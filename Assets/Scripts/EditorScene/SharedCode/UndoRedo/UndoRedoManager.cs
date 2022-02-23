@@ -5,9 +5,6 @@ namespace EAR.UndoRedo
 {
     public class UndoRedoManager : MonoBehaviour
     {
-        [SerializeField]
-        private KeyCode undoKeycode = KeyCode.Z;
-
         private Stack<IUndoRedoCommand> commandStack = new Stack<IUndoRedoCommand>();
         private Stack<IUndoRedoCommand> redoStack = new Stack<IUndoRedoCommand>();
 
@@ -17,21 +14,7 @@ namespace EAR.UndoRedo
             redoStack.Clear();
         }
 
-        void Update()
-        {
-            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
-            {
-                if (Input.GetKeyDown(undoKeycode))
-                {
-                    PerformUndo();
-                } else if (Input.GetKeyDown(KeyCode.R))
-                {
-                    PerformRedo();
-                }
-            }
-        }
-
-        private void PerformUndo()
+        public void PerformUndo()
         {
             if (commandStack.Count > 0)
             {
@@ -41,7 +24,7 @@ namespace EAR.UndoRedo
             }
         }
 
-        private void PerformRedo()
+        public void PerformRedo()
         {
             if (redoStack.Count > 0)
             {

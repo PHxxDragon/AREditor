@@ -9,7 +9,7 @@ namespace RuntimeHandle
      */
     public class RuntimeTransformHandle : MonoBehaviour
     {
-        public static float MOUSE_SENSITIVITY = 2;
+        public static float MOUSE_SENSITIVITY = 0.5f;
         
         public HandleAxes axes = HandleAxes.XYZ;
         public HandleSpace space = HandleSpace.LOCAL;

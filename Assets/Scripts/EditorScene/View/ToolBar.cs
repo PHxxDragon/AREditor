@@ -16,11 +16,17 @@ namespace EAR.View
         private Toggle scaleToggle;
         [SerializeField]
         private Button saveButton;
+        [SerializeField]
+        private Button undoButton;
+        [SerializeField]
+        private Button redoButton;
 
         private ToolEnum activeTool;
 
         public event Action<ToolEnum, ToolEnum> OnToolChanged;
         public event Action SaveButtonClicked;
+        public event Action UndoButtonClicked;
+        public event Action RedoButtonClicked;
 
         public ToolEnum GetActiveTool()
         {
@@ -40,6 +46,18 @@ namespace EAR.View
             rotateToggle.onValueChanged.AddListener(RotateToggleActive);
             scaleToggle.onValueChanged.AddListener(ScaleToggleActive);
             saveButton.onClick.AddListener(SaveButtonClick);
+            undoButton.onClick.AddListener(UndoButtonClick);
+            redoButton.onClick.AddListener(RedoButtonClick);
+        }
+
+        private void RedoButtonClick()
+        {
+            RedoButtonClicked?.Invoke();
+        }
+
+        private void UndoButtonClick()
+        {
+            UndoButtonClicked?.Invoke();
         }
 
         private void CameraRotateToggleActive(bool isOn)

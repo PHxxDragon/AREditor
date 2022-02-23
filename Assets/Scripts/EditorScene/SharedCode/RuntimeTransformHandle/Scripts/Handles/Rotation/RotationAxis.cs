@@ -45,16 +45,19 @@ namespace RuntimeHandle
         {
             Vector3 mouseVector = (Input.mousePosition - p_previousPosition);
             mouseVector.x = _xmod * mouseVector.x;
-            mouseVector.y = _ymod * mouseVector.y;
+            //mouseVector.y = _ymod * mouseVector.y;
+            mouseVector.y = 0;
             float mag = mouseVector.magnitude;
             mouseVector = _parentTransformHandle.handleCamera.transform.rotation * mouseVector.normalized;
 
-            Vector3 planeNormal = _parentTransformHandle.space == HandleSpace.LOCAL ? _parentTransformHandle.target.rotation * _axis : _axis;
-            Vector3 projected = Vector3.ProjectOnPlane(mouseVector, planeNormal);
+            //Vector3 planeNormal = _parentTransformHandle.space == HandleSpace.LOCAL ? _parentTransformHandle.target.rotation * _axis : _axis;
+            //Vector3 projected = Vector3.ProjectOnPlane(mouseVector, planeNormal);
             
-            projected *= Time.deltaTime * mag * 2; // Bulhar
-            float d = projected.x + projected.y + projected.z;
-            delta += d;
+            //projected *= Time.deltaTime * mag * 2; // Bulhar
+            //float d = projected.x + projected.y + projected.z;
+            mouseVector *= Time.deltaTime * mag * 2;
+            float d = mouseVector.x + mouseVector.y;
+            delta += d / 15;
 
             Vector3 rotatedAxis = _startRotation * _axis;
             Vector3 invertedRotatedAxis = Quaternion.Inverse(_startRotation) * _axis;
@@ -88,7 +91,7 @@ namespace RuntimeHandle
 
                 _parentTransformHandle.target.rotation = _startRotation *
                                                          Quaternion.AngleAxis(-snappedDelta * 180f / Mathf.PI,
-                                                             invertedRotatedAxis);
+                                                             rotatedAxis);
             }
 
             base.Interact(p_previousPosition);

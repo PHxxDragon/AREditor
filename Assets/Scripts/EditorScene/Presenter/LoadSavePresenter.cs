@@ -1,7 +1,6 @@
 using UnityEngine;
 using EAR.AR;
 using EAR.View;
-using EAR.WebRequest;
 using EAR.Integration;
 
 namespace EAR.Editor.Presenter
@@ -18,7 +17,7 @@ namespace EAR.Editor.Presenter
         private ToolBar toolBar;
 
         [SerializeField]
-        private WebRequestHelper webRequestHelper;
+        private ReactPlugin reactPlugin;
 
         void Start()
         {
@@ -30,21 +29,18 @@ namespace EAR.Editor.Presenter
 
         private void SaveButtonClicked()
         {
-            MetadataObject metadataObject = new MetadataObject();
-            metadataObject.imageWidthInMeters = imageHolder.widthInMeter;
-            metadataObject.modelTransform = TransformData.TransformToTransformData(modelLoader.GetModel().transform);
-            ModuleParam param = LocalStorage.Load<ModuleParam>("param");
-            webRequestHelper.SetModuleMetadata(param.token, param.moduleId, metadataObject, SetModuleMetadataSuccessCallback, SetModuleMetadataErrorCallback);
-        }
-
-        private void SetModuleMetadataSuccessCallback()
-        {
-
-        }
-
-        private void SetModuleMetadataErrorCallback(string error)
-        {
-            Debug.Log(error);
+            if (modelLoader.GetModel() != null)
+            {
+                MetadataObject metadataObject = new MetadataObject();
+                metadataObject.modelTransform = TransformData.TransformToTransformData(modelLoader.GetModel().transform);
+                if (imageHolder.gameObject.activeSelf)
+                {
+                    metadataObject.imageWidthInMeters = imageHolder.widthInMeter;
+                }
+                reactPlugin.Save(JsonUtility.ToJson(metadataObject));
+            }
+/*            ModuleParam param = LocalStorage.Load<ModuleParam>("param");
+            webRequestHelper.SetModuleMetadata(param.token, param.moduleId, metadataObject, SetModuleMetadataSuccessCallback, SetModuleMetadataErrorCallback);*/
         }
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using RuntimeHandle;
 using EAR.UndoRedo;
 using EAR.Selection;
+using EAR.View;
 
 namespace EAR.Editor.Presenter
 {
@@ -13,6 +14,8 @@ namespace EAR.Editor.Presenter
         private SelectionManager selectionManager;
         [SerializeField]
         private UndoRedoManager undoRedoManager;
+        [SerializeField]
+        private ToolBar toolbar;
 
         void Awake()
         {
@@ -27,6 +30,14 @@ namespace EAR.Editor.Presenter
             if (selectionManager != null && undoRedoManager != null)
             {
                 selectionManager.NewCommandEvent += AddCommandHandler;
+            } else
+            {
+                Debug.LogWarning("Unassiged references");
+            }
+            if (toolbar != null && undoRedoManager != null)
+            {
+                toolbar.RedoButtonClicked += undoRedoManager.PerformRedo;
+                toolbar.UndoButtonClicked += undoRedoManager.PerformUndo;
             } else
             {
                 Debug.LogWarning("Unassiged references");

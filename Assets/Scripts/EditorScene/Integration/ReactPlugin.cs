@@ -6,12 +6,15 @@ namespace EAR.Integration
 {
     public class ReactPlugin : MonoBehaviour
     {
-        public event Action<ModuleParam> LoadModuleCalledEvent;
+        public event Action<ModuleARInformation> LoadModuleCalledEvent;
         public event Action<ModelParam> LoadModelCalledEvent;
 
 
         [DllImport("__Internal")]
         private static extern void SceneLoaded();
+
+        [DllImport("__Internal")]
+        private static extern void SaveMetadata(string metadata);
 
         void Start()
         {
@@ -20,14 +23,20 @@ namespace EAR.Integration
         SceneLoaded();
 #endif
 #if UNITY_EDITOR == true
-        LoadModel("{\"url\":\"https://firebasestorage.googleapis.com/v0/b/education-ar-c395d.appspot.com/o/models%2F1%2Fmodels_1_Bodacious%20Maimu-Duup%20(2).zip?alt=media&token=6d0d07bd-75ba-4db8-b344-ed96be01ba63\",\"extension\":\"zip\"}");
+            LoadModule("{\"modelUrl\":\"https://firebasestorage.googleapis.com/v0/b/education-ar-c395d.appspot.com/o/models%2F1%2Fmodels_1_Bodacious%20Maimu-Duup%20(2).zip?alt=media&token=6d0d07bd-75ba-4db8-b344-ed96be01ba63\",\"extension\":\"zip\", \"imageUrl\": \"dfsfd\", \"metadataString\":\"\"}");
 #endif
+        }
+
+        public void Save(string metadata)
+        {
+            Debug.Log(metadata);
+            SaveMetadata(metadata);
         }
 
         public void LoadModule(string paramJson)
         {
             Debug.Log("Load module called: " + paramJson);
-            ModuleParam param = JsonUtility.FromJson<ModuleParam>(paramJson);
+            ModuleARInformation param = JsonUtility.FromJson<ModuleARInformation>(paramJson);
             LoadModuleCalledEvent?.Invoke(param);
         }
 
