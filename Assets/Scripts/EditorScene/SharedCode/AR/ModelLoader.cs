@@ -170,6 +170,7 @@ namespace EAR.AR
             var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
             var webRequest = AssetDownloader.CreateWebRequest(url);
             AssetDownloader.LoadModelFromUri(webRequest, OnLoad, OnMaterialsLoad, OnProgress, OnError, modelContainer, assetLoaderOptions, null, extension, isZipFile);
+            OnLoadStarted?.Invoke();
         }
 
         private void OnError(IContextualizedError obj)
