@@ -8,4 +8,5 @@ public class ModuleARInformation
     public string metadataString;
     public string extension;
     public bool enableEditor;
+    public bool isZipFile;
 }

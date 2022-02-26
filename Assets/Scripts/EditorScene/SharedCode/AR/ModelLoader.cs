@@ -101,14 +101,14 @@ namespace EAR.AR
             LoadModel("D:\\Mon hoc\\Nam 4 ky 1\\luan van\\EAR_OLD\\backend\\public\\wolf_with_animations.zip");
         }*/
 
-        public void LoadModel(string url, string extension)
+        public void LoadModel(string url, string extension, bool isZipFile)
         {
             if (extension == "gltf" || extension == "glb")
             {
                 LoadModelUsingPiglet(url);
             } else
             {
-                LoadModelUsingTrilib(url, extension);
+                LoadModelUsingTrilib(url, extension, isZipFile);
             }
             
         }
@@ -165,11 +165,11 @@ namespace EAR.AR
 
         //===========================================Trilib==========================================
 
-        private void LoadModelUsingTrilib(string url, string extension)
+        private void LoadModelUsingTrilib(string url, string extension, bool isZipFile)
         {
             var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
             var webRequest = AssetDownloader.CreateWebRequest(url);
-            AssetDownloader.LoadModelFromUri(webRequest, OnLoad, OnMaterialsLoad, OnProgress, OnError, modelContainer, assetLoaderOptions, null, extension);
+            AssetDownloader.LoadModelFromUri(webRequest, OnLoad, OnMaterialsLoad, OnProgress, OnError, modelContainer, assetLoaderOptions, null, extension, isZipFile);
         }
 
         private void OnError(IContextualizedError obj)

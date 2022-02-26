@@ -48,20 +48,11 @@ namespace EAR.Editor.Presenter
             if (reactPlugin != null)
             {
                 reactPlugin.LoadModuleCalledEvent += LoadModuleCallback;
-                reactPlugin.LoadModelCalledEvent += LoadModelCalledEventSubscriber;
             }
             else
             {
                 Debug.LogWarning("Unassigned references");
             }
-        }
-
-        private void LoadModelCalledEventSubscriber(ModelParam obj)
-        {
-            Debug.Log("Event called!" + obj.url + " extension: " + obj.extension);
-            modelLoader.LoadModel(obj.url, obj.extension);
-            modelLoader.OnLoadEnded += InitMetadataForModel;
-            DisableUnusedComponents();
         }
 
         private void DisableUnusedComponents()
@@ -78,7 +69,7 @@ namespace EAR.Editor.Presenter
             {
                 DisableUnusedComponents();
             }
-            modelLoader.LoadModel(moduleAR.modelUrl, moduleAR.extension);
+            modelLoader.LoadModel(moduleAR.modelUrl, moduleAR.extension, moduleAR.isZipFile);
             modelLoader.OnLoadError += OnLoadError;
             imageHolder.LoadImage(moduleAR.imageUrl);
             MetadataObject metadataObject = JsonUtility.FromJson<MetadataObject>(moduleAR.metadataString);

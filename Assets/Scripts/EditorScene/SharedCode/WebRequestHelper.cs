@@ -40,10 +40,10 @@ namespace EAR.WebRequest
             StartCoroutine(GetModuleListCoroutine(token, courseId, callback, errorCallback));
         }
 
-        public void GetModuleInformation(string token, int moduleId, Action<ModuleARInformation> callback = null, Action<string> errorCallback = null)
+/*        public void GetModuleInformation(string token, int moduleId, Action<ModuleARInformation> callback = null, Action<string> errorCallback = null)
         {
             StartCoroutine(GetModuleInformationCoroutine(token, moduleId, callback, errorCallback));
-        }
+        }*/
 
         public void SetModuleMetadata(string token, int moduleId, MetadataObject metadata, Action callback = null, Action<string> errorCallback = null)
         {
@@ -76,7 +76,7 @@ namespace EAR.WebRequest
             }
         }
 
-        private IEnumerator GetModuleInformationCoroutine(string token, int moduleId, Action<ModuleARInformation> callback, Action<string> errorCallback)
+/*        private IEnumerator GetModuleInformationCoroutine(string token, int moduleId, Action<ModuleARInformation> callback, Action<string> errorCallback)
         {
             using(UnityWebRequest unityWebRequest = UnityWebRequest.Get(applicationConfiguration.GetARModulePath(moduleId)))
             {
@@ -117,7 +117,7 @@ namespace EAR.WebRequest
                     }
                 }
             }
-        }
+        }*/
 
         /* Todo
          * 

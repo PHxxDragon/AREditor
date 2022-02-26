@@ -7,8 +7,6 @@ namespace EAR.Integration
     public class ReactPlugin : MonoBehaviour
     {
         public event Action<ModuleARInformation> LoadModuleCalledEvent;
-        public event Action<ModelParam> LoadModelCalledEvent;
-
 
         [DllImport("__Internal")]
         private static extern void SceneLoaded();
@@ -38,13 +36,6 @@ namespace EAR.Integration
             Debug.Log("Load module called: " + paramJson);
             ModuleARInformation param = JsonUtility.FromJson<ModuleARInformation>(paramJson);
             LoadModuleCalledEvent?.Invoke(param);
-        }
-
-        public void LoadModel(string paramJson)
-        {
-            Debug.Log("Load model called: " + paramJson);
-            ModelParam param = JsonUtility.FromJson<ModelParam>(paramJson);
-            LoadModelCalledEvent?.Invoke(param);
         }
     }
 }
