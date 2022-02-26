@@ -2,22 +2,22 @@ using UnityEngine;
 
 namespace EAR.Selection
 {
-    [RequireComponent(typeof(Outline))]
+    //[RequireComponent(typeof(Outline))]
     public class Selectable : MonoBehaviour
     {
-        private readonly Color outlineColor = Color.yellow;
-        private readonly float outlineWidth = 6f;
+/*        private readonly Color outlineColor = Color.yellow;
+        private readonly float outlineWidth = 6f;*/
 
-        private Outline outline;
+        //private Outline outline;
 
         public void AddSelectedOutline()
         {
-            outline.enabled = true;
+            //outline.enabled = true;
         }
 
         public void RemoveSelectedOutline()
         {
-            outline.enabled = false;
+            //outline.enabled = false;
         }
 
         void Awake()
@@ -27,10 +27,10 @@ namespace EAR.Selection
 
         private void InitializeOutlineComponent()
         {
-            outline = GetComponent<Outline>();
+            /*outline = GetComponent<Outline>();
             outline.OutlineWidth = outlineWidth;
             outline.OutlineColor = outlineColor;
-            outline.enabled = false;
+            outline.enabled = false;*/
         }
     }
 }
