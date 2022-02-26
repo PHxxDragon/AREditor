@@ -23,10 +23,10 @@ namespace EAR.Integration
         SceneLoaded();
 #endif
 #if UNITY_EDITOR == true
-            LoadModule("{\"modelUrl\":\"https://firebasestorage.googleapis.com/v0/b/education-ar-c395d.appspot.com/o/models%2F1%2Fmodels_1_Bodacious%20Maimu-Duup%20(2).zip?alt=media&token=6d0d07bd-75ba-4db8-b344-ed96be01ba63\",\"extension\":\"zip\", \"imageUrl\": \"dfsfd\", \"metadataString\":\"\"}");
+            LoadModule("{\"modelUrl\":\"http://localhost:4000/wolf_with_animations.zip\",\"imageUrl\":\"\",\"metadataString\":\"\",\"extension\":\"obj\",\"enableEditor\":true}");
 #endif
         }
-
+        //https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/1/1645813567940_Powerful Jarv-Bruticus.zip
         public void Save(string metadata)
         {
             Debug.Log(metadata);

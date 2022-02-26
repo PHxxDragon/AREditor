@@ -75,8 +75,10 @@ namespace EAR.AR
 
 using UnityEngine;
 using System;
+using System.IO;
 using TriLibCore;
 using Piglet;
+using EAR.Download;
 namespace EAR.AR
 {
     public class ModelLoader : MonoBehaviour
@@ -88,6 +90,8 @@ namespace EAR.AR
 
         [SerializeField]
         private GameObject modelContainer;
+        [SerializeField]
+        private Downloader downloader;
 
         private GameObject loadedModel;
         private GltfImportTask task;
@@ -103,14 +107,29 @@ namespace EAR.AR
 
         public void LoadModel(string url, string extension)
         {
-            if (extension == "gltf" || extension == "glb")
-            {
-                LoadModelUsingPiglet(url);
-            } else
-            {
-                LoadModelUsingTrilib(url, extension);
-            }
-            
+            /*            OnLoadStarted?.Invoke();
+                        downloader.DownloadAndGetFilePath(url, url, url, extension, (string filePath) =>
+                        {
+                            Debug.Log(filePath);
+                            if (extension == "gltf" || extension == "glb")
+                            {
+                                LoadModelUsingPiglet(filePath);
+                            }
+                            else
+                            {
+                                LoadModelUsingTrilib(filePath);
+                            }
+                        },
+                        (float progress) =>
+                        {
+                            OnLoadProgressChanged?.Invoke(progress, string.Format("Downloading... {0}%", progress * 100));
+                        },
+                        (string message) =>
+                        {
+                            OnLoadError?.Invoke(message);
+                        });*/
+            var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
+            AssetLoader.LoadModelFromFile("C:\\Users\\Duy\\AppData\\LocalLow\\DefaultCompany\\AREditor\\Models\\02f1ad3978bdc22a21f638c2e37ece70148a1795ed8616617b98fa251cfde6e9.zip", OnLoad, OnMaterialsLoad, OnProgress, OnError, modelContainer, assetLoaderOptions);
         }
 
         //======================================piglet================================================
@@ -121,7 +140,6 @@ namespace EAR.AR
             task.OnCompleted = OnComplete;
             task.OnException += OnException;
             task.OnProgress += OnProgress;
-            OnLoadStarted?.Invoke();
         }
 
         void Update()
@@ -154,7 +172,6 @@ namespace EAR.AR
         private void OnComplete(GameObject importedModel)
         {
             loadedModel = importedModel;
-            //loadedModel.transform.parent = modelContainer.transform;
             OnLoadEnded?.Invoke();
         }
 
@@ -165,15 +182,17 @@ namespace EAR.AR
 
         //===========================================Trilib==========================================
 
-        private void LoadModelUsingTrilib(string url, string extension)
+        private void LoadModelUsingTrilib(string url)
         {
+            Debug.Log("Called url: " + url);
             var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
-            var webRequest = AssetDownloader.CreateWebRequest(url);
-            AssetDownloader.LoadModelFromUri(webRequest, OnLoad, OnMaterialsLoad, OnProgress, OnError, modelContainer, assetLoaderOptions, null, extension);
+            FileStream fs = File.Create(url);
+            AssetLoader.LoadModelFromStream(fs,"abc", ".zip", OnLoad, OnMaterialsLoad, OnProgress, OnError, modelContainer, assetLoaderOptions);
         }
 
         private void OnError(IContextualizedError obj)
         {
+            Debug.Log(obj);
             OnLoadError?.Invoke("Error loading model");
         }
 

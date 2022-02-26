@@ -76,7 +76,7 @@ namespace EAR.Editor.Presenter
         {
             if (!moduleAR.enableEditor)
             {
-                //DisableUnusedComponents();
+                DisableUnusedComponents();
             }
             modelLoader.LoadModel(moduleAR.modelUrl, moduleAR.extension);
             modelLoader.OnLoadError += OnLoadError;
