@@ -9,4 +9,5 @@ public class ModuleARInformation
     public string extension;
     public bool enableEditor;
     public bool isZipFile;
+    public bool enableScreenshot;
 }

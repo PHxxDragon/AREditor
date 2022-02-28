@@ -14,6 +14,9 @@ namespace EAR.Integration
         [DllImport("__Internal")]
         private static extern void SaveMetadata(string metadata);
 
+        [DllImport("__Internal")]
+        private static extern void SaveScreenshot(byte[] array, int size);
+
         void Start()
         {
             Debug.Log("start in react plugin");
@@ -36,6 +39,11 @@ namespace EAR.Integration
             Debug.Log("Load module called: " + paramJson);
             ModuleARInformation param = JsonUtility.FromJson<ModuleARInformation>(paramJson);
             LoadModuleCalledEvent?.Invoke(param);
+        }
+
+        public void SaveScreenshotToJs(byte[] image)
+        {
+            SaveScreenshot(image, image.Length);
         }
     }
 }

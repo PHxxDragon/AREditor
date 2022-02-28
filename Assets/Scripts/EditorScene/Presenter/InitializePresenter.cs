@@ -69,6 +69,10 @@ namespace EAR.Editor.Presenter
             {
                 DisableUnusedComponents();
             }
+            if (!moduleAR.enableScreenshot)
+            {
+                toolBar.DisableScreenshotButton();
+            }
             modelLoader.LoadModel(moduleAR.modelUrl, moduleAR.extension, moduleAR.isZipFile);
             modelLoader.OnLoadError += OnLoadError;
             imageHolder.LoadImage(moduleAR.imageUrl);

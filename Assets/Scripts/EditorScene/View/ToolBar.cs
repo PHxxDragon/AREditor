@@ -20,6 +20,8 @@ namespace EAR.View
         private Button undoButton;
         [SerializeField]
         private Button redoButton;
+        [SerializeField]
+        private Button screenshotButton;
 
         private ToolEnum activeTool;
 
@@ -27,10 +29,16 @@ namespace EAR.View
         public event Action SaveButtonClicked;
         public event Action UndoButtonClicked;
         public event Action RedoButtonClicked;
+        public event Action ScreenshotButtonClicked;
 
         public ToolEnum GetActiveTool()
         {
             return activeTool;
+        }
+
+        public void DisableScreenshotButton()
+        {
+            screenshotButton.gameObject.SetActive(false);
         }
 
         void Awake()
@@ -48,6 +56,12 @@ namespace EAR.View
             saveButton.onClick.AddListener(SaveButtonClick);
             undoButton.onClick.AddListener(UndoButtonClick);
             redoButton.onClick.AddListener(RedoButtonClick);
+            screenshotButton.onClick.AddListener(ScreenshotButtonClick);
+        }
+
+        private void ScreenshotButtonClick()
+        {
+            ScreenshotButtonClicked?.Invoke();
         }
 
         private void RedoButtonClick()
