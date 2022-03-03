@@ -18,29 +18,43 @@ namespace EAR.Selection
         {
             OnObjectSelected += AddSelectedOutline;
             OnObjectDeselected += RemoveSelectedOutline;
+
+            ApplyGlobalState();
+        }
+
+        private void ApplyGlobalState()
+        {
+            gameObject.SetActive(GlobalStates.IsEnableEditor());
+            GlobalStates.OnEnableEditorChange += (bool value) =>
+            {
+                gameObject.SetActive(value);
+            };
+        }
+
+        public bool HasSelection()
+        {
+            return _currentSelection != null;
         }
 
         void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                bool hasSelection = false;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 foreach (RaycastHit hit in Physics.RaycastAll(ray))
                 {
                     Selectable selectable = hit.transform.GetComponentInParent<Selectable>();
                     if (selectable != null && _currentSelection != selectable)
                     {
-                        hasSelection = true;
                         SelectObject(selectable);
                         IUndoRedoCommand command = new SelectCommand(selectable, SelectObject, DeselectObject);
                         NewCommandEvent?.Invoke(command);
-                        break;
+                        return;
                     }
                 }
                 bool isBlocked = false;
                 CheckMouseRaycastBlocked(ref isBlocked);
-                if (!hasSelection && !isBlocked)
+                if (!isBlocked)
                 {
                     if (_currentSelection != null)
                     {
@@ -50,6 +64,20 @@ namespace EAR.Selection
                     DeselectObject();
                 }
             }
+        }
+
+        public IUndoRedoCommand DeselectAndGetCommand()
+        {
+            if (_currentSelection != null)
+            {
+                IUndoRedoCommand command = new DeselectCommand(_currentSelection, DeselectObject, SelectObject);
+                DeselectObject();
+                return command;
+            } else
+            {
+                return null;
+            }
+            
         }
 
         private void SelectObject(Selectable selectable)

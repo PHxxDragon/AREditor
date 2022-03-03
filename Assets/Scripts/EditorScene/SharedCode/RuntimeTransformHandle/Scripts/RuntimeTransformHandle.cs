@@ -25,7 +25,6 @@ namespace RuntimeHandle
         public Camera handleCamera;
 
         public bool toolEnabled = false;
-        public bool selectionEnabled = false;
 
         public Transform target;
         public event Action<IUndoRedoCommand> NewCommandEvent;
@@ -60,6 +59,17 @@ namespace RuntimeHandle
                 handleCamera = Camera.main;
 
             _previousType = type;
+
+            ApplyGlobalStates();
+        }
+
+        private void ApplyGlobalStates()
+        {
+            gameObject.SetActive(GlobalStates.IsEnableEditor());
+            GlobalStates.OnEnableEditorChange += (bool value) =>
+            {
+                gameObject.SetActive(value);
+            };
         }
 
         void CreateHandles()
@@ -90,7 +100,7 @@ namespace RuntimeHandle
 
         public bool IsEnabled()
         {
-            return (target != null && toolEnabled && selectionEnabled);
+            return (target != null && toolEnabled);
         }
 
         void Update()

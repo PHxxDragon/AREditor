@@ -21,8 +21,9 @@ namespace EAR.EARCamera
         public KeyCode LookAroundKey = KeyCode.LeftControl;
         public KeyCode ResetKey = KeyCode.F;
 
-        public delegate void IsMouseRaycastBlocked(ref bool isBlocked);
-        public event IsMouseRaycastBlocked CheckMouseRaycastBlocked;
+        public delegate void IsBlocked(ref bool isBlocked);
+        public event IsBlocked CheckMouseRaycastBlocked;
+        public event IsBlocked CheckKeyboardBlocked;
 
         private Transform cameraTransform;
         private Transform cameraAnchorTransform;
@@ -126,14 +127,20 @@ namespace EAR.EARCamera
                 _Distance = Mathf.Clamp(_Distance, 0.015f, 100f);
                 isZooming = true;
             }
-
+            
             if (Input.GetKeyDown(ResetKey))
             {
-                _ResetT = 0f;
-                _StartResetPosition = cameraAnchorTransform.transform.position;
-                _StartResetRotation = cameraAnchorTransform.transform.rotation;
-                _StartResetDistance = _Distance;
-                isReseting = true;
+                bool isKeyboardBlocked = false;
+                CheckKeyboardBlocked?.Invoke(ref isKeyboardBlocked);
+                if (!isKeyboardBlocked)
+                {
+                    _ResetT = 0f;
+                    _StartResetPosition = cameraAnchorTransform.transform.position;
+                    _StartResetRotation = cameraAnchorTransform.transform.rotation;
+                    _StartResetDistance = _Distance;
+                    isReseting = true;
+                }
+
             }
         }
 

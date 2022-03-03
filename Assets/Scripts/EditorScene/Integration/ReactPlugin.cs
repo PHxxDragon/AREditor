@@ -23,9 +23,6 @@ namespace EAR.Integration
 #if UNITY_WEBGL == true && UNITY_EDITOR == false
         SceneLoaded();
 #endif
-#if UNITY_EDITOR == true
-            LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/2/1645864666845_wild_west_saloon.zip\",\"imageUrl\":\"\",\"metadataString\":\"\",\"extension\":\"gltf\",\"isZipFile\":true,\"enableEditor\":true}");
-#endif
         }
 
         public void Save(string metadata)

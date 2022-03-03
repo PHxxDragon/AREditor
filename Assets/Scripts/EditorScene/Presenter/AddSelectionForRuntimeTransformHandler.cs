@@ -32,7 +32,6 @@ namespace EAR.Editor.Presenter
         private void AddTarget(Selectable target)
         {
             runtimeTransformHandle.target = target.transform;
-            runtimeTransformHandle.selectionEnabled = true;
         }
 
         private void RemoveTarget(Selectable target)
@@ -40,7 +39,6 @@ namespace EAR.Editor.Presenter
             if (runtimeTransformHandle.target == target.transform)
             {
                 runtimeTransformHandle.target = null;
-                runtimeTransformHandle.selectionEnabled = false;
             }
         }
     }

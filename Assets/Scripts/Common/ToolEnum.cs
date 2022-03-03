@@ -2,7 +2,7 @@ namespace EAR
 {
     public enum ToolEnum
     {
-        CameraRotate, Move, Rotate, Scale
+        CameraRotate, Move, Rotate, Scale, AddNote
     }
 }
 

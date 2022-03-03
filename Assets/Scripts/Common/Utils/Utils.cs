@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 using System.Collections;
 using System;
 
@@ -32,6 +33,38 @@ namespace EAR
         public void GetImageAsTexture2D(string imageUrl, Action<Texture2D, object> callback, Action<string, object> errorCallback = null, object param = null)
         {
             StartCoroutine(GetImageCoroutine(imageUrl, callback, errorCallback, param));
+        }
+
+        public static Bounds GetUIBounds(GameObject UIObject)
+        {
+            Image[] images = UIObject.GetComponentsInChildren<Image>();
+            if (images.Length == 0)
+            {
+                return new Bounds();
+            }
+            var min = Vector3.positiveInfinity;
+            var max = Vector3.negativeInfinity;
+
+            foreach (var image in images)
+            {
+                if (!image) continue;
+
+                // Get the 4 corners in world coordinates
+                var v = new Vector3[4];
+                image.rectTransform.GetWorldCorners(v);
+
+                // update min and max
+                foreach (var vector3 in v)
+                {
+                    min = Vector3.Min(min, vector3);
+                    max = Vector3.Max(max, vector3);
+                }
+            }
+
+            // create the bounds
+            var bounds = new Bounds();
+            bounds.SetMinMax(min, max);
+            return bounds;
         }
 
         public static Bounds GetModelBounds(GameObject model)

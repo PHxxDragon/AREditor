@@ -2,19 +2,19 @@ using UnityEngine;
 
 namespace EAR
 {
-    public class ApplicationConfigurationHolder : MonoBehaviour
+    public class ApplicationConfigurationStatic : MonoBehaviour
     {
         private ApplicationConfiguration applicationConfiguration;
 
-        private static ApplicationConfigurationHolder instance;
+        private static ApplicationConfigurationStatic instance;
 
-        public static ApplicationConfigurationHolder Instance
+        public static ApplicationConfigurationStatic Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new GameObject().AddComponent<ApplicationConfigurationHolder>();
+                    instance = new GameObject().AddComponent<ApplicationConfigurationStatic>();
 
                     instance.applicationConfiguration = Resources.Load<ApplicationConfiguration>("ApplicationConfiguration");
                     Debug.Log(instance.applicationConfiguration.GetServerName());

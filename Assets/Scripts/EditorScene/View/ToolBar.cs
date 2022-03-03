@@ -15,6 +15,8 @@ namespace EAR.View
         [SerializeField]
         private Toggle scaleToggle;
         [SerializeField]
+        private Toggle noteAddToggle;
+        [SerializeField]
         private Button saveButton;
         [SerializeField]
         private Button undoButton;
@@ -36,11 +38,6 @@ namespace EAR.View
             return activeTool;
         }
 
-        public void DisableScreenshotButton()
-        {
-            screenshotButton.gameObject.SetActive(false);
-        }
-
         void Awake()
         {
             cameraRotateToggle.isOn = true;
@@ -53,10 +50,31 @@ namespace EAR.View
             moveToggle.onValueChanged.AddListener(MoveToggleActive);
             rotateToggle.onValueChanged.AddListener(RotateToggleActive);
             scaleToggle.onValueChanged.AddListener(ScaleToggleActive);
+            noteAddToggle.onValueChanged.AddListener(NoteToggleActive);
             saveButton.onClick.AddListener(SaveButtonClick);
             undoButton.onClick.AddListener(UndoButtonClick);
             redoButton.onClick.AddListener(RedoButtonClick);
             screenshotButton.onClick.AddListener(ScreenshotButtonClick);
+            ApplyGlobalStates();
+        }
+
+        public void SetDefaultTool()
+        {
+            cameraRotateToggle.isOn = true;
+        }
+
+        private void ApplyGlobalStates()
+        {
+            gameObject.SetActive(GlobalStates.IsEnableEditor());
+            GlobalStates.OnEnableEditorChange += (bool value) =>
+            {
+                gameObject.SetActive(value);
+            };
+            screenshotButton.gameObject.SetActive(GlobalStates.IsEnableScreenshot());
+            GlobalStates.OnEnableScreenshotChange += (bool value) =>
+            {
+                screenshotButton.gameObject.SetActive(value);
+            };
         }
 
         private void ScreenshotButtonClick()
@@ -106,6 +124,15 @@ namespace EAR.View
             {
                 OnToolChanged?.Invoke(activeTool, ToolEnum.Scale);
                 activeTool = ToolEnum.Scale;
+            }
+        }
+
+        private void NoteToggleActive(bool isOn)
+        {
+            if (isOn)
+            {
+                OnToolChanged?.Invoke(activeTool, ToolEnum.AddNote);
+                activeTool = ToolEnum.AddNote;
             }
         }
 

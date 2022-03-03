@@ -2,6 +2,7 @@ using UnityEngine;
 using EAR.AR;
 using EAR.View;
 using EAR.Integration;
+using System.Collections.Generic;
 
 namespace EAR.Editor.Presenter
 {
@@ -19,11 +20,17 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private ReactPlugin reactPlugin;
 
+        [SerializeField]
+        private GameObject noteContainer;
+
         void Start()
         {
-            if (toolBar != null)
+            if (toolBar != null && noteContainer != null)
             {
                 toolBar.SaveButtonClicked += SaveButtonClicked;
+            } else
+            {
+                Debug.Log("Unassigned references");
             }
         }
 
@@ -37,10 +44,22 @@ namespace EAR.Editor.Presenter
                 {
                     metadataObject.imageWidthInMeters = imageHolder.widthInMeter;
                 }
+
+                List<NoteData> noteDatas = new List<NoteData>();
+                foreach (Transform child in noteContainer.transform)
+                {
+                    if (child.gameObject.activeSelf)
+                    {
+                        Note note = child.GetComponent<Note>();
+                        if (note != null)
+                        {
+                            noteDatas.Add(note.GetNoteData());
+                        }
+                    }
+                }
+                metadataObject.noteDatas = noteDatas;
                 reactPlugin.Save(JsonUtility.ToJson(metadataObject));
             }
-/*            ModuleParam param = LocalStorage.Load<ModuleParam>("param");
-            webRequestHelper.SetModuleMetadata(param.token, param.moduleId, metadataObject, SetModuleMetadataSuccessCallback, SetModuleMetadataErrorCallback);*/
         }
     }
 }

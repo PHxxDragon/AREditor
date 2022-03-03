@@ -3,9 +3,6 @@ using EAR.Integration;
 using EAR.AR;
 using EAR.EARCamera;
 using EAR.View;
-using EAR.Selection;
-using RuntimeHandle;
-using EAR.UndoRedo;
 
 namespace EAR.Editor.Presenter
 {
@@ -24,15 +21,10 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private CameraController cameraController;
 
-        // for disable when not used
         [SerializeField]
-        private ToolBar toolBar;
+        private GameObject noteContainer;
         [SerializeField]
-        private SelectionManager selectionManager;
-        [SerializeField]
-        private RuntimeTransformHandle runtimeTransformHandle;
-        [SerializeField]
-        private UndoRedoManager undoRedoManager;
+        private Note notePrefab;
 
         [SerializeField]
         private Modal modalPrefab;
@@ -55,24 +47,10 @@ namespace EAR.Editor.Presenter
             }
         }
 
-        private void DisableUnusedComponents()
-        {
-            toolBar.gameObject.SetActive(false);
-            selectionManager.gameObject.SetActive(false);
-            runtimeTransformHandle.gameObject.SetActive(false);
-            undoRedoManager.gameObject.SetActive(false);
-        }
-
         private void LoadModuleCallback(ModuleARInformation moduleAR)
         {
-            if (!moduleAR.enableEditor)
-            {
-                DisableUnusedComponents();
-            }
-            if (!moduleAR.enableScreenshot)
-            {
-                toolBar.DisableScreenshotButton();
-            }
+            GlobalStates.SetEnableEditor(moduleAR.enableEditor);
+            GlobalStates.SetEnableScreenshot(moduleAR.enableScreenshot);
             modelLoader.LoadModel(moduleAR.modelUrl, moduleAR.extension, moduleAR.isZipFile);
             modelLoader.OnLoadError += OnLoadError;
             imageHolder.LoadImage(moduleAR.imageUrl);
@@ -105,6 +83,15 @@ namespace EAR.Editor.Presenter
             {
                 modelLoader.OnLoadEnded += SetDataForModel;
                 metadata = metadataObject;
+            }
+            
+            if (metadataObject.noteDatas != null)
+            {
+                foreach(NoteData noteData in metadataObject.noteDatas)
+                {
+                    Note note = Instantiate(notePrefab, noteContainer.transform);
+                    note.PopulateData(noteData);
+                }
             }
         }
 
