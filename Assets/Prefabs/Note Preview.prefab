@@ -20,6 +20,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1986636551635260989, guid: 12a2fe29cdf83814e92db79213a31bde, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1986636551635260989, guid: 12a2fe29cdf83814e92db79213a31bde, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
@@ -125,6 +129,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -7015820881939787464, guid: 12a2fe29cdf83814e92db79213a31bde, type: 3}
+    - {fileID: 2050810985359431543, guid: 12a2fe29cdf83814e92db79213a31bde, type: 3}
+    - {fileID: 7255989322571796864, guid: 12a2fe29cdf83814e92db79213a31bde, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 12a2fe29cdf83814e92db79213a31bde, type: 3}
 --- !u!1 &1333305987999371825 stripped
 GameObject:

@@ -23,12 +23,17 @@ namespace EAR.Integration
 #if UNITY_WEBGL == true && UNITY_EDITOR == false
         SceneLoaded();
 #endif
+#if UNITY_EDITOR == true
+            LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/test/models/1/1646381936963_aa.zip\",\"imageUrl\":\"\",\"metadataString\":\"\",\"extension\":\"obj\",\"isZipFile\":true,\"enableEditor\":true,\"enableScreenshot\":true}");
+#endif
         }
 
         public void Save(string metadata)
         {
             Debug.Log(metadata);
+#if UNITY_WEBGL == true && UNITY_EDITOR == false
             SaveMetadata(metadata);
+#endif
         }
 
         public void LoadModule(string paramJson)
@@ -40,7 +45,9 @@ namespace EAR.Integration
 
         public void SaveScreenshotToJs(byte[] image)
         {
+#if UNITY_WEBGL == true && UNITY_EDITOR == false
             SaveScreenshot(image, image.Length);
+#endif
         }
     }
 }

@@ -49,7 +49,6 @@ namespace EAR.Screenshoter
             yield return null;
             OnScreenshotTake?.Invoke(bytes);
             screenshotCamera.gameObject.SetActive(false);
-            Debug.Log("aaaaaaa");
         }
 
         public void TakeScreenshot()

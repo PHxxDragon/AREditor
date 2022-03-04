@@ -40,22 +40,23 @@ namespace EAR.Selection
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                foreach (RaycastHit hit in Physics.RaycastAll(ray))
-                {
-                    Selectable selectable = hit.transform.GetComponentInParent<Selectable>();
-                    if (selectable != null && _currentSelection != selectable)
-                    {
-                        SelectObject(selectable);
-                        IUndoRedoCommand command = new SelectCommand(selectable, SelectObject, DeselectObject);
-                        NewCommandEvent?.Invoke(command);
-                        return;
-                    }
-                }
                 bool isBlocked = false;
                 CheckMouseRaycastBlocked(ref isBlocked);
                 if (!isBlocked)
                 {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    foreach (RaycastHit hit in Physics.RaycastAll(ray))
+                    {
+                        Selectable selectable = hit.transform.GetComponentInParent<Selectable>();
+                        if (selectable != null && _currentSelection != selectable)
+                        {
+                            SelectObject(selectable);
+                            IUndoRedoCommand command = new SelectCommand(selectable, SelectObject, DeselectObject);
+                            NewCommandEvent?.Invoke(command);
+                            return;
+                        }
+                    }
+
                     if (_currentSelection != null)
                     {
                         IUndoRedoCommand command = new DeselectCommand(_currentSelection, DeselectObject, SelectObject);

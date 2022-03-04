@@ -57,7 +57,7 @@ namespace RuntimeHandle
             //float d = projected.x + projected.y + projected.z;
             mouseVector *= Time.deltaTime * mag * 2;
             float d = mouseVector.x + mouseVector.y;
-            delta += d / 15;
+            delta += d / 8;
 
             Vector3 rotatedAxis = _startRotation * _axis;
             Vector3 invertedRotatedAxis = Quaternion.Inverse(_startRotation) * _axis;
