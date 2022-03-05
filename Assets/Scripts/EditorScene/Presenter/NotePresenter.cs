@@ -83,6 +83,21 @@ namespace EAR.Editor.Presenter
                 undoRedoManager.AddCommand(command);
             };
 
+            noteEditorWindow.OnFontSizeChanged += (int value) =>
+            {
+                currentNote.SetFontSize(value);
+            };
+
+            noteEditorWindow.OnHeightChanged += (float value) =>
+            {
+                currentNote.SetHeight(value);
+            };
+
+            noteEditorWindow.OnBoxWidthChanged += (float value) =>
+            {
+                currentNote.SetBoxWidth(value);
+            };
+
             cameraController.CheckKeyboardBlocked += (ref bool isBlocked) =>
             {
                 if (noteEditorWindow.isActiveAndEnabled)
@@ -96,6 +111,9 @@ namespace EAR.Editor.Presenter
         {
             noteEditorWindow.SetTextInputField(currentNote.GetText());
             noteEditorWindow.SetButtonTitleInputField(currentNote.GetButtonText());
+            noteEditorWindow.SetFontSize(currentNote.GetFontSize());
+            noteEditorWindow.SetBoxWidth(currentNote.GetBoxWidth());
+            noteEditorWindow.SetHeight(currentNote.GetHeight());
         }
 
         private void OnToolbarToolChanged(ToolEnum prev, ToolEnum current)
