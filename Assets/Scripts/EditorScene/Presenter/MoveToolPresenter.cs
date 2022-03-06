@@ -17,7 +17,7 @@ namespace EAR.Editor.Presenter
         {
             if (toolbar != null && runtimeTransformHandle != null)
             {
-                SetHandle(ToolEnum.CameraRotate, toolbar.GetActiveTool());
+                SetHandle(ToolEnum.Move, toolbar.GetActiveTool());
                 toolbar.OnToolChanged += SetHandle;
             }
         }

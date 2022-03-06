@@ -1,15 +1,18 @@
 using UnityEngine;
 using RuntimeHandle;
 using EAR.Selection;
+using EAR.EARCamera;
 
 namespace EAR.Editor.Presenter
 {
-    public class AddSelectionForRuntimeTransformHandler : MonoBehaviour
+    public class RuntimeTransformHandlerPresenter : MonoBehaviour
     {
         [SerializeField]
         private RuntimeTransformHandle runtimeTransformHandle;
         [SerializeField]
         private SelectionManager selectionManager;
+        [SerializeField]
+        private CameraController cameraController;
 
         void Start()
         {
@@ -17,13 +20,17 @@ namespace EAR.Editor.Presenter
             {
                 selectionManager.OnObjectSelected += AddTarget;
                 selectionManager.OnObjectDeselected += RemoveTarget;
-                selectionManager.CheckMouseRaycastBlocked += CheckIfMouseOverHandle;
+                selectionManager.CheckMouseRaycastBlocked += CheckIfMouseDraggingHandle;
+            }
+            if (cameraController != null && runtimeTransformHandle != null)
+            {
+                cameraController.CheckMouseRaycastBlocked += CheckIfMouseDraggingHandle;
             }
         }
 
-        private void CheckIfMouseOverHandle(ref bool isOver)
+        private void CheckIfMouseDraggingHandle(ref bool isOver)
         {
-            if (runtimeTransformHandle.CheckIfMouseOverHandle())
+            if (runtimeTransformHandle.CheckIfMouseDraggingHandle())
             {
                 isOver = true;
             }

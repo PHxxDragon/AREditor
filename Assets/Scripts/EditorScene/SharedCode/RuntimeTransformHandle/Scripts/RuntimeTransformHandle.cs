@@ -44,13 +44,13 @@ namespace RuntimeHandle
 
         private TransformData _previousTransformData;
 
-        public bool CheckIfMouseOverHandle()
+        public bool CheckIfMouseDraggingHandle()
         {
             HandleBase handle = null;
             Vector3 hitPoint = Vector3.zero;
             GetHandle(ref handle, ref hitPoint);
 
-            return handle != null;
+            return handle != null || _draggingHandle != null;
         }
 
         void Start()

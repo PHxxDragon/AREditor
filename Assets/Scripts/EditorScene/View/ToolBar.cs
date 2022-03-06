@@ -7,8 +7,6 @@ namespace EAR.View
     public class ToolBar: MonoBehaviour
     {
         [SerializeField]
-        private Toggle cameraRotateToggle;
-        [SerializeField]
         private Toggle moveToggle;
         [SerializeField]
         private Toggle rotateToggle;
@@ -40,13 +38,12 @@ namespace EAR.View
 
         void Awake()
         {
-            cameraRotateToggle.isOn = true;
-            activeTool = ToolEnum.CameraRotate;
+            moveToggle.isOn = true;
+            activeTool = ToolEnum.Move;
         }
 
         void Start()
         {
-            cameraRotateToggle.onValueChanged.AddListener(CameraRotateToggleActive);
             moveToggle.onValueChanged.AddListener(MoveToggleActive);
             rotateToggle.onValueChanged.AddListener(RotateToggleActive);
             scaleToggle.onValueChanged.AddListener(ScaleToggleActive);
@@ -60,7 +57,7 @@ namespace EAR.View
 
         public void SetDefaultTool()
         {
-            cameraRotateToggle.isOn = true;
+            moveToggle.isOn = true;
         }
 
         private void ApplyGlobalStates()
@@ -90,15 +87,6 @@ namespace EAR.View
         private void UndoButtonClick()
         {
             UndoButtonClicked?.Invoke();
-        }
-
-        private void CameraRotateToggleActive(bool isOn)
-        {
-            if (isOn)
-            {
-                OnToolChanged?.Invoke(activeTool, ToolEnum.CameraRotate);
-                activeTool = ToolEnum.CameraRotate;
-            }
         }
 
         private void MoveToggleActive(bool isOn)
