@@ -7,6 +7,7 @@ namespace EAR.Integration
     public class ReactPlugin : MonoBehaviour
     {
         public event Action<ModuleARInformation> LoadModuleCalledEvent;
+        public event Action<string> LanguageChangeEvent;
 
         [DllImport("__Internal")]
         private static extern void SceneLoaded();
@@ -24,7 +25,7 @@ namespace EAR.Integration
         SceneLoaded();
 #endif
 #if UNITY_EDITOR == true
-            LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/test/models/1/1646381936963_aa.zip\",\"imageUrl\":\"\",\"metadataString\":\"\",\"extension\":\"obj\",\"isZipFile\":true,\"enableEditor\":true,\"enableScreenshot\":true}");
+            LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646720686211_enc_aa.zip\",\"imageUrl\":\"\",\"metadataString\":\"\",\"extension\":\"obj\",\"isZipFile\":true,\"enableEditor\":true,\"enableScreenshot\":true}");
 #endif
         }
 
@@ -41,6 +42,11 @@ namespace EAR.Integration
             Debug.Log("Load module called: " + paramJson);
             ModuleARInformation param = JsonUtility.FromJson<ModuleARInformation>(paramJson);
             LoadModuleCalledEvent?.Invoke(param);
+        }
+
+        public void SetLanguage(string language)
+        {
+            LanguageChangeEvent?.Invoke(language);
         }
 
         public void SaveScreenshotToJs(byte[] image)

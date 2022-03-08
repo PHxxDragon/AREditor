@@ -31,7 +31,7 @@ namespace EAR.View
             button.onClick.AddListener(() =>
             {
                 if (!isCompleted) return;
-
+                
                 if (noteContainer.transform.localScale != Vector3.zero)
                 {
                     isCompleted = false;
@@ -67,6 +67,10 @@ namespace EAR.View
             noteData.buttonTitle = button_text.text;
             noteData.noteTransformData = TransformData.TransformToTransformData(transform);
             noteData.noteContentRectTransformData = RectTransformData.RectTransformToRectTransformData(noteContainer);
+            if (noteData.noteContentRectTransformData.localScale == Vector3.zero)
+            {
+                noteData.noteContentRectTransformData.localScale = originalScale;
+            }
             noteData.boxWidth = GetBoxWidth();
             noteData.height = GetHeight();
             noteData.fontSize = GetFontSize();
