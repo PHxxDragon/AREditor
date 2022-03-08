@@ -2,6 +2,10 @@ using UnityEngine;
 using System;
 using TriLibCore;
 using Piglet;
+using UnityEngine.Networking;
+using EAR.DownloadHandler;
+using System.Collections;
+
 namespace EAR.AR
 {
     public class ModelLoader : MonoBehaviour
@@ -14,6 +18,9 @@ namespace EAR.AR
         [SerializeField]
         private GameObject modelContainer;
 
+        [SerializeField]
+        private string key;
+
         private GameObject loadedModel;
         private GltfImportTask task;
 
@@ -21,21 +28,52 @@ namespace EAR.AR
         {
             return loadedModel;
         }
-/*        void Start()
-        {
-            LoadModel("D:\\Mon hoc\\Nam 4 ky 1\\luan van\\EAR_OLD\\backend\\public\\wolf_with_animations.zip");
-        }*/
 
         public void LoadModel(string url, string extension, bool isZipFile)
         {
-            if (extension == "gltf" || extension == "glb")
+            StartCoroutine(LoadModelCoroutine(url, extension, isZipFile));
+        }
+
+        private IEnumerator LoadModelCoroutine(string url, string extension, bool isZipFile)
+        {
+            OnLoadStarted?.Invoke();
+            string filePath = Application.persistentDataPath + "/model";
+            bool error = false;
+            using (UnityWebRequest uwr = UnityWebRequest.Get(url))
             {
-                LoadModelUsingPiglet(url);
-            } else
-            {
-                LoadModelUsingTrilib(url, extension, isZipFile);
+                byte[] buffer = new byte[1024 * 1024];
+                uwr.downloadHandler = new DecryptDownloadHandler(buffer, Utils.StringToByteArrayFastest(key), filePath);
+
+                UnityWebRequestAsyncOperation operation = uwr.SendWebRequest();
+                while (!operation.isDone)
+                {
+                    OnLoadProgressChanged?.Invoke(uwr.downloadProgress, "Downloading ");
+                    yield return null;
+                }
+                if (uwr.result == UnityWebRequest.Result.ConnectionError)
+                {
+                    Debug.Log("Connection Error: " + uwr.error);
+                    error = true;
+                    OnLoadError?.Invoke("Connection error");
+                }
+                else if (uwr.result == UnityWebRequest.Result.ProtocolError)
+                {
+                    Debug.Log("Protocol Error: " + uwr.error);
+                    error = true;
+                    OnLoadError?.Invoke(uwr.error);
+                }
             }
-            
+            if (!error)
+            {
+                if (extension == "gltf" || extension == "glb")
+                {
+                    LoadModelUsingPiglet(filePath);
+                }
+                else
+                {
+                    LoadModelUsingTrilib(filePath, extension, isZipFile);
+                }
+            }
         }
 
         //======================================piglet================================================
@@ -46,7 +84,6 @@ namespace EAR.AR
             task.OnCompleted = OnComplete;
             task.OnException += OnException;
             task.OnProgress += OnProgress;
-            OnLoadStarted?.Invoke();
         }
 
         void Update()
@@ -90,12 +127,17 @@ namespace EAR.AR
 
         //===========================================Trilib==========================================
 
-        private void LoadModelUsingTrilib(string url, string extension, bool isZipFile)
+        private void LoadModelUsingTrilib(string path, string extension, bool isZipFile)
         {
             var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
-            var webRequest = AssetDownloader.CreateWebRequest(url);
-            AssetDownloader.LoadModelFromUri(webRequest, OnLoad, OnMaterialsLoad, OnProgress, OnError, modelContainer, assetLoaderOptions, null, extension, isZipFile);
-            OnLoadStarted?.Invoke();
+            if (isZipFile)
+            {
+                AssetLoaderZip.LoadModelFromZipFile(path, OnLoad, OnMaterialsLoad, OnProgress, OnError, null, assetLoaderOptions);
+            }
+            else
+            {
+                AssetLoader.LoadModelFromFile(path, OnLoad, OnMaterialsLoad, OnProgress, OnError, null, assetLoaderOptions);
+            }
         }
 
         private void OnError(IContextualizedError obj)
