@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.IO;
 using TriLibCore;
 using Piglet;
 using UnityEngine.Networking;
@@ -18,9 +19,6 @@ namespace EAR.AR
         [SerializeField]
         private GameObject modelContainer;
 
-        [SerializeField]
-        private string key;
-
         private GameObject loadedModel;
         private GltfImportTask task;
 
@@ -37,12 +35,12 @@ namespace EAR.AR
         private IEnumerator LoadModelCoroutine(string url, string extension, bool isZipFile)
         {
             OnLoadStarted?.Invoke();
-            string filePath = Application.persistentDataPath + "/model";
             bool error = false;
+            byte[] data = null;
             using (UnityWebRequest uwr = UnityWebRequest.Get(url))
             {
                 byte[] buffer = new byte[1024 * 1024];
-                uwr.downloadHandler = new DecryptDownloadHandler(buffer, Utils.StringToByteArrayFastest(key), filePath);
+                uwr.downloadHandler = new DecryptDownloadHandler(buffer);
 
                 UnityWebRequestAsyncOperation operation = uwr.SendWebRequest();
                 while (!operation.isDone)
@@ -61,26 +59,29 @@ namespace EAR.AR
                     Debug.Log("Protocol Error: " + uwr.error);
                     error = true;
                     OnLoadError?.Invoke(uwr.error);
+                } else
+                {
+                    data = uwr.downloadHandler.data;
                 }
             }
             if (!error)
             {
                 if (extension == "gltf" || extension == "glb")
                 {
-                    LoadModelUsingPiglet(filePath);
+                    LoadModelUsingPiglet(data);
                 }
                 else
                 {
-                    LoadModelUsingTrilib(filePath, extension, isZipFile);
+                    LoadModelUsingTrilib(data, extension, isZipFile);
                 }
             }
         }
 
         //======================================piglet================================================
 
-        private void LoadModelUsingPiglet(string url)
+        private void LoadModelUsingPiglet(byte[] data)
         {
-            task = RuntimeGltfImporter.GetImportTask(url);
+            task = RuntimeGltfImporter.GetImportTask(data);
             task.OnCompleted = OnComplete;
             task.OnException += OnException;
             task.OnProgress += OnProgress;
@@ -118,6 +119,7 @@ namespace EAR.AR
             loadedModel = importedModel;
             //loadedModel.transform.parent = modelContainer.transform;
             OnLoadEnded?.Invoke();
+            
         }
 
         private void OnException(Exception e)
@@ -127,16 +129,17 @@ namespace EAR.AR
 
         //===========================================Trilib==========================================
 
-        private void LoadModelUsingTrilib(string path, string extension, bool isZipFile)
+        private void LoadModelUsingTrilib(byte[] data, string extension, bool isZipFile)
         {
             var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
+            using MemoryStream memoryStream = new MemoryStream(data);
             if (isZipFile)
             {
-                AssetLoaderZip.LoadModelFromZipFile(path, OnLoad, OnMaterialsLoad, OnProgress, OnError, null, assetLoaderOptions);
+                AssetLoaderZip.LoadModelFromZipStream(memoryStream, OnLoad, OnMaterialsLoad, OnProgress, OnError, null, assetLoaderOptions);
             }
             else
             {
-                AssetLoader.LoadModelFromFile(path, OnLoad, OnMaterialsLoad, OnProgress, OnError, null, assetLoaderOptions);
+                AssetLoader.LoadModelFromStream(memoryStream, "model." + extension, extension, OnLoad, OnMaterialsLoad, OnProgress, OnError, null, assetLoaderOptions);
             }
         }
 
