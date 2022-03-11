@@ -13,6 +13,8 @@ namespace EAR.Screenshoter
         private Camera screenshotCamera;
         [SerializeField]
         private Camera targetCamera;
+        [SerializeField]
+        private GameObject canvasToHide;
 
         private bool takeScreenshotOnNextFrame;
 
@@ -41,6 +43,7 @@ namespace EAR.Screenshoter
 
                 RenderTexture.ReleaseTemporary(renderTexture);
                 screenshotCamera.targetTexture = null;
+                canvasToHide.SetActive(true);
             }
         }
 
@@ -53,6 +56,7 @@ namespace EAR.Screenshoter
 
         public void TakeScreenshot()
         {
+            canvasToHide.SetActive(false);
             screenshotCamera.gameObject.SetActive(true);
             CopyTransform(targetCamera.transform, screenshotCamera.transform);
             screenshotCamera.targetTexture = RenderTexture.GetTemporary(Screen.width, Screen.height, 16);

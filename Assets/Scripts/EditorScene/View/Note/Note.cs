@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using EAR.Localization;
 using DG.Tweening;
 
 namespace EAR.View
@@ -28,6 +29,8 @@ namespace EAR.View
 
         void Start()
         {
+            text.text = LocalizationManager.GetLocalizedText("NoteFirstText");
+            button_text.text = LocalizationManager.GetLocalizedText("ButtonFirstText");
             button.onClick.AddListener(() =>
             {
                 if (!isCompleted) return;

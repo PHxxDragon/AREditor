@@ -12,8 +12,10 @@ namespace EAR.Localization
         [SerializeField]
         private GameObject canvas;
 
-        private List<Dictionary<string, string>> database = new List<Dictionary<string, string>>();
-        private Dictionary<string, int> codeToIndex = new Dictionary<string, int>();
+        private static List<Dictionary<string, string>> database = new List<Dictionary<string, string>>();
+        private static Dictionary<string, int> codeToIndex = new Dictionary<string, int>();
+
+        private static string currentLocale;
 
         private bool loaded = false;
         void Start()
@@ -42,8 +44,24 @@ namespace EAR.Localization
             loaded = true;
         }
 
+        public static string GetLocalizedText(string key)
+        {
+            if (currentLocale != null && 
+                database[codeToIndex[currentLocale]] != null && 
+                database[codeToIndex[currentLocale]].ContainsKey(key))
+            {
+                return database[codeToIndex[currentLocale]][key];
+            } else
+            {
+                //Debug.LogError("Cannot find key in database");
+                return "";
+            }
+            
+        }
+
         public void ApplyLocalization(string locale)
         {
+            currentLocale = locale;
             StartCoroutine(ApplyLocalizationCoroutine(locale));
         }
 
@@ -76,7 +94,12 @@ namespace EAR.Localization
             {
                 if (line[currentChar] == ',' && (numOfQuote % 2 == 0))
                 {
-                    result.Add(line.Substring(afterLastComma, currentChar - afterLastComma));
+                    string token = line.Substring(afterLastComma, currentChar - afterLastComma);
+                    if (token[0] == '"' && token[token.Length - 1] == '"')
+                    {
+                        token = token.Substring(1, token.Length - 2);
+                    }
+                    result.Add(token);
                     afterLastComma = currentChar + 1;
                 }
                 else if (line[currentChar] == '\"')

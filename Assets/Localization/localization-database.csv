@@ -10,6 +10,16 @@ Rotate,Rotate,Xoay
 Scale,Scale,Thu phóng
 Undo,Undo,Hoàn tác
 Redo,Redo,Quay lại
-AddNote,Add note,Thêm note
+AddNote,Add note,Thêm ghi chú
 Screenshot,Screenshot,Chụp hình
 Save,Save,Lưu
+EditNote,Edit note,Sửa ghi chú
+NoteContent,Note content,Nội dung
+EnterText,Enter text...,Nhập nội dung...
+FontSize,Font size,Cỡ chữ
+BoxWidth,Box width,Độ rộng khung
+Height,Height,Độ cao
+ButtonText,Button text,Chữ nút bấm
+Delete,Delete,Xóa
+NoteFirstText,"Your text is here, click to edit note",Nhấp vào đây để sửa text
+ButtonFirstText,Open note,Mở note

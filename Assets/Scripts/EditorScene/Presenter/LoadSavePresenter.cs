@@ -8,8 +8,8 @@ namespace EAR.Editor.Presenter
 {
     public class LoadSavePresenter : MonoBehaviour
     {
-        [SerializeField]
-        private ImageHolder imageHolder;
+/*        [SerializeField]
+        private ImageHolder imageHolder;*/
 
         [SerializeField]
         private ModelLoader modelLoader;
@@ -40,10 +40,10 @@ namespace EAR.Editor.Presenter
             {
                 MetadataObject metadataObject = new MetadataObject();
                 metadataObject.modelTransform = TransformData.TransformToTransformData(modelLoader.GetModel().transform);
-                if (imageHolder.gameObject.activeSelf)
+/*                if (imageHolder.gameObject.activeSelf)
                 {
                     metadataObject.imageWidthInMeters = imageHolder.widthInMeter;
-                }
+                }*/
 
                 List<NoteData> noteDatas = new List<NoteData>();
                 foreach (Transform child in noteContainer.transform)

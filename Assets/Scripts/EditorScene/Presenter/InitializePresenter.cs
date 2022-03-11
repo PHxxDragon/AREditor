@@ -12,8 +12,8 @@ namespace EAR.Editor.Presenter
         private ReactPlugin reactPlugin;
         [SerializeField]
         private ModelLoader modelLoader;
-        [SerializeField]
-        private ImageHolder imageHolder;
+/*        [SerializeField]
+        private ImageHolder imageHolder;*/
         [SerializeField]
         private float scaleToSize = 0.5f;
         [SerializeField]
@@ -53,7 +53,7 @@ namespace EAR.Editor.Presenter
             GlobalStates.SetEnableScreenshot(moduleAR.enableScreenshot);
             modelLoader.LoadModel(moduleAR.modelUrl, moduleAR.extension, moduleAR.isZipFile);
             modelLoader.OnLoadError += OnLoadError;
-            imageHolder.LoadImage(moduleAR.imageUrl);
+            //imageHolder.LoadImage(moduleAR.imageUrl);
             MetadataObject metadataObject = JsonUtility.FromJson<MetadataObject>(moduleAR.metadataString);
             if (metadataObject == null)
             {
@@ -74,7 +74,10 @@ namespace EAR.Editor.Presenter
 
         private void ApplyMetadata(MetadataObject metadataObject)
         {
-            imageHolder.widthInMeter = metadataObject.imageWidthInMeters;
+/*            if (metadataObject.imageWidthInMeters != 0)
+            {
+                imageHolder.widthInMeter = metadataObject.imageWidthInMeters;
+            }*/
             if (modelLoader.GetModel() != null)
             {
                 TransformData.TransformDataToTransfrom(metadataObject.modelTransform, modelLoader.GetModel().transform);

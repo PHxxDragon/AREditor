@@ -7,7 +7,7 @@ namespace EAR
     public class MetadataObject
     {
         public TransformData modelTransform;
-        public float imageWidthInMeters;
+/*        public float imageWidthInMeters;*/
         public List<NoteData> noteDatas;
     }
 }

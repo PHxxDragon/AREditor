@@ -11,7 +11,7 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private LocalizationManager localizationManager;
 
-        void Start()
+        void Awake()
         {
             if (reactPlugin != null && localizationManager != null)
             {
