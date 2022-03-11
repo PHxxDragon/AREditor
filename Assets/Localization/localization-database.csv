@@ -21,5 +21,5 @@ BoxWidth,Box width,Độ rộng khung
 Height,Height,Độ cao
 ButtonText,Button text,Chữ nút bấm
 Delete,Delete,Xóa
-NoteFirstText,"Your text is here, click to edit note",Nhấp vào đây để sửa text
-ButtonFirstText,Open note,Mở note
+NoteFirstText,"Your text is here, click to edit note",Nhấp vào đây để sửa ghi chú
+ButtonFirstText,Open note,Mở ghi chú
