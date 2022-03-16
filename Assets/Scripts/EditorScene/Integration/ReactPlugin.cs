@@ -8,6 +8,8 @@ namespace EAR.Integration
     {
         public event Action<ModuleARInformation> LoadModuleCalledEvent;
         public event Action<string> LanguageChangeEvent;
+        public event Action<bool> OnSetEnableEditor;
+        public event Action<bool> OnSetEnableScreenshot;
 
         [DllImport("__Internal")]
         private static extern void SceneLoaded();
@@ -46,6 +48,18 @@ namespace EAR.Integration
             Debug.Log("Load module called: " + paramJson);
             ModuleARInformation param = JsonUtility.FromJson<ModuleARInformation>(paramJson);
             LoadModuleCalledEvent?.Invoke(param);
+        }
+
+        public void SetEnableEditor(int enable)
+        {
+            Debug.Log("enable editor: " + enable);
+            OnSetEnableEditor?.Invoke(enable != 0);
+        }
+
+        public void SetEnableScreenshot(int enable)
+        {
+            Debug.Log("enable screenshot: " + enable);
+            OnSetEnableScreenshot?.Invoke(enable != 0);
         }
 
         public void SetLanguage(string language)

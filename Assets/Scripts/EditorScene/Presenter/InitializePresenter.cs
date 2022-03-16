@@ -40,6 +40,14 @@ namespace EAR.Editor.Presenter
             if (reactPlugin != null)
             {
                 reactPlugin.LoadModuleCalledEvent += LoadModuleCallback;
+                reactPlugin.OnSetEnableEditor += (enable) =>
+                {
+                    GlobalStates.SetEnableEditor(enable);
+                };
+                reactPlugin.OnSetEnableScreenshot += (enable) =>
+                {
+                    GlobalStates.SetEnableScreenshot(enable);
+                };
             }
             else
             {

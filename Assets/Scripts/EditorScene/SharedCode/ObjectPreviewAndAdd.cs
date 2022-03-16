@@ -26,11 +26,12 @@ namespace EAR.AddObject
             }
         }
 
-        public void StartPreviewAndAdd(GameObject objectPrefab, GameObject previewPrefab, Action<GameObject> callback = null)
+        public void StartPreviewAndAdd(GameObject objectPrefab, GameObject previewPrefab, Action<GameObject> callback = null, Action<GameObject> previewInitCallback = null)
         {
             isPreviewOn = true;
             this.objectPrefab = objectPrefab;
             previewObject = Instantiate(previewPrefab);
+            previewInitCallback?.Invoke(previewObject);
             previewObject.SetActive(false);
             this.callback = callback;
         }

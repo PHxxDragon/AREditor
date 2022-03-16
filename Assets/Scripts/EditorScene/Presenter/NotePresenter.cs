@@ -122,10 +122,14 @@ namespace EAR.Editor.Presenter
             {
                 objectPreviewAndAdd.StartPreviewAndAdd(notePrefab, notePreviewPrefab, (GameObject note) =>
                 {
+                    note.GetComponent<Note>().InitNoteData();
                     note.transform.parent = noteContainer.transform;
                     toolBar.SetDefaultTool();
                     IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<Note>());
                     undoRedoManager.AddCommand(command);
+                }, (GameObject note) =>
+                {
+                    note.GetComponent<Note>().InitNoteData();
                 });
             } else
             {

@@ -29,8 +29,6 @@ namespace EAR.View
 
         void Start()
         {
-            text.text = LocalizationManager.GetLocalizedText("NoteFirstText");
-            button_text.text = LocalizationManager.GetLocalizedText("ButtonFirstText");
             button.onClick.AddListener(() =>
             {
                 if (!isCompleted) return;
@@ -61,6 +59,12 @@ namespace EAR.View
                     canvas.worldCamera = eventCamera;
                 }
             }
+        }
+
+        public void InitNoteData()
+        {
+            text.text = LocalizationManager.GetLocalizedText("NoteFirstText");
+            button_text.text = LocalizationManager.GetLocalizedText("ButtonFirstText");
         }
 
         public NoteData GetNoteData()
