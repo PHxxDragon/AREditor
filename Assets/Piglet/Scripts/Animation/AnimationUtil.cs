@@ -58,8 +58,8 @@ namespace Piglet
             GameObject o, string parentPath, AnimationClip clip)
         {
 
-            string path = parentPath != ""? string.Format("{0}/{1}", parentPath, o.name): o.name;
-            
+            string path = parentPath != "" ? string.Format("{0}/{1}", parentPath, o.name) : o.name;
+
 
             var position = o.transform.localPosition;
 

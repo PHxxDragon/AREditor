@@ -195,69 +195,6 @@ namespace Piglet
         }
 
         /// <summary>
-        /// <para>Get the default material, which is used whenever
-        /// a mesh is not explicitly assigned a material.</para>
-        /// <para>Note!: This method must be called after populating
-        /// the `Materials` array with all of the materials
-        /// from the glTF file. Otherwise, the indices in the
-        /// `Materials` array will not match the material indices
-        /// in the glTF file, and the importer will assign the wrong
-        /// materials to the meshes.</para>
-        /// </summary>
-        /// <param name="create">
-        /// create the default material if it does not already exist
-        /// </param>
-        public Material GetDefaultMaterial(bool create)
-        {
-            if (DefaultMaterialIndex < 0)
-            {
-                if (!create)
-                    return null;
-
-                string shaderName;
-
-                var pipeline = RenderPipelineUtil.GetRenderPipeline(true);
-                switch (pipeline)
-                {
-                    case RenderPipelineType.BuiltIn:
-                        shaderName = "Piglet/MetallicRoughnessOpaque";
-                        break;
-                    case RenderPipelineType.URP:
-                        shaderName = "Shader Graphs/URPMetallicRoughnessOpaque";
-                        break;
-                    default:
-                        throw new Exception("current render pipeline unsupported, " +
-                            " GetRenderPipeline should have thrown exception");
-                }
-
-                Shader shader = Shader.Find(shaderName);
-                if (shader == null)
-                {
-                    if (pipeline == RenderPipelineType.URP)
-                        throw new Exception(String.Format(
-                            "Piglet failed to load URP shader \"{0}\". Please ensure that " +
-                            "you have installed the URP shaders from the appropriate .unitypackage " +
-                            "in Assets/Piglet/Extras, and that the shaders are being included " +
-                            "your build.",
-                            shaderName));
-
-                    throw new Exception(String.Format(
-                        "Piglet failed to load shader \"{0}\". Please ensure that " +
-                        "this shader is being included your build.",
-                        shaderName));
-                }
-
-                DefaultMaterialIndex = Materials.Count;
-
-                var material = new Material(shader) {name = "default"};
-
-                Materials.Add(material);
-            }
-
-            return Materials[DefaultMaterialIndex];
-        }
-
-        /// <summary>
         /// Remove a game object from the Unity scene and from memory.
         /// </summary>
         protected static void Destroy(GameObject gameObject)

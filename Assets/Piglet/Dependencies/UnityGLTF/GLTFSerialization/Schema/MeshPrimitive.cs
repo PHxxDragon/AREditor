@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Piglet.GLTF.Extensions;
-using Newtonsoft.Json;
+using Piglet.Newtonsoft.Json;
 
 namespace Piglet.GLTF.Schema
 {

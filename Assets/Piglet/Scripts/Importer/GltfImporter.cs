@@ -337,6 +337,22 @@ namespace Piglet
 		/// </summary>
 		protected IEnumerable<string> ResolveUri(string uriStr)
 		{
+			// Special case: Check if the input URI is a data
+			// URI (i.e. base64-encoded data). It's necessary
+			// that we check for this up front because the
+			// `Uri` constructor below can not handle super-long
+			// URIs and will fail with a UriFormatException
+			// ("The Uri string is too long.").
+			//
+			// This fixes piglet-viewer issue #3:
+			// https://github.com/AwesomesauceLabs/piglet-viewer/issues/3
+
+			if (UriUtil.IsDataUri(uriStr))
+			{
+				yield return uriStr;
+				yield break;
+			}
+
 			// If the given URI is absolute, we don't need to resolve it.
 
 			Uri uri = new Uri(uriStr, UriKind.RelativeOrAbsolute);
@@ -812,7 +828,8 @@ namespace Piglet
 			// Generates asset names that are: (1) unique, (2) safe to use as filenames,
 			// and (3) similar to the original entity name from the glTF file (if any).
 
-			var assetNameGenerator = new AssetNameGenerator("texture");
+			var assetNameGenerator = new NameGenerator(
+				"texture", AssetPathUtil.GetLegalAssetName);
 
 			// Build a list of texture loading tasks (IEnumerators), so that we can load
 			// the textures in parallel. This is much faster than loading the textures
@@ -1113,20 +1130,71 @@ namespace Piglet
 			yield return GetSceneObject();
 		}
 
+        /// <summary>
+        /// Create a default (plain white) material to be used whenever
+        /// a glTF mesh primitive does not explicitly specify a material.
+        /// </summary>
+		protected void LoadDefaultMaterial()
+		{
+			string shaderName;
+
+			var pipeline = RenderPipelineUtil.GetRenderPipeline(true);
+			switch (pipeline)
+			{
+				case RenderPipelineType.BuiltIn:
+					shaderName = "Piglet/MetallicRoughnessOpaque";
+					break;
+				case RenderPipelineType.URP:
+					shaderName = "Shader Graphs/URPMetallicRoughnessOpaqueOrMask";
+					break;
+				default:
+					throw new Exception("current render pipeline unsupported, " +
+						" GetRenderPipeline should have thrown exception");
+			}
+
+			Shader shader = Shader.Find(shaderName);
+			if (shader == null)
+			{
+				if (pipeline == RenderPipelineType.URP)
+					throw new Exception(String.Format(
+						"Piglet failed to load URP shader \"{0}\". Please ensure that " +
+						"you have installed the URP shaders from the appropriate .unitypackage " +
+						"in Assets/Piglet/Extras, and that the shaders are being included " +
+						"your build.",
+						shaderName));
+
+				throw new Exception(String.Format(
+					"Piglet failed to load shader \"{0}\". Please ensure that " +
+					"this shader is being included your build.",
+					shaderName));
+			}
+
+			_imported.DefaultMaterialIndex = _imported.Materials.Count;
+			var material = new UnityEngine.Material(shader) {name = "default"};
+			_imported.Materials.Add(material);
+		}
+
 		/// <summary>
 		/// Create Unity materials from glTF material definitions.
 		/// </summary>
 		virtual protected IEnumerable LoadMaterials()
 		{
 			if (_root.Materials == null || _root.Materials.Count == 0)
+			{
+				// If the model defines meshes but not materials,
+				// we need to create a default material.
+				if (_root.Meshes != null && _root.Meshes.Count > 0)
+					LoadDefaultMaterial();
 				yield break;
+			}
 
 			_progressCallback?.Invoke(GltfImportStep.Material, 0, _root.Materials.Count);
 
 			// Generates asset names that are: (1) unique, (2) safe to use as filenames,
 			// and (3) similar to the original entity name from the glTF file (if any).
 
-			var assetNameGenerator = new AssetNameGenerator("material");
+			var assetNameGenerator = new NameGenerator(
+				"material", AssetPathUtil.GetLegalAssetName);
 
 			// Set to true if the model uses one or more transparent materials.
 
@@ -1147,6 +1215,36 @@ namespace Piglet
 
 				yield return null;
 			}
+
+			// Create a default material if there are any mesh primitives
+			// that don't explicitly specify a material.
+			//
+			// Note!: This material must be created after populating
+			// the `Materials` array with all of the materials
+			// from the glTF file. Otherwise, the indices in the
+			// `Materials` array will not match the material indices
+			// from the glTF file, and the importer will assign the wrong
+			// materials to the meshes.
+
+			var needsDefaultMaterial = false;
+
+			if (_root.Meshes != null)
+			{
+				foreach (var mesh in _root.Meshes)
+				{
+					if (mesh.Primitives == null)
+						continue;
+
+					foreach (var primitive in mesh.Primitives)
+					{
+						if (primitive.Material == null)
+							needsDefaultMaterial = true;
+					}
+				}
+			}
+
+			if (needsDefaultMaterial)
+				LoadDefaultMaterial();
 
 			// Transparency workaround for URP.
 			//
@@ -1541,7 +1639,8 @@ namespace Piglet
 			// Generates asset names that are: (1) unique, (2) safe to use as filenames,
 			// and (3) similar to the original entity name from the glTF file (if any).
 
-			var assetNameGenerator = new AssetNameGenerator("mesh");
+			var assetNameGenerator = new NameGenerator(
+				"mesh", AssetPathUtil.GetLegalAssetName);
 
 			for(int i = 0; i < _root.Meshes.Count; ++i)
 			{
@@ -1642,7 +1741,8 @@ namespace Piglet
 				// Get Unity material for mesh primitive.
 
 				var material = primitive.Material != null && primitive.Material.Id >= 0
-					? _imported.Materials[primitive.Material.Id] : _imported.GetDefaultMaterial(true);
+					? _imported.Materials[primitive.Material.Id]
+					: _imported.Materials[_imported.DefaultMaterialIndex];
 
 				mesh.Add(new KeyValuePair<UnityEngine.Mesh, UnityEngine.Material>(
 					meshPrimitive, material));
@@ -2072,19 +2172,26 @@ namespace Piglet
 		}
 
 		/// <summary>
+		/// <para>
 		/// Set up mesh nodes in the scene hierarchy by
 		/// attaching MeshFilter/MeshRenderer components
 		/// and linking them to the appropriate
-		/// meshes/materials.
-		///
-		/// If a glTF mesh has more than one primitive,
-		/// we must create a seperate GameObject for each additional
-		/// primitive with its own MeshFilter/MeshRenderer,
-		/// which are added as siblings of the GameObject for
-		/// mesh primitive 0. See documentation of
-		/// GltfImportCache.NodeToMeshPrimitives for further discussion.
+		/// mesh and material.
+		/// </para>
+		/// <para>
+		/// In the case where a glTF mesh has multiple primitives,
+		/// we must add a separate GameObject to the scene hierarchy
+		/// for each primitive, because Unity only allows one mesh/material
+		/// per GameObject. The additional GameObjects for
+		/// primitive 1..n are added as siblings of the GameObject for
+		/// primitive 0.
+		/// </para>
 		/// </summary>
-		protected void SetupMeshNodes()
+		/// <param name="nameGenerator">
+		/// Generates unique names for any additional GameObjects we create
+		/// for multi-primitive meshes.
+		/// </param>
+		protected void SetupMeshNodes(NameGenerator nameGenerator)
 		{
 			foreach (var kvp in _imported.Nodes)
 			{
@@ -2110,8 +2217,23 @@ namespace Piglet
 					}
 					else
 					{
-						primitiveNode = createGameObject(
-							node.Name ?? "GLTFNode_" + nodeIndex);
+						// In the case where a glTF mesh has multiple primitives,
+						// `nameGenerator` is used to generate a unique name
+						// for the GameObject corresponding to each primitive.
+						//
+						// This is important in order for multi-primitive meshes
+						// to be animated correctly. If all of the GameObjects for
+						// the primitives were given the same name, then only the first
+						// primitive would be animated while the other primitives would
+						// remain stationary. This happens because Unity AnimationClip's
+						// use a "node path" to identify the location of the target GameObject
+						// in the scene hierarchy (e.g. "Torso/LeftLeg/LeftFoot"), and Unity
+						// assumes that such paths are unique.
+
+						var name = nameGenerator.GenerateName(gameObject.name);
+
+						primitiveNode = new GameObject(name);
+
 						primitiveNode.transform.localPosition
 							= gameObject.transform.localPosition;
 						primitiveNode.transform.localRotation
@@ -2138,15 +2260,25 @@ namespace Piglet
 			}
 		}
 
-		virtual protected GameObject createGameObject(string name)
+		/// <summary>
+		/// <para>
+		/// Given a suggested name for a GameObject, return a "clean" version
+		/// of the name where all occurrences of "/" or "." have been replaced
+		/// with "_".
+		/// </para>
+		/// <para>
+		/// The "/" and "." characters must be masked out because they
+		/// cause problems with Unity's animation APIs. The "/" character causes problems
+		/// because AnimationClip's use "/"-separated node paths (e.g. "Torso/LeftLeg/LeftFoot")
+		/// to identify the target GameObjects to be animated. Similarly,
+		/// "." causes problems because it is used as the separator character
+		/// between layer name and state name when identifying AnimatorController
+		/// states (e.g. "Base Layer.Idle State").
+		/// </para>
+		/// </summary>
+		static string GetLegalGameObjectName(string suggestedName)
 		{
-			// Replace '\', '/', and '.' in GameObject names, since these
-			// characters can cause problems when the GameObject names
-			// are used in an animation path. For example, see:
-			// https://issuetracker.unity3d.com/issues/animator-component-isnt-created-and-no-exception-is-thrown-when-creating-an-animation-for-gameobject-with-certain-invalid-names
-			name = name.Replace('\\', '_').Replace('/', '_').Replace('.', '_');
-
-			return new GameObject(name);
+			return suggestedName.Replace('/', '_').Replace('.', '_');
 		}
 
 		/// <summary>
@@ -2163,14 +2295,21 @@ namespace Piglet
 			// model (i.e. the scene object). Note that
 			// we use `_uri.LocalPath` here instead of
 			// `_uri.AbsolutePath` because the latter
-			// will URL-encode special characters (e.g.
-			// " " -> "%20").
+			// is URL-encoded (e.g. " " -> "%20").
+			//
+			// `nameGenerator` is used to: (1) ensure that
+			// the name of each GameObject in the hierarchy
+			// is unique, and (2) ensure there are no illegal
+			// characters (i.e. "/", ".") in GameObject names.
 
 			string importName = "model";
 			if (_uri != null)
 				importName = Path.GetFileNameWithoutExtension(_uri.LocalPath);
 
-			_imported.Scene = createGameObject(importName);
+			var nameGenerator = new NameGenerator("node", GetLegalGameObjectName);
+			importName = nameGenerator.GenerateName(importName);
+
+			_imported.Scene = new GameObject(importName);
 
 			// Hide the model until it has finished importing, so that
 			// the user never sees the model in a partially reconstructed
@@ -2180,18 +2319,50 @@ namespace Piglet
 
 			foreach (var node in scene.Nodes)
 			{
-				var nodeObj = CreateNode(node.Value, node.Id);
+				var nodeObj = CreateNode(node.Value, node.Id, nameGenerator);
 				nodeObj.transform.SetParent(_imported.Scene.transform, false);
 			}
 
-			SetupMeshNodes();
+			SetupMeshNodes(nameGenerator);
 
 			yield return null;
 		}
 
-		protected GameObject CreateNode(Node node, int index)
+		/// <summary>
+		/// Create a hierarchy of GameObjects that corresponds to the given node
+		/// from the glTF file.
+		/// </summary>
+		/// <param name="node">
+		/// The definition of the node from the glTF file.
+		/// </param>
+		/// <param name="index">
+		/// The index of the node in the glTF file.
+		/// </param>
+		/// <param name="nameGenerator">
+		/// Used to generate unique and safe names for the created GameObjects.
+		/// </param>
+		/// <returns>
+		/// The root GameObject of the created hierarchy of GameObjects.
+		/// </returns>
+		protected GameObject CreateNode(Node node, int index,
+			NameGenerator nameGenerator)
 		{
-			var nodeObj = createGameObject(node.Name != null && node.Name.Length > 0 ? node.Name : "GLTFNode_" + index);
+			// `nameGenerator` helps us choose a name for each
+			// GameObject that satisfies the following criteria:
+			//
+			// (1) Unique.
+			// (2) Does not contain illegal chars ("/", ".").
+			// (3) Similar (or identical) to the name of the
+			// corresponding node from the glTF file.
+
+			var name = node.Name;
+
+			if (string.IsNullOrEmpty(name))
+				name = string.Format("node_{0}", index);
+
+			name = nameGenerator.GenerateName(name);
+
+			var nodeObj = new GameObject(name);
 
 			Vector3 position;
 			Quaternion rotation;
@@ -2232,7 +2403,7 @@ namespace Piglet
 			{
 				foreach (var child in node.Children)
 				{
-					var childObj = CreateNode(child.Value, child.Id);
+					var childObj = CreateNode(child.Value, child.Id, nameGenerator);
 					childObj.transform.SetParent(nodeObj.transform, false);
 				}
 			}
@@ -2311,8 +2482,6 @@ namespace Piglet
 			// for each scene node that has the mesh attached
 			foreach (int nodeIndex in nodeIndices)
 			{
-				var weightIndex = 0;
-
 				// for each game object corresponding to a mesh primitive
 				var gameObjects = _imported.NodeToMeshPrimitives[nodeIndex];
 				for (int i = 0; i < gameObjects.Count; ++i)
@@ -2344,7 +2513,7 @@ namespace Piglet
 
 					// set default morph target weights for "static pose"
 					for (var j = 0; j < mesh.blendShapeCount; ++j)
-						renderer.SetBlendShapeWeight(j, (float) weights[weightIndex++]);
+						renderer.SetBlendShapeWeight(j, (float) weights[j]);
 				}
 			}
 
@@ -2615,7 +2784,8 @@ namespace Piglet
 			// Generates asset names that are: (1) unique, (2) safe to use as filenames,
 			// and (3) similar to the original entity name from the glTF file (if any).
 
-			var assetNameGenerator = new AssetNameGenerator("animation");
+			var assetNameGenerator = new NameGenerator(
+				"animation", AssetPathUtil.GetLegalAssetName);
 
 			for (int i = 0; i < _root.Animations.Count; ++i)
 			{
@@ -2834,9 +3004,30 @@ namespace Piglet
 				throw new Exception(string.Format(
 					"animation targets non-existent node {0}", nodeIndex));
 
-			var node = _imported.Nodes[nodeIndex];
-			var nodePath = _imported.Scene.GetPathToDescendant(node);
-			Debug.Assert(nodePath != null);
+			// Construct node paths (e.g. "Torso/LeftLeg/LeftFoot") that
+			// identify the GameObjects targeted by the glTF animation channel.
+			//
+			// An animation channel can only target a single glTF node.
+			// However, a glTF node maps to multiple GameObjects
+			// if it has a mesh with multiple primitives.
+
+			var nodePaths = new List<string>();
+			if (_imported.NodeToMeshPrimitives.ContainsKey(nodeIndex))
+			{
+				// Case 1: Target glTF node is a mesh node, and therefore
+				// may correspond to multiple GameObjects.
+
+				foreach (var node in _imported.NodeToMeshPrimitives[nodeIndex])
+					nodePaths.Add(_imported.Scene.GetPathToDescendant(node));
+			}
+			else
+			{
+				// Case 2: Target glTF is not a mesh node, and therefore it
+				// corresponds to exactly one GameObject.
+
+				var node = _imported.Nodes[nodeIndex];
+				nodePaths.Add(_imported.Scene.GetPathToDescendant(node));
+			}
 
 			var sampler = channel.Sampler.Value;
 
@@ -2875,7 +3066,7 @@ namespace Piglet
 
 					foreach (var unused in
 						clip.SetCurvesFromVector3Array(
-							nodePath, typeof(Transform), "m_LocalPosition",
+							nodePaths, typeof(Transform), "m_LocalPosition",
 							times, translations, v => new Vector3(v.x, v.y, -v.z),
 							sampler.Interpolation))
 					{
@@ -2895,7 +3086,7 @@ namespace Piglet
 
 					foreach (var unused in
 						clip.SetCurvesFromVector3Array(
-							nodePath, typeof(Transform), "m_LocalScale",
+							nodePaths, typeof(Transform), "m_LocalScale",
 							times, scales, null, sampler.Interpolation))
 					{
 						if (++steps % stepsPerYield == 0)
@@ -2919,7 +3110,7 @@ namespace Piglet
 
 					foreach (var unused in
 						clip.SetCurvesFromVector4Array(
-							nodePath, typeof(Transform), "m_LocalRotation",
+							nodePaths, typeof(Transform), "m_LocalRotation",
 							times, rotations,
 							v => new Vector4(v.x, v.y, -v.z, -v.w),
 							sampler.Interpolation))
@@ -2947,7 +3138,7 @@ namespace Piglet
 
 						foreach (var unused in
 							clip.SetCurveFromFloatArray(
-								nodePath, typeof(SkinnedMeshRenderer), property,
+								nodePaths, typeof(SkinnedMeshRenderer), property,
 								times, weights, index => index * numTargets + i,
 								sampler.Interpolation))
 						{

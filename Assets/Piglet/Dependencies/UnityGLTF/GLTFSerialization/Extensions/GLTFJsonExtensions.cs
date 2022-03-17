@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Piglet.Newtonsoft.Json;
+using Piglet.Newtonsoft.Json.Linq;
 using Piglet.GLTF.Math;
 using Piglet.GLTF.Schema;
 

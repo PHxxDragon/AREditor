@@ -1,6 +1,6 @@
 ﻿using System;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+using Piglet.Newtonsoft.Json.Linq;
+using Piglet.Newtonsoft.Json;
 using Piglet.GLTF.Extensions;
 using Piglet.GLTF.Math;
 

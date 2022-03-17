@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Piglet.GLTF.Extensions;
-using Newtonsoft.Json;
+using Piglet.Newtonsoft.Json;
 
 namespace Piglet.GLTF.Schema
 {

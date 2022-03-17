@@ -1,6 +1,6 @@
 ﻿using Piglet.GLTF.Schema;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Piglet.Newtonsoft.Json;
+using Piglet.Newtonsoft.Json.Linq;
 using Piglet.GLTF.Extensions;
 using Piglet.GLTF.Math;
 

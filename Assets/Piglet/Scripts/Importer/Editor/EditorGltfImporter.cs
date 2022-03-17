@@ -303,7 +303,8 @@ namespace Piglet
 			// Generates asset names that are: (1) unique, (2) safe to use as filenames,
 			// and (3) similar to the original entity name from the glTF file (if any).
 
-			var assetNameGenerator = new AssetNameGenerator("texture");
+			var assetNameGenerator = new NameGenerator(
+				"texture", AssetPathUtil.GetLegalAssetName);
 
 			// Step 1: Write raw PNG/JPG data to image files on disk.
 
@@ -494,13 +495,13 @@ namespace Piglet
 		/// </summary>
 		override protected IEnumerable LoadMaterials()
 		{
-			if (_root.Materials == null || _root.Materials.Count == 0)
-				yield break;
-
 			// First create the materials in memory, as in a runtime glTF import.
 
 			foreach (var _ in base.LoadMaterials())
 				yield return null;
+
+			if (_imported.Materials == null || _imported.Materials.Count == 0)
+				yield break;
 
 			// Create the `Materials` subfolder under the main import folder.
 

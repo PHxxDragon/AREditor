@@ -1,5 +1,5 @@
 using Piglet.GLTF.Extensions;
-using Newtonsoft.Json;
+using Piglet.Newtonsoft.Json;
 using Piglet.GLTF.Math;
 
 namespace Piglet.GLTF.Schema

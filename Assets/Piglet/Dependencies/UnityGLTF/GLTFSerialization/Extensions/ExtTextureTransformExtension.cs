@@ -1,7 +1,7 @@
 ﻿using System;
 using Piglet.GLTF.Schema;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Piglet.Newtonsoft.Json;
+using Piglet.Newtonsoft.Json.Linq;
 using Piglet.GLTF.Math;
 
 namespace Piglet.GLTF.Schema

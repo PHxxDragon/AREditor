@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using Piglet.Newtonsoft.Json;
 
 namespace Piglet.GLTF.Schema
 {
