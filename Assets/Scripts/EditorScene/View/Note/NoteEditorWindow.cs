@@ -7,36 +7,69 @@ namespace EAR.View
 {
     public class NoteEditorWindow : MonoBehaviour
     {
-        public event Action OnDeleteButtonClick;
         public event Action<string> OnTextInputFieldChanged;
-        public event Action<string> OnButtonTitleInputFieldChanged;
+
+        public event Action<Color> OnBackgroundColorChanged;
+
+        public event Action<float> OnBorderWidthChanged;
+        public event Action<int> OnBorderRadiusChanged;
+        public event Action<Color> OnBorderColorChanged;
+
         public event Action<int> OnFontSizeChanged;
+        public event Action<Color> OnFontColorChanged;
+
         public event Action<float> OnBoxWidthChanged;
         public event Action<float> OnHeightChanged;
+
+        public event Action<string> OnButtonTitleInputFieldChanged;
+
+        public event Action<Color> OnButtonBackgroundColorChanged;
+
+        public event Action<float> OnButtonBorderWidthChanged;
+        public event Action<int> OnButtonBorderRadiusChanged;
+        public event Action<Color> OnButtonBorderColorChanged;
+
+        public event Action<int> OnButtonFontSizeChanged;
+        public event Action<Color> OnButtonFontColorChanged;
+
+        public event Action OnDeleteButtonClick;
 
         [SerializeField]
         private TMP_InputField textInputField;
         [SerializeField]
-        private TMP_InputField buttonTitleInputField;
+        private ColorSelector backgroundColorSelector;
+        [SerializeField]
+        private InputFieldWithSlider borderWidth;
+        [SerializeField]
+        private InputFieldWithSlider borderRadius;
+        [SerializeField]
+        private ColorSelector borderColorSelector;
+        [SerializeField]
+        private InputFieldWithSlider fontSize;
+        [SerializeField]
+        private ColorSelector fontColor;
+        [SerializeField]
+        private InputFieldWithSlider boxWidth;
+        [SerializeField]
+        private InputFieldWithSlider height;
+
+        [SerializeField]
+        private TMP_InputField buttonInputField;
+        [SerializeField]
+        private ColorSelector buttonBackgroundColorSelector;
+        [SerializeField]
+        private InputFieldWithSlider buttonBorderWidth;
+        [SerializeField]
+        private InputFieldWithSlider buttonBorderRadius;
+        [SerializeField]
+        private ColorSelector buttonBorderColorSelector;
+        [SerializeField]
+        private InputFieldWithSlider buttonFontSize;
+        [SerializeField]
+        private ColorSelector buttonFontColor;
+
         [SerializeField]
         private Button deleteButton;
-        [SerializeField]
-        private TMP_InputField fontSizeInputField;
-        [SerializeField]
-        private Slider boxWidthSlider;
-        [SerializeField]
-        private TMP_InputField boxWidthInputField;
-        [SerializeField]
-        private Slider heightSlider;
-        [SerializeField]
-        private TMP_InputField heightInputField;
-
-        private int fontSizeMin = 1;
-        private int fontSizeMax = 80;
-        private float boxWidthMin = 1;
-        private float boxWidhtMax = 1500;
-        private float heightMin = 0.1f;
-        private float heightMax = 3f;
 
         public void CloseEditor()
         {
@@ -48,30 +81,24 @@ namespace EAR.View
             gameObject.SetActive(true);
         }
 
-        public void SetFontSize (int value)
+        public void PopulateData(NoteData noteData)
         {
-            fontSizeInputField.text = value.ToString();
+            textInputField.text = noteData.noteContent;
+            backgroundColorSelector.SetColor(noteData.textBackgroundColor);
+            borderWidth.SetValue(noteData.borderWidth.x);
+            borderRadius.SetValue(noteData.textBorderRadius.x);
+            borderColorSelector.SetColor(noteData.borderColor);
+            fontSize.SetValue(noteData.fontSize);
+            fontColor.SetColor(noteData.textColor);
+            buttonInputField.text = noteData.buttonTitle;
+            buttonBackgroundColorSelector.SetColor(noteData.buttonBackgroundColor);
+            buttonBorderWidth.SetValue(noteData.buttonBorderWidth.x);
+            buttonBorderRadius.SetValue(noteData.buttonBorderRadius.x);
+            buttonBorderColorSelector.SetColor(noteData.buttonBorderColor);
+            buttonFontSize.SetValue(noteData.buttonFontSize);
+            buttonFontColor.SetColor(noteData.buttonTextColor);
         }
-
-        public void SetBoxWidth (float value)
-        {
-            boxWidthSlider.value = value;
-        }
-
-        public void SetHeight(float value)
-        {
-            heightSlider.value = value;
-        }
-
-        public void SetTextInputField(string value)
-        {
-            textInputField.text = value;
-        }
-
-        public void SetButtonTitleInputField(string value)
-        {
-            buttonTitleInputField.text = value;
-        }
+        
 
         void Start()
         {
@@ -83,91 +110,81 @@ namespace EAR.View
             {
                 OnTextInputFieldChanged?.Invoke(value);
             });
-            buttonTitleInputField.onValueChanged.AddListener((string value) =>
+
+            backgroundColorSelector.OnColorChanged += (Color color) =>
             {
-                OnButtonTitleInputFieldChanged?.Invoke(value);
-            });
+                OnBackgroundColorChanged?.Invoke(color);
+            };
 
-            fontSizeInputField.onValueChanged.AddListener((string value) =>
+            borderWidth.OnValueChanged += (float value) =>
             {
-                try
-                {
-                    int fontSize = int.Parse(value);
-                    int clampedFontSize = Utils.Clamp(fontSize, fontSizeMin, fontSizeMax);
+                OnBorderWidthChanged?.Invoke(value);
+            };
 
-                    if (clampedFontSize != fontSize)
-                    {
-                        fontSizeInputField.text = clampedFontSize.ToString();
-                    }
-                    else
-                    {
-                        OnFontSizeChanged?.Invoke(clampedFontSize);
-                    }
-                } catch (FormatException)
-                {
-
-                }
-               
-            });
-
-            boxWidthInputField.onValueChanged.AddListener((string value) =>
+            borderRadius.OnValueChanged += (float value) =>
             {
-                try
-                {
-                    float boxWidth = float.Parse(value);
-                    float clampedBoxWidth = Utils.Clamp(boxWidth, boxWidthMin, boxWidhtMax);
-                    if (clampedBoxWidth != boxWidth)
-                    {
-                        boxWidthInputField.text = clampedBoxWidth.ToString();
-                    }
-                    else
-                    {
-                        boxWidthSlider.value = clampedBoxWidth;
-                    }
-                } catch (FormatException)
-                {
+                OnBorderRadiusChanged?.Invoke((int) value);
+            };
 
-                }
-                
-            });
+            borderColorSelector.OnColorChanged += (Color color) =>
+            {
+                OnBorderColorChanged?.Invoke(color);
+            };
 
-            boxWidthSlider.minValue = boxWidthMin;
-            boxWidthSlider.maxValue = boxWidhtMax;
+            fontSize.OnValueChanged += (float value) =>
+            {
+                OnFontSizeChanged?.Invoke((int)value);
+            };
 
-            boxWidthSlider.onValueChanged.AddListener((float value) => {
-                boxWidthInputField.text = value.ToString();
+            fontColor.OnColorChanged += (Color color) =>
+            {
+                OnFontColorChanged?.Invoke(color);
+            };
+
+            boxWidth.OnValueChanged += (float value) =>
+            {
                 OnBoxWidthChanged?.Invoke(value);
-            });
+            };
 
-            heightInputField.onValueChanged.AddListener((string value) =>
+            height.OnValueChanged += (float value) =>
             {
-                try
-                {
-                    float height = float.Parse(value);
-                    float clampedHeight = Utils.Clamp(height, heightMin, heightMax);
-                    if (clampedHeight != height)
-                    {
-                        heightInputField.text = clampedHeight.ToString();
-                    }
-                    else
-                    {
-                        heightSlider.value = clampedHeight;
-                    }
-                } catch (FormatException)
-                {
-
-                }
-                
-            });
-
-            heightSlider.minValue = heightMin;
-            heightSlider.maxValue = heightMax;
-
-            heightSlider.onValueChanged.AddListener((float value) => {
-                heightInputField.text = value.ToString();
                 OnHeightChanged?.Invoke(value);
+            };
+
+            buttonInputField.onValueChanged.AddListener((string text) =>
+            {
+                OnButtonTitleInputFieldChanged?.Invoke(text);
             });
 
+            buttonBackgroundColorSelector.OnColorChanged += (Color color) =>
+            {
+                OnButtonBackgroundColorChanged?.Invoke(color);
+            };
+
+            buttonBorderWidth.OnValueChanged += (float value) =>
+            {
+                OnButtonBorderWidthChanged?.Invoke(value);
+            };
+
+            buttonBorderRadius.OnValueChanged += (float value) =>
+            {
+                OnButtonBorderRadiusChanged?.Invoke((int)value);
+            };
+
+            buttonFontColor.OnColorChanged += (Color color) =>
+            {
+                OnButtonFontColorChanged?.Invoke(color);
+            };
+
+            buttonFontSize.OnValueChanged += (float value) =>
+            {
+                OnButtonFontSizeChanged?.Invoke((int) value);
+            };
+
+            buttonBorderColorSelector.OnColorChanged += (Color color) =>
+            {
+                OnButtonBorderColorChanged?.Invoke(color);
+            };
 
             CloseEditor();
         }

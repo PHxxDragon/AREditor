@@ -55,7 +55,7 @@ namespace EAR.Editor.Presenter
                 if (note == currentNote)
                 {
                     currentNote = null;
-                    noteEditorWindow.CloseEditor();
+                    if (noteEditorWindow) noteEditorWindow.CloseEditor();
                 }
             };
             selectionManager.CheckMouseRaycastBlocked += (ref bool isBlocked) =>
@@ -98,6 +98,61 @@ namespace EAR.Editor.Presenter
                 currentNote.SetBoxWidth(value);
             };
 
+            noteEditorWindow.OnBackgroundColorChanged += (Color color) =>
+            {
+                currentNote.SetTextBackgroundColor(color);
+            };
+
+            noteEditorWindow.OnBorderRadiusChanged += (int radius) =>
+            {
+                currentNote.SetTextBorderRadius(new Vector4(radius, radius, radius, radius));
+            };
+
+            noteEditorWindow.OnButtonBackgroundColorChanged += (Color color) =>
+            {
+                currentNote.SetButtonBackgroundColor(color);
+            };
+
+            noteEditorWindow.OnButtonBorderRadiusChanged += (int radius) =>
+            {
+                currentNote.SetButtonBorderRadius(new Vector4(radius, radius, radius, radius));
+            };
+
+            noteEditorWindow.OnButtonFontColorChanged += (Color color) =>
+            {
+                currentNote.SetButtonTextColor(color);
+            };
+
+            noteEditorWindow.OnFontColorChanged += (Color color) =>
+            {
+                currentNote.SetTextColor(color);
+            };
+
+            noteEditorWindow.OnButtonFontSizeChanged += (int size) =>
+            {
+                currentNote.SetButtonFontSize(size);
+            };
+
+            noteEditorWindow.OnBorderColorChanged += (Color color) =>
+            {
+                currentNote.SetBorderColor(color);
+            };
+
+            noteEditorWindow.OnButtonBorderColorChanged += (Color color) =>
+            {
+                currentNote.SetButtonBorderColor(color);
+            };
+
+            noteEditorWindow.OnBorderWidthChanged += (float width) =>
+            {
+                currentNote.SetTextBorderWidth(new Vector4(width, width, width, width));
+            };
+
+            noteEditorWindow.OnButtonBorderWidthChanged += (float width) =>
+            {
+                currentNote.SetButtonBorderWidth(new Vector4(width, width, width, width));
+            };
+
             cameraController.CheckKeyboardBlocked += (ref bool isBlocked) =>
             {
                 if (noteEditorWindow.isActiveAndEnabled)
@@ -109,11 +164,7 @@ namespace EAR.Editor.Presenter
 
         private void PopulateNoteDataToEditor()
         {
-            noteEditorWindow.SetTextInputField(currentNote.GetText());
-            noteEditorWindow.SetButtonTitleInputField(currentNote.GetButtonText());
-            noteEditorWindow.SetFontSize(currentNote.GetFontSize());
-            noteEditorWindow.SetBoxWidth(currentNote.GetBoxWidth());
-            noteEditorWindow.SetHeight(currentNote.GetHeight());
+            noteEditorWindow.PopulateData(currentNote.GetNoteData());
         }
 
         private void OnToolbarToolChanged(ToolEnum prev, ToolEnum current)

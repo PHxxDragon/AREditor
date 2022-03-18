@@ -23,3 +23,11 @@ ButtonText,Button text,Chữ nút bấm
 Delete,Delete,Xóa
 NoteFirstText,"Your text is here, click to edit note",Nhấp vào đây để sửa ghi chú
 ButtonFirstText,Open note,Mở ghi chú
+BackgroundColor,Background color,Màu nền
+TextBox,Text box,Khung chữ
+Button,Button,Nút bấm
+BorderRadius,Border radius,Góc
+FontColor,Font color,Màu chữ
+ColorPicker,Color picker,Bảng chọn màu
+BorderColor,Border color,Màu viền
+BorderWidth,Border width,Độ dày viền
