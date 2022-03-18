@@ -13,6 +13,7 @@ Shader "Custom/FCP_Gradient" {
 		_StencilWriteMask("Stencil Write Mask", Float) = 255
 		_StencilReadMask("Stencil Read Mask", Float) = 255
 		_ColorMask("Color Mask", Float) = 15
+		_MainTex("Texture", 2D) = "white" {}
 	}
 		
 
