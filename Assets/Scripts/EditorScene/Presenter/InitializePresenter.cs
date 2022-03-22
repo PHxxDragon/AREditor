@@ -20,6 +20,8 @@ namespace EAR.Editor.Presenter
         private float distanceToPlane = 0f;
         [SerializeField]
         private CameraController cameraController;
+        [SerializeField]
+        private EnvironmentEditorWindow environmentEditorWindow;
 
         [SerializeField]
         private GameObject noteContainer;
@@ -104,6 +106,7 @@ namespace EAR.Editor.Presenter
                     note.PopulateData(noteData);
                 }
             }
+            environmentEditorWindow.SetAmbientColor(metadata.ambientColor);
         }
 
         private void SetDataForModel()
@@ -115,6 +118,7 @@ namespace EAR.Editor.Presenter
         private void InitMetadata()
         {
             modelLoader.OnLoadEnded += InitMetadataForModel;
+            environmentEditorWindow.SetAmbientColor(Color.white);
         }
 
         private void InitMetadataForModel()

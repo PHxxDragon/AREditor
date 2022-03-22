@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace EAR
 {
@@ -9,6 +10,7 @@ namespace EAR
         public TransformData modelTransform;
 /*        public float imageWidthInMeters;*/
         public List<NoteData> noteDatas;
+        public Color ambientColor = Color.white;
     }
 }
 

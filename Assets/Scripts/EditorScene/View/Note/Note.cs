@@ -16,6 +16,8 @@ namespace EAR.View
         [SerializeField]
         private RectTransform noteContainer;
         [SerializeField]
+        private HorizontalLayoutGroup textHorizontalLayoutGroup;
+        [SerializeField]
         private RectTransform imageBox;
         [SerializeField]
         private Image textBackground;
@@ -31,6 +33,8 @@ namespace EAR.View
 
         [SerializeField]
         private TMP_Text button_text;
+        [SerializeField]
+        private HorizontalLayoutGroup buttonHorizontalLayoutGroup;
         [SerializeField]
         private Image buttonBackground;
         [SerializeField]
@@ -316,6 +320,8 @@ namespace EAR.View
             int remainDeg = Mathf.Max((int) (borderCorners.r.x - border.offsetMax.x), 0);
             imageCorners.r = new Vector4(remainDeg, remainDeg, remainDeg, remainDeg);
             imageCorners.Refresh();
+            int padding = (int) imageCorners.GetRealR().x / 2;
+            textHorizontalLayoutGroup.padding = new RectOffset(padding, padding, 3, 3);
         }
 
         private void UpdateButtonBackgroundCorners()
@@ -323,6 +329,8 @@ namespace EAR.View
             int remainDeg = Mathf.Max((int)(buttonBorderCorners.r.x - buttonBorder.offsetMax.x), 0);
             buttonImageCorners.r = new Vector4(remainDeg, remainDeg, remainDeg, remainDeg);
             buttonImageCorners.Refresh();
+            int padding = (int)buttonImageCorners.GetRealR().x / 2;
+            buttonHorizontalLayoutGroup.padding = new RectOffset(padding, padding, 3, 3);
         }
     }
 }

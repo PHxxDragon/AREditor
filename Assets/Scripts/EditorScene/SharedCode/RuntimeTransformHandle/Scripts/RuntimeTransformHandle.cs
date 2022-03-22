@@ -114,7 +114,7 @@ namespace RuntimeHandle
 
             if (autoScale)
                 transform.localScale =
-                    Vector3.one * (Vector3.Distance(handleCamera.transform.position, transform.position) * autoScaleFactor) / 15;
+                    Vector3.one * (Vector3.Distance(handleCamera.transform.position, transform.position) * Mathf.Sin(handleCamera.fieldOfView * Mathf.Deg2Rad / 2f) * autoScaleFactor) / 15;
             
             if (_previousType != type || _previousAxes != axes || _previousTarget != target)
             {

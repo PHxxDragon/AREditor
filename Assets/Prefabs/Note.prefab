@@ -529,6 +529,7 @@ MonoBehaviour:
   button: {fileID: 8003067740792458208}
   text: {fileID: 4705591316761667694}
   noteContainer: {fileID: 332574168702070458}
+  textHorizontalLayoutGroup: {fileID: 4705591317713267189}
   imageBox: {fileID: 4705591317713267192}
   textBackground: {fileID: 5138252971661405397}
   imageCorners: {fileID: 9011018332377488159}
@@ -536,6 +537,7 @@ MonoBehaviour:
   border: {fileID: 4495470977888251354}
   borderCorners: {fileID: 6067454550401691542}
   button_text: {fileID: 1012099123319520078}
+  buttonHorizontalLayoutGroup: {fileID: 2193734865244310889}
   buttonBackground: {fileID: 7323718806922898010}
   buttonImageCorners: {fileID: 7138143082171987086}
   buttonBorderBackground: {fileID: 3437679205799059675}

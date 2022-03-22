@@ -6,9 +6,9 @@ namespace EAR.EARCamera
     {
         [Header("Speed")]
         public float RotateSpeed = 2f;
-        public float MoveSpeed = 4f;
+        public float MoveSpeed = 2f;
         public float ScrollSpeed = 10f;
-        public float LookSpeed = 5f;
+        public float LookSpeed = 150f;
         public float ResetSpeed = 6f;
 
         [Header("Dampening")]
@@ -86,7 +86,6 @@ namespace EAR.EARCamera
 
         private void ProcessInputs()
         {
-
             if (Input.GetMouseButton(0))
             {
                 bool isBlocked = false;
@@ -95,20 +94,23 @@ namespace EAR.EARCamera
                 {
                     if (Input.GetKey(RotateAroundKey))
                     {
-                        _Rotation.y += Input.GetAxis("Mouse X") * RotateSpeed;
-                        _Rotation.x -= Input.GetAxis("Mouse Y") * RotateSpeed;
-                        _Rotation.x = Mathf.Clamp(_Rotation.x, -90f, 90f);
+                        _Rotation.y += Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * RotateSpeed;
+                        _Rotation.x -= Mathf.Clamp(Input.GetAxis("Mouse Y"), -1, 1) * RotateSpeed;
+                        _Rotation.x = ClampRotation(_Rotation.x, -90f, 90f);
                         isRotating = true;
                     }
                     else if (Input.GetKey(LookAroundKey))
                     {
-                        _LookRotationX = -Input.GetAxis("Mouse X") * LookSpeed;
-                        _LookRotationY = Input.GetAxis("Mouse Y") * LookSpeed;
+                        _LookRotationX = -Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * LookSpeed * Time.deltaTime;
+                        _LookRotationY = Mathf.Clamp(Input.GetAxis("Mouse Y"), -1, 1) * LookSpeed * Time.deltaTime;
                         isLooking = true;
                     }
                     else
                     {
-                        Vector3 moveDirection = new Vector3(Input.GetAxis("Mouse X") * MoveSpeed * _Distance * Time.deltaTime, Input.GetAxis("Mouse Y") * MoveSpeed * _Distance * Time.deltaTime, 0);
+                        float distanceScreenSpace = _Distance * Mathf.Sin(_camera.fieldOfView * Mathf.Deg2Rad / 2f);
+                        float x = Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * MoveSpeed * distanceScreenSpace * Time.deltaTime;
+                        float y = Mathf.Clamp(Input.GetAxis("Mouse Y"), -1, 1) * MoveSpeed * distanceScreenSpace * Time.deltaTime;
+                        Vector3 moveDirection = new Vector3(x, y, 0);
                         moveDirection = Quaternion.Euler(_Rotation) * moveDirection;
                         _AnchorPosition -= moveDirection;
                         isMoving = true;
@@ -118,7 +120,7 @@ namespace EAR.EARCamera
 
             if (Input.GetAxis("Mouse ScrollWheel") != 0f)
             {
-                float ScrollAmount = Input.GetAxis("Mouse ScrollWheel") * ScrollSpeed;
+                float ScrollAmount = Mathf.Clamp(Input.GetAxis("Mouse ScrollWheel"), -1, 1) * ScrollSpeed;
 
                 //Makes camera zoom faster the further away
                 ScrollAmount *= (_Distance * 0.3f);
@@ -142,6 +144,12 @@ namespace EAR.EARCamera
                 }
 
             }
+        }
+
+        private float ClampRotation(float rotation, float min, float max)
+        {
+            rotation = (rotation + 180 -  ((int) rotation + 180) / 360 * 360) - 180;
+            return Mathf.Clamp(rotation, min, max);
         }
 
         private void UpdateLocals()
@@ -174,7 +182,6 @@ namespace EAR.EARCamera
             {
                 Quaternion QT = Quaternion.Euler(_Rotation.x, _Rotation.y, 0);
                 cameraAnchorTransform.rotation = Quaternion.Lerp(cameraAnchorTransform.rotation, QT, Time.deltaTime * OrbitDampending * 2f);
-
                 //Debug.Log(Quaternion.Lerp(Quaternion.Euler(new Vector3(29.6f, 184.8f, 180f)), Quaternion.Euler(new Vector3(150.6f, 4.7f, 0.0f)), 0.090109f).eulerAngles);
             }
 
@@ -188,7 +195,8 @@ namespace EAR.EARCamera
 
             if (isMoving)
             {
-                cameraAnchorTransform.position = Vector3.Lerp(cameraAnchorTransform.position, _AnchorPosition, MoveDampening);
+                //cameraAnchorTransform.position = Vector3.Lerp(cameraAnchorTransform.position, _AnchorPosition, MoveDampening);
+                cameraAnchorTransform.position = _AnchorPosition;
             }
 
             if (isLooking)

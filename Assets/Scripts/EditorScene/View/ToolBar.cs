@@ -22,6 +22,8 @@ namespace EAR.View
         private Button redoButton;
         [SerializeField]
         private Button screenshotButton;
+        [SerializeField]
+        private Button settingButton;
 
         private ToolEnum activeTool;
 
@@ -30,6 +32,7 @@ namespace EAR.View
         public event Action UndoButtonClicked;
         public event Action RedoButtonClicked;
         public event Action ScreenshotButtonClicked;
+        public event Action SettingButtonClicked;
 
         public ToolEnum GetActiveTool()
         {
@@ -52,7 +55,13 @@ namespace EAR.View
             undoButton.onClick.AddListener(UndoButtonClick);
             redoButton.onClick.AddListener(RedoButtonClick);
             screenshotButton.onClick.AddListener(ScreenshotButtonClick);
+            settingButton.onClick.AddListener(SettingButtonClick);
             ApplyGlobalStates();
+        }
+
+        private void SettingButtonClick()
+        {
+            SettingButtonClicked?.Invoke();
         }
 
         public void SetDefaultTool()

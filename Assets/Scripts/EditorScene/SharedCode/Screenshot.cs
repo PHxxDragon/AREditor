@@ -59,6 +59,7 @@ namespace EAR.Screenshoter
             canvasToHide.SetActive(false);
             screenshotCamera.gameObject.SetActive(true);
             CopyTransform(targetCamera.transform, screenshotCamera.transform);
+            screenshotCamera.fieldOfView = targetCamera.fieldOfView;
             screenshotCamera.targetTexture = RenderTexture.GetTemporary(Screen.width, Screen.height, 16);
             takeScreenshotOnNextFrame = true;
             

@@ -31,3 +31,11 @@ FontColor,Font color,Màu chữ
 ColorPicker,Color picker,Bảng chọn màu
 BorderColor,Border color,Màu viền
 BorderWidth,Border width,Độ dày viền
+EditEnvironment,Edit environment,Sửa cảnh
+Light,Light,Ánh sáng
+AmbientColor,Ambient color,Màu ánh sáng
+Intensity,Intensity,Cường độ
+Camera,Camera,Camera
+FieldOfView,FOV,FOV
+Settings,Settings,Cài đặt
+AmbientLight,Ambient light,Ánh sáng môi trường

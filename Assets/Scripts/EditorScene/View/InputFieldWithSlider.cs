@@ -36,7 +36,7 @@ namespace EAR.View
             this.max = max;
         }
 
-        void Start()
+        void Awake()
         {
             slider.minValue = min;
             slider.maxValue = max;

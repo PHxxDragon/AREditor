@@ -45,6 +45,11 @@ namespace Nobi.UiRoundedCorners {
 			material = null;
 		}
 
+		public Vector4 GetRealR()
+        {
+			return _r;
+        }
+
 		public void Validate() {
 			if (material == null) {
 				material = new Material(Shader.Find("UI/RoundedCorners/IndependentRoundedCorners"));
