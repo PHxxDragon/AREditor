@@ -92,6 +92,9 @@ namespace EAR.Editor.Presenter
                 }
                 metadataObject.noteDatas = noteDatas;
                 metadataObject.ambientColor = RenderSettings.ambientLight;
+                List<LightData> lightDatas = new List<LightData>();
+                lightDatas.Add(environmentEditorWindow.GetLightData());
+                metadataObject.lightDatas = lightDatas;
                 reactPlugin.Save(JsonUtility.ToJson(metadataObject));
             }
         }

@@ -107,6 +107,13 @@ namespace EAR.Editor.Presenter
                 }
             }
             environmentEditorWindow.SetAmbientColor(metadata.ambientColor);
+            if (metadata.lightDatas.Count > 0)
+            {
+                environmentEditorWindow.SetDirectionalLight(metadata.lightDatas[0]);
+            } else
+            {
+                environmentEditorWindow.SetDirectionalLight(new LightData());
+            }
         }
 
         private void SetDataForModel()
@@ -119,6 +126,7 @@ namespace EAR.Editor.Presenter
         {
             modelLoader.OnLoadEnded += InitMetadataForModel;
             environmentEditorWindow.SetAmbientColor(Color.white);
+            environmentEditorWindow.SetDirectionalLight(new LightData());
         }
 
         private void InitMetadataForModel()
