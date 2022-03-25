@@ -22,12 +22,16 @@ namespace EAR.View
 
         private void OpenTutorialTable()
         {
+            tutorialTable.SetActive(true);
             tutorialTable.transform.DOScale(Vector3.one, 0.2f);
+            
         }
 
         private void CloseTutorialTable()
         {
-            tutorialTable.transform.DOScale(Vector3.zero, 0.2f);
+            tutorialTable.transform.DOScale(Vector3.zero, 0.2f).OnComplete(() => {
+                tutorialTable.SetActive(false);
+            });
         }
     }
 }
