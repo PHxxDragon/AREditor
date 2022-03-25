@@ -210,6 +210,8 @@ GameObject:
   - component: {fileID: 6985325416370210590}
   - component: {fileID: 6985325416370210588}
   - component: {fileID: 6985325416370210589}
+  - component: {fileID: 5609573537410055602}
+  - component: {fileID: 2678829853598511385}
   m_Layer: 5
   m_Name: Tooltip
   m_TagString: Untagged
@@ -275,6 +277,40 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!223 &5609573537410055602
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6985325416370210591}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 1375271369
+  m_SortingOrder: 10
+  m_TargetDisplay: 0
+--- !u!114 &2678829853598511385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6985325416370210591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2333e444c8d4ef84c8a3d631919d8c85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentArea: {fileID: 0}
 --- !u!1 &6985325416872636740
 GameObject:
   m_ObjectHideFlags: 0

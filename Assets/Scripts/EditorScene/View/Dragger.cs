@@ -60,7 +60,7 @@ namespace EAR.View
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(DragAreaInternal, data.position, data.pressEventCamera, out localPointerPosition))
             {
                 Vector3 offsetToOriginal = localPointerPosition - originalLocalPointerPosition;
-                DragObjectInternal.localPosition = originalPanelLocalPosition + offsetToOriginal;
+                //DragObjectInternal.localPosition = originalPanelLocalPosition + offsetToOriginal;
             }
 
             ClampToArea();

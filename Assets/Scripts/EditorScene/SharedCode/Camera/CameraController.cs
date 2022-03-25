@@ -120,14 +120,19 @@ namespace EAR.EARCamera
 
             if (Input.GetAxis("Mouse ScrollWheel") != 0f)
             {
-                float ScrollAmount = Mathf.Clamp(Input.GetAxis("Mouse ScrollWheel"), -1, 1) * ScrollSpeed;
+                bool isBlocked = false;
+                CheckMouseRaycastBlocked?.Invoke(ref isBlocked);
+                if (!isBlocked)
+                {
+                    float ScrollAmount = Mathf.Clamp(Input.GetAxis("Mouse ScrollWheel"), -1, 1) * ScrollSpeed;
 
-                //Makes camera zoom faster the further away
-                ScrollAmount *= (_Distance * 0.3f);
+                    //Makes camera zoom faster the further away
+                    ScrollAmount *= (_Distance * 0.3f);
 
-                _Distance += ScrollAmount * -1f;
-                _Distance = Mathf.Clamp(_Distance, 0.015f, 100f);
-                isZooming = true;
+                    _Distance += ScrollAmount * -1f;
+                    _Distance = Mathf.Clamp(_Distance, 0.015f, 100f);
+                    isZooming = true;
+                }
             }
             
             if (Input.GetKeyDown(ResetKey))
