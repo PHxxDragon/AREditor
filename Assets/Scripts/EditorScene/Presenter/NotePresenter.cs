@@ -3,6 +3,7 @@ using EAR.AddObject;
 using EAR.Selection;
 using EAR.EARCamera;
 using EAR.UndoRedo;
+using EAR.Entity;
 using UnityEngine;
 
 namespace EAR.Editor.Presenter
@@ -28,7 +29,7 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private UndoRedoManager undoRedoManager;
 
-        private Note currentNote;
+        private NoteEntity currentNote;
 
         void Start()
         {
@@ -41,7 +42,7 @@ namespace EAR.Editor.Presenter
             toolBar.OnToolChanged += OnToolbarToolChanged;
 
             selectionManager.OnObjectSelected += (Selectable selectable) => {
-                Note note = selectable.GetComponent<Note>();
+                NoteEntity note = selectable.GetComponent<NoteEntity>();
                 if (note != null)
                 {
                     currentNote = note;
@@ -51,7 +52,7 @@ namespace EAR.Editor.Presenter
             };
             selectionManager.OnObjectDeselected += (Selectable selectable) =>
             {
-                Note note = selectable.GetComponent<Note>();
+                NoteEntity note = selectable.GetComponent<NoteEntity>();
                 if (note == currentNote)
                 {
                     currentNote = null;
@@ -70,13 +71,10 @@ namespace EAR.Editor.Presenter
             {
                 currentNote.SetText(value != "" ? value : " ");
             };
-            noteEditorWindow.OnButtonTitleInputFieldChanged += (string value) =>
-            {
-                currentNote.SetButtonText(value != "" ? value : " ");
-            };
+
             noteEditorWindow.OnDeleteButtonClick += () =>
             {
-                Note note = currentNote;
+                NoteEntity note = currentNote;
                 IUndoRedoCommand deselectCommand = selectionManager.DeselectAndGetCommand();
                 note.gameObject.SetActive(false);
                 IUndoRedoCommand command = new RemoveNoteCommand(note, deselectCommand);
@@ -86,11 +84,6 @@ namespace EAR.Editor.Presenter
             noteEditorWindow.OnFontSizeChanged += (int value) =>
             {
                 currentNote.SetFontSize(value);
-            };
-
-            noteEditorWindow.OnHeightChanged += (float value) =>
-            {
-                currentNote.SetHeight(value);
             };
 
             noteEditorWindow.OnBoxWidthChanged += (float value) =>
@@ -108,29 +101,9 @@ namespace EAR.Editor.Presenter
                 currentNote.SetTextBorderRadius(new Vector4(radius, radius, radius, radius));
             };
 
-            noteEditorWindow.OnButtonBackgroundColorChanged += (Color color) =>
-            {
-                currentNote.SetButtonBackgroundColor(color);
-            };
-
-            noteEditorWindow.OnButtonBorderRadiusChanged += (int radius) =>
-            {
-                currentNote.SetButtonBorderRadius(new Vector4(radius, radius, radius, radius));
-            };
-
-            noteEditorWindow.OnButtonFontColorChanged += (Color color) =>
-            {
-                currentNote.SetButtonTextColor(color);
-            };
-
             noteEditorWindow.OnFontColorChanged += (Color color) =>
             {
                 currentNote.SetTextColor(color);
-            };
-
-            noteEditorWindow.OnButtonFontSizeChanged += (int size) =>
-            {
-                currentNote.SetButtonFontSize(size);
             };
 
             noteEditorWindow.OnBorderColorChanged += (Color color) =>
@@ -138,19 +111,9 @@ namespace EAR.Editor.Presenter
                 currentNote.SetBorderColor(color);
             };
 
-            noteEditorWindow.OnButtonBorderColorChanged += (Color color) =>
-            {
-                currentNote.SetButtonBorderColor(color);
-            };
-
             noteEditorWindow.OnBorderWidthChanged += (float width) =>
             {
                 currentNote.SetTextBorderWidth(new Vector4(width, width, width, width));
-            };
-
-            noteEditorWindow.OnButtonBorderWidthChanged += (float width) =>
-            {
-                currentNote.SetButtonBorderWidth(new Vector4(width, width, width, width));
             };
 
             cameraController.CheckKeyboardBlocked += (ref bool isBlocked) =>
@@ -173,14 +136,14 @@ namespace EAR.Editor.Presenter
             {
                 objectPreviewAndAdd.StartPreviewAndAdd(notePrefab, notePreviewPrefab, (GameObject note) =>
                 {
-                    note.GetComponent<Note>().InitNoteData();
+                    note.GetComponent<NoteEntity>().InitNoteData();
                     note.transform.parent = noteContainer.transform;
                     toolBar.SetDefaultTool();
-                    IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<Note>());
+                    IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
                     undoRedoManager.AddCommand(command);
                 }, (GameObject note) =>
                 {
-                    note.GetComponent<Note>().InitNoteData();
+                    note.GetComponent<NoteEntity>().InitNoteData();
                 });
             } else
             {

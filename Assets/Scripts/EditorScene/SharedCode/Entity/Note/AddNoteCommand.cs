@@ -1,9 +1,11 @@
+using EAR.Entity;
+
 namespace EAR.View
 {
     public class AddNoteCommand : IUndoRedoCommand
     {
-        private Note note;
-        public AddNoteCommand(Note note)
+        private NoteEntity note;
+        public AddNoteCommand(NoteEntity note)
         {
             this.note = note;
         }

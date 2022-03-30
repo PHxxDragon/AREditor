@@ -6,7 +6,7 @@ namespace EAR.Integration
 {
     public class ReactPlugin : MonoBehaviour
     {
-        public event Action<ModuleARInformation> LoadModuleCalledEvent;
+        public event Action<AssetInformation> LoadModuleCalledEvent;
         public event Action<string> LanguageChangeEvent;
         public event Action<bool> OnSetEnableEditor;
         public event Action<bool> OnSetEnableScreenshot;
@@ -31,7 +31,16 @@ namespace EAR.Integration
             //LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646739907080_enc_old_retro_television.zip\",\"imageUrl\":\"\",\"metadataString\":\"\",\"extension\":\"gltf\",\"isZipFile\":true,\"enableEditor\":true,\"enableScreenshot\":true}");
             //LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646743962550_old_retro_television.zip\",\"imageUrl\":\"\",\"metadataString\":\"\",\"extension\":\"gltf\",\"isZipFile\":true,\"enableEditor\":true,\"enableScreenshot\":true}");
             //LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646795054315_enc_aa.zip\",\"imageUrl\":\"\",\"metadataString\":\"\",\"extension\":\"obj\",\"isZipFile\":true,\"enableEditor\":true,\"enableScreenshot\":true}");
-            LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip\",\"imageUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/3/1646979043558_Gawr_Gura (1).png\",\"metadataString\":\"\",\"extension\":\"gltf\",\"isZipFile\":true,\"enableEditor\":true,\"enableScreenshot\":true}");
+            //LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip\",\"imageUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/3/1646979043558_Gawr_Gura (1).png\",\"metadataString\":\"\",\"extension\":\"gltf\",\"isZipFile\":true,\"enableEditor\":true,\"enableScreenshot\":true}");
+            AssetInformation assetInformation = new AssetInformation();
+            AssetObject assetObject = new AssetObject();
+            assetObject.assetsId = "alksdjfals;df";
+            assetObject.extension = "gltf";
+            assetObject.isZipFile = true;
+            assetObject.type = AssetObject.MODEL_TYPE;
+            assetObject.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip";
+            assetInformation.assets.Add(assetObject);
+            LoadModule(JsonUtility.ToJson(assetInformation));
 #endif
         }
 
@@ -46,7 +55,7 @@ namespace EAR.Integration
         public void LoadModule(string paramJson)
         {
             Debug.Log("Load module called: " + paramJson);
-            ModuleARInformation param = JsonUtility.FromJson<ModuleARInformation>(paramJson);
+            AssetInformation param = JsonUtility.FromJson<AssetInformation>(paramJson);
             LoadModuleCalledEvent?.Invoke(param);
         }
 

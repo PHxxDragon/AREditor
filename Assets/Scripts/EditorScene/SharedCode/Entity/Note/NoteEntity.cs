@@ -5,12 +5,10 @@ using EAR.Localization;
 using DG.Tweening;
 using Nobi.UiRoundedCorners;
 
-namespace EAR.View
+namespace EAR.Entity
 {
-    public class Note : MonoBehaviour
+    public class NoteEntity : BaseEntity
     {
-        [SerializeField]
-        private Button button;
         [SerializeField]
         private TMP_Text text;
         [SerializeField]
@@ -30,34 +28,24 @@ namespace EAR.View
         [SerializeField]
         private ImageWithIndependentRoundedCorners borderCorners;
 
-
-        [SerializeField]
-        private TMP_Text button_text;
-        [SerializeField]
-        private HorizontalLayoutGroup buttonHorizontalLayoutGroup;
-        [SerializeField]
-        private Image buttonBackground;
-        [SerializeField]
-        private ImageWithIndependentRoundedCorners buttonImageCorners;
-        [SerializeField]
-        private Image buttonBorderBackground;
-        [SerializeField]
-        private RectTransform buttonBorder;
-        [SerializeField]
-        private ImageWithIndependentRoundedCorners buttonBorderCorners;
-
-
         [SerializeField]
         private Canvas[] canvases;
         [SerializeField]
         private Camera eventCamera;
 
         private Vector3 originalScale;
-        private bool isCompleted = true;
+
+        public static NoteEntity InstantNewEntity(NoteEntity notePrefab, NoteData noteData)
+        {
+            NoteEntity noteEntity = Instantiate(notePrefab);
+            noteEntity.PopulateData(noteData);
+            noteEntity.SetId(noteData.id);
+            return noteEntity;
+        }
 
         void Start()
         {
-            button.onClick.AddListener(() =>
+/*            button.onClick.AddListener(() =>
             {
                 if (!isCompleted) return;
                 
@@ -86,20 +74,20 @@ namespace EAR.View
                 {
                     canvas.worldCamera = eventCamera;
                 }
-            }
+            }*/
         }
 
         public void InitNoteData()
         {
             text.text = LocalizationManager.GetLocalizedText("NoteFirstText");
-            button_text.text = LocalizationManager.GetLocalizedText("ButtonFirstText");
         }
 
         public NoteData GetNoteData()
         {
             NoteData noteData = new NoteData();
+            noteData.id = GetId();
+            noteData.name = GetEntityName();
             noteData.noteContent = text.text;
-            noteData.buttonTitle = button_text.text;
             noteData.noteTransformData = TransformData.TransformToTransformData(transform);
             noteData.noteContentRectTransformData = RectTransformData.RectTransformToRectTransformData(noteContainer);
             if (noteData.noteContentRectTransformData.localScale == Vector3.zero)
@@ -107,18 +95,12 @@ namespace EAR.View
                 noteData.noteContentRectTransformData.localScale = originalScale;
             }
             noteData.boxWidth = GetBoxWidth();
-            noteData.height = GetHeight();
+
             noteData.fontSize = GetFontSize();
-            noteData.buttonBackgroundColor = GetButtonBackgroundColor();
-            noteData.buttonBorderRadius = GetButtonBorderRadius();
             noteData.textBackgroundColor = GetTextBackgroundColor();
             noteData.textBorderRadius = GetTextBorderRadius();
             noteData.textColor = GetTextColor();
-            noteData.buttonTextColor = GetButtonTextColor();
-            noteData.buttonFontSize = GetButtonFontSize();
-            noteData.buttonBorderWidth = GetButtonBorderWidth();
             noteData.borderWidth = GetTextBorderWidth();
-            noteData.buttonBorderColor = GetButtonBorderColor();
             noteData.borderColor = GetBorderColor();
             return noteData;
         }
@@ -128,19 +110,11 @@ namespace EAR.View
             TransformData.TransformDataToTransfrom(data.noteTransformData, transform);
             RectTransformData.RectTransformDataToRectTransform(data.noteContentRectTransformData, noteContainer);
             text.text = data.noteContent;
-            button_text.text = data.buttonTitle;
-            SetHeight(data.height);
             SetBoxWidth(data.boxWidth);
             SetFontSize(data.fontSize);
-            SetButtonBackgroundColor(data.buttonBackgroundColor);
-            SetButtonBorderRadius(data.buttonBorderRadius);
             SetTextBackgroundColor(data.textBackgroundColor);
             SetTextBorderRadius(data.textBorderRadius);
             SetTextColor(data.textColor);
-            SetButtonTextColor(data.buttonTextColor);
-            SetButtonFontSize(data.buttonFontSize);
-            SetButtonBorderWidth(data.buttonBorderWidth);
-            SetButtonBorderColor(data.buttonBorderColor);
             SetBorderColor(data.borderColor);
             SetTextBorderWidth(data.borderWidth);
         }
@@ -231,26 +205,6 @@ namespace EAR.View
             return new Vector4(border.offsetMax.x, border.offsetMax.y, -border.offsetMin.x, -border.offsetMin.y);
         }
 
-        public void SetButtonText(string value)
-        {
-            button_text.text = value;
-        }
-
-        public string GetButtonText()
-        {
-            return button_text.text;
-        }
-
-        public void SetButtonBorderColor(Color color)
-        {
-            buttonBorderBackground.color = color;
-        }
-
-        public Color GetButtonBorderColor()
-        {
-            return buttonBorderBackground.color;
-        }
-
         public void SetBorderColor(Color color)
         {
             borderBackground.color = color;
@@ -261,60 +215,6 @@ namespace EAR.View
             return borderBackground.color;
         }
 
-        public void SetButtonBackgroundColor(Color color)
-        {
-            buttonBackground.color = color;
-        }
-
-        public Color GetButtonBackgroundColor()
-        {
-            return buttonBackground.color;
-        }
-
-        public void SetButtonBorderRadius(Vector4 r)
-        {
-            buttonBorderCorners.r = r;
-            buttonBorderCorners.Refresh();
-            UpdateButtonBackgroundCorners();
-        }
-
-        public Vector4 GetButtonBorderRadius()
-        {
-            return buttonBorderCorners.r;
-        }
-
-        public void SetButtonBorderWidth(Vector4 width)
-        {
-            buttonBorder.offsetMax = new Vector2(width.x, width.y);
-            buttonBorder.offsetMin = new Vector2(-width.z, -width.w);
-            UpdateButtonBackgroundCorners();
-        }
-
-        public Vector4 GetButtonBorderWidth()
-        {
-            return new Vector4(buttonBorder.offsetMax.x, buttonBorder.offsetMax.y, -buttonBorder.offsetMin.x, -buttonBorder.offsetMin.y);
-        }
-
-        public void SetButtonFontSize(int size)
-        {
-            button_text.fontSize = size;
-        }
-
-        public int GetButtonFontSize()
-        {
-            return (int) button_text.fontSize;
-        }
-
-        public void SetButtonTextColor(Color color)
-        {
-            button_text.color = color;
-        }
-
-        public Color GetButtonTextColor()
-        {
-            return button_text.color;
-        }
-
         private void UpdateBackgroundCorners()
         {
             int remainDeg = Mathf.Max((int) (borderCorners.r.x - border.offsetMax.x), 0);
@@ -322,15 +222,6 @@ namespace EAR.View
             imageCorners.Refresh();
             int padding = (int) imageCorners.GetRealR().x / 2;
             textHorizontalLayoutGroup.padding = new RectOffset(padding, padding, 3, 3);
-        }
-
-        private void UpdateButtonBackgroundCorners()
-        {
-            int remainDeg = Mathf.Max((int)(buttonBorderCorners.r.x - buttonBorder.offsetMax.x), 0);
-            buttonImageCorners.r = new Vector4(remainDeg, remainDeg, remainDeg, remainDeg);
-            buttonImageCorners.Refresh();
-            int padding = (int)buttonImageCorners.GetRealR().x / 2;
-            buttonHorizontalLayoutGroup.padding = new RectOffset(padding, padding, 3, 3);
         }
     }
 }

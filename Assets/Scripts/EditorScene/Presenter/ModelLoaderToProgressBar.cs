@@ -21,12 +21,12 @@ namespace EAR.Editor.Presenter
             }
         }
 
-        private void ModelLoadStart()
+        private void ModelLoadStart(string assetId)
         {
             progressBar.EnableProgressBar();
         }
 
-        private void ModelLoadEnd()
+        private void ModelLoadEnd(string assetId, GameObject model)
         {
             progressBar.DisableProgressBar();
         }

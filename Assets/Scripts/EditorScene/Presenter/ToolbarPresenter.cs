@@ -3,6 +3,7 @@ using EAR.Integration;
 using UnityEngine;
 using EAR.View;
 using EAR.AR;
+using EAR.Entity;
 using System.Collections.Generic;
 using RuntimeHandle;
 
@@ -19,7 +20,7 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private ModelLoader modelLoader;
         [SerializeField]
-        private GameObject noteContainer;
+        private GameObject container;
         [SerializeField]
         private RuntimeTransformHandle runtimeTransformHandle;
         [SerializeField]
@@ -42,7 +43,7 @@ namespace EAR.Editor.Presenter
                 Debug.Log("Unassigned references");
             }
 
-            if (toolBar != null && noteContainer != null)
+            if (toolBar != null && container != null)
             {
                 toolBar.SaveButtonClicked += SaveButtonClicked;
             }
@@ -73,30 +74,26 @@ namespace EAR.Editor.Presenter
 
         private void SaveButtonClicked()
         {
-            if (modelLoader.GetModel() != null)
+            MetadataObject metadataObject = new MetadataObject();
+            List<ModelData> modelDatas = new List<ModelData>();
+            foreach (ModelEntity model in container.GetComponentsInChildren<ModelEntity>())
             {
-                MetadataObject metadataObject = new MetadataObject();
-                metadataObject.modelTransform = TransformData.TransformToTransformData(modelLoader.GetModel().transform);
-
-                List<NoteData> noteDatas = new List<NoteData>();
-                foreach (Transform child in noteContainer.transform)
-                {
-                    if (child.gameObject.activeSelf)
-                    {
-                        Note note = child.GetComponent<Note>();
-                        if (note != null)
-                        {
-                            noteDatas.Add(note.GetNoteData());
-                        }
-                    }
-                }
-                metadataObject.noteDatas = noteDatas;
-                metadataObject.ambientColor = RenderSettings.ambientLight;
-                List<LightData> lightDatas = new List<LightData>();
-                lightDatas.Add(environmentEditorWindow.GetLightData());
-                metadataObject.lightDatas = lightDatas;
-                reactPlugin.Save(JsonUtility.ToJson(metadataObject));
+                modelDatas.Add(model.GetModelData());
             }
+
+            List<NoteData> noteDatas = new List<NoteData>();
+            foreach (NoteEntity note in container.GetComponentsInChildren<NoteEntity>())
+            {
+                noteDatas.Add(note.GetNoteData());
+            }
+            metadataObject.noteDatas = noteDatas;
+
+            metadataObject.ambientColor = RenderSettings.ambientLight;
+
+            List<LightData> lightDatas = new List<LightData>();
+            lightDatas.Add(environmentEditorWindow.GetLightData());
+            metadataObject.lightDatas = lightDatas;
+            reactPlugin.Save(JsonUtility.ToJson(metadataObject));
         }
 
         private void SetHandle(ToolEnum prev, ToolEnum current)

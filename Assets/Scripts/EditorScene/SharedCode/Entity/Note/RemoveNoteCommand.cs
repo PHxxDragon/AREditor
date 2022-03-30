@@ -1,10 +1,12 @@
+using EAR.Entity;
+
 namespace EAR.View
 {
     public class RemoveNoteCommand : IUndoRedoCommand
     {
-        private Note note;
+        private NoteEntity note;
         private IUndoRedoCommand deselectCommand;
-        public RemoveNoteCommand(Note note, IUndoRedoCommand deselectCommand)
+        public RemoveNoteCommand(NoteEntity note, IUndoRedoCommand deselectCommand)
         {
             this.note = note;
             this.deselectCommand = deselectCommand;

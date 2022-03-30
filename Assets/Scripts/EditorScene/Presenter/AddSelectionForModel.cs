@@ -18,15 +18,14 @@ namespace EAR.Editor.Presenter
             }
         }
 
-        private void AddSelection()
+        private void AddSelection(string assetId, GameObject model)
         {
-            modelLoader.GetModel().gameObject.AddComponent<Selectable>();
-            StartCoroutine(AddCollider());
+            model.AddComponent<Selectable>();
+            StartCoroutine(AddCollider(model));
         }
 
-        private IEnumerator AddCollider()
+        private IEnumerator AddCollider(GameObject model)
         {
-            GameObject model = modelLoader.GetModel();
             TransformData transformData = TransformData.TransformToTransformData(model.transform);
             TransformData.ResetTransform(model.transform);
             Bounds bound = Utils.GetModelBounds(model);

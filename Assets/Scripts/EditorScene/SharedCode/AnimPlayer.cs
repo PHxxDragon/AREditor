@@ -1,6 +1,7 @@
 using Piglet;
 using System.Collections.Generic;
 using UnityEngine;
+using EAR.Entity;
 using System;
 using System.Linq;
 
@@ -39,7 +40,7 @@ namespace EAR.AnimationPlayer
             _currentAnimationState.normalizedTime = value;
         }
 
-        public bool SetModel(GameObject model)
+        public bool SetModel(ModelEntity model)
         {
             _animation = model.GetComponent<Animation>();
             _animationList = model.GetComponent<AnimationList>();

@@ -2,7 +2,8 @@ using EAR.View;
 using EAR.AR;
 using UnityEngine;
 using EAR.AnimationPlayer;
-using System;
+using EAR.Selection;
+using EAR.Entity;
 
 namespace EAR.Editor.Presenter
 {
@@ -14,22 +15,24 @@ namespace EAR.Editor.Presenter
         private AnimationBar animationBar;
         [SerializeField]
         private AnimPlayer animationPlayer;
-
+        [SerializeField]
+        private SelectionManager selectionManager;
 
         void Start()
         {
-            if (modelLoader != null && animationBar != null && animationPlayer != null)
+            selectionManager.OnObjectSelected += (Selectable selectable) =>
             {
-                modelLoader.OnLoadEnded += ModelLoadDone;
-            } else
-            {
-                Debug.Log("Unassigned references");
-            }
+                ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
+                if (modelEntity)
+                {
+                    ModelSelect(modelEntity);
+                }
+            };
         }
 
-        private void ModelLoadDone()
+        private void ModelSelect(ModelEntity modelEntity)
         {
-            if (animationPlayer.SetModel(modelLoader.GetModel()))
+            if (animationPlayer.SetModel(modelEntity))
             {
                 animationBar.gameObject.SetActive(true);
                 animationBar.AddDropdownOption(animationPlayer.GetAnimationList());

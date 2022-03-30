@@ -19,18 +19,6 @@ namespace EAR.View
         public event Action<Color> OnFontColorChanged;
 
         public event Action<float> OnBoxWidthChanged;
-        public event Action<float> OnHeightChanged;
-
-        public event Action<string> OnButtonTitleInputFieldChanged;
-
-        public event Action<Color> OnButtonBackgroundColorChanged;
-
-        public event Action<float> OnButtonBorderWidthChanged;
-        public event Action<int> OnButtonBorderRadiusChanged;
-        public event Action<Color> OnButtonBorderColorChanged;
-
-        public event Action<int> OnButtonFontSizeChanged;
-        public event Action<Color> OnButtonFontColorChanged;
 
         public event Action OnDeleteButtonClick;
 
@@ -50,23 +38,6 @@ namespace EAR.View
         private ColorSelector fontColor;
         [SerializeField]
         private InputFieldWithSlider boxWidth;
-        [SerializeField]
-        private InputFieldWithSlider height;
-
-        [SerializeField]
-        private TMP_InputField buttonInputField;
-        [SerializeField]
-        private ColorSelector buttonBackgroundColorSelector;
-        [SerializeField]
-        private InputFieldWithSlider buttonBorderWidth;
-        [SerializeField]
-        private InputFieldWithSlider buttonBorderRadius;
-        [SerializeField]
-        private ColorSelector buttonBorderColorSelector;
-        [SerializeField]
-        private InputFieldWithSlider buttonFontSize;
-        [SerializeField]
-        private ColorSelector buttonFontColor;
 
         [SerializeField]
         private Button deleteButton;
@@ -90,13 +61,6 @@ namespace EAR.View
             borderColorSelector.SetColor(noteData.borderColor);
             fontSize.SetValue(noteData.fontSize);
             fontColor.SetColor(noteData.textColor);
-            buttonInputField.text = noteData.buttonTitle;
-            buttonBackgroundColorSelector.SetColor(noteData.buttonBackgroundColor);
-            buttonBorderWidth.SetValue(noteData.buttonBorderWidth.x);
-            buttonBorderRadius.SetValue(noteData.buttonBorderRadius.x);
-            buttonBorderColorSelector.SetColor(noteData.buttonBorderColor);
-            buttonFontSize.SetValue(noteData.buttonFontSize);
-            buttonFontColor.SetColor(noteData.buttonTextColor);
         }
         
 
@@ -144,46 +108,6 @@ namespace EAR.View
             boxWidth.OnValueChanged += (float value) =>
             {
                 OnBoxWidthChanged?.Invoke(value);
-            };
-
-            height.OnValueChanged += (float value) =>
-            {
-                OnHeightChanged?.Invoke(value);
-            };
-
-            buttonInputField.onValueChanged.AddListener((string text) =>
-            {
-                OnButtonTitleInputFieldChanged?.Invoke(text);
-            });
-
-            buttonBackgroundColorSelector.OnColorChanged += (Color color) =>
-            {
-                OnButtonBackgroundColorChanged?.Invoke(color);
-            };
-
-            buttonBorderWidth.OnValueChanged += (float value) =>
-            {
-                OnButtonBorderWidthChanged?.Invoke(value);
-            };
-
-            buttonBorderRadius.OnValueChanged += (float value) =>
-            {
-                OnButtonBorderRadiusChanged?.Invoke((int)value);
-            };
-
-            buttonFontColor.OnColorChanged += (Color color) =>
-            {
-                OnButtonFontColorChanged?.Invoke(color);
-            };
-
-            buttonFontSize.OnValueChanged += (float value) =>
-            {
-                OnButtonFontSizeChanged?.Invoke((int) value);
-            };
-
-            buttonBorderColorSelector.OnColorChanged += (Color color) =>
-            {
-                OnButtonBorderColorChanged?.Invoke(color);
             };
 
             CloseEditor();
