@@ -1,8 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-using EAR.Localization;
-using DG.Tweening;
+using EAR.AssetManager;
 using Nobi.UiRoundedCorners;
 
 namespace EAR.Entity
@@ -35,11 +34,11 @@ namespace EAR.Entity
 
         private Vector3 originalScale;
 
-        public static NoteEntity InstantNewEntity(NoteEntity notePrefab, NoteData noteData)
+        public static NoteEntity InstantNewEntity(NoteData noteData)
         {
+            NoteEntity notePrefab = AssetContainer.Instance.GetNotePrefab();
             NoteEntity noteEntity = Instantiate(notePrefab);
-            noteEntity.PopulateData(noteData);
-            noteEntity.SetId(noteData.id);
+            noteEntity.PopulateData(noteData);  
             return noteEntity;
         }
 
@@ -100,7 +99,7 @@ namespace EAR.Entity
             return noteData;
         }
 
-        public void PopulateData(NoteData data)
+        private void PopulateData(NoteData data)
         {
             TransformData.TransformDataToTransfrom(data.noteTransformData, transform);
             RectTransformData.RectTransformDataToRectTransform(data.noteContentRectTransformData, noteContainer);
@@ -112,6 +111,7 @@ namespace EAR.Entity
             SetTextColor(data.textColor);
             SetBorderColor(data.borderColor);
             SetTextBorderWidth(data.borderWidth);
+            SetId(data.id);
         }
 
         public void SetHeight(float height)

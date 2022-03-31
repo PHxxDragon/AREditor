@@ -1,12 +1,12 @@
+using System;
 using UnityEngine;
 using TMPro;
 using EAR.AssetManager;
-using System;
 using System.Collections.Generic;
 
 namespace EAR.View
 {
-    public class ModelEditorWindow : MonoBehaviour
+    public class ImageEditorWindow : MonoBehaviour
     {
         public event Action<string> OnModelAssetSelected;
 
@@ -28,7 +28,7 @@ namespace EAR.View
             });
             assetContainer.OnAssetObjectAdded += (AssetObject assetObject) =>
             {
-                if (assetObject.type == AssetObject.MODEL_TYPE)
+                if (assetObject.type == AssetObject.IMAGE_TYPE)
                 {
                     assets.Add(assetObject);
                     TMP_Dropdown.OptionData optionData = new TMP_Dropdown.OptionData();
@@ -55,15 +55,16 @@ namespace EAR.View
             gameObject.SetActive(false);
         }
 
-        public void PopulateData(ModelData modelData)
+        public void PopulateData(ImageData imageData)
         {
             int index = 0;
-            for (int i = 0; i < assets.Count; i++) { 
-                if (assets[i].assetsId == modelData.assetId)
+            for (int i = 0; i < assets.Count; i++)
+            {
+                if (assets[i].assetsId == imageData.assetId)
                 {
                     index = i + 1;
                 }
-            }           
+            }
             dropdown.value = index;
         }
     }

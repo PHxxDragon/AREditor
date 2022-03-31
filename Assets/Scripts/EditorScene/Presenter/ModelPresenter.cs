@@ -43,7 +43,7 @@ namespace EAR.Editor.Presenter
                     });
                 } else
                 {
-
+                    objectPreviewAndAdd.StopPreview(modelPrefab);
                 }
             };
             selectionManager.OnObjectSelected += (Selectable selectable) =>
@@ -71,7 +71,7 @@ namespace EAR.Editor.Presenter
             modelEditorWindow.OnModelAssetSelected += (string assetId) =>
             {
                 GameObject model = assetContainer.GetModel(assetId);
-                currentModel.SetModel(assetId, model);
+                currentModel.SetModel(assetId);
             };
         }
     }

@@ -29,8 +29,6 @@ namespace EAR.Editor.Presenter
 
         [SerializeField]
         private GameObject container;
-        [SerializeField]
-        private NoteEntity notePrefab;
 
         [SerializeField]
         private Modal modalPrefab;
@@ -71,6 +69,9 @@ namespace EAR.Editor.Presenter
                     case AssetObject.MODEL_TYPE:
                         modelLoader.LoadModel(assetObject.assetsId, assetObject.url, assetObject.extension, assetObject.isZipFile);
                         break;
+                    case AssetObject.IMAGE_TYPE:
+                        LoadImage(assetObject.assetsId, assetObject.url);
+                        break;
                     default:
                         assetCount -= 1;
                         break;
@@ -82,6 +83,21 @@ namespace EAR.Editor.Presenter
             modelLoader.OnLoadError += OnLoadError;
 
             StartCoroutine(LoadMetadataAfterAssets(assetInformation));
+        }
+
+        private void LoadImage(string assetId, string url)
+        {
+            Utils.Instance.GetImageAsTexture2D(url,
+            (image) =>
+            {
+                assetContainer.AddImage(assetObjectDict[assetId], image);
+                assetCount -= 1;
+            }, (error) =>
+            {
+                Modal modal = Instantiate(modalPrefab, canvas.transform);
+                modal.SetModalContent("Error", error);
+                modal.DisableCancelButton();
+            });
         }
 
         private IEnumerator LoadMetadataAfterAssets(AssetInformation assetInformation)
@@ -129,8 +145,7 @@ namespace EAR.Editor.Presenter
                 {
                     try
                     {
-                        GameObject model = assetContainer.GetModel(modelData.assetId);
-                        ModelEntity modelEntity = ModelEntity.InstantNewEntity(model, modelData);
+                        ModelEntity modelEntity = ModelEntity.InstantNewEntity(modelData);
                         modelEntity.gameObject.transform.parent = container.transform;
                     } catch (KeyNotFoundException)
                     {
@@ -143,7 +158,7 @@ namespace EAR.Editor.Presenter
             {
                 foreach(NoteData noteData in metadataObject.noteDatas)
                 {
-                    NoteEntity note = NoteEntity.InstantNewEntity(notePrefab, noteData);
+                    NoteEntity note = NoteEntity.InstantNewEntity(noteData);
                     note.gameObject.transform.parent = container.transform;
                 }
             }
@@ -171,13 +186,12 @@ namespace EAR.Editor.Presenter
                 {
                     ModelData modelData = new ModelData();
                     modelData.assetId = assetObject.assetsId;
-                    GameObject model = assetContainer.GetModel(modelData.assetId);
-                    ModelEntity modelEntity = ModelEntity.InstantNewEntity(model, modelData);
+                    ModelEntity modelEntity = ModelEntity.InstantNewEntity(modelData);
                     modelEntity.gameObject.transform.parent = container.transform;
                     Bounds bounds = Utils.GetModelBounds(modelEntity.gameObject);
                     float ratio = scaleToSize / bounds.extents.magnitude;
-                    model.transform.position = -(bounds.center * ratio) + new Vector3(0, distanceToPlane + bounds.extents.y * ratio, 0);
-                    model.transform.localScale *= ratio;
+                    modelEntity.transform.position = -(bounds.center * ratio) + new Vector3(0, distanceToPlane + bounds.extents.y * ratio, 0);
+                    modelEntity.transform.localScale *= ratio;
                     break;
                 }
             }

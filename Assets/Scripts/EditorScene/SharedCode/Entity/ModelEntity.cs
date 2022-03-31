@@ -1,12 +1,13 @@
 using UnityEngine;
 using System;
+using EAR.AssetManager;
 
 namespace EAR.Entity
 {
     public class ModelEntity : BaseEntity
     {
-        public static event Action<string, ModelEntity> OnModelEntityCreated;
-        public static event Action<string, ModelEntity> OnModelEntityChanged;
+        public static event Action<ModelEntity> OnModelEntityCreated;
+        public static event Action<ModelEntity> OnModelEntityChanged;
 
         private string assetId;
 
@@ -25,7 +26,7 @@ namespace EAR.Entity
             return modelData;
         }
 
-        public void SetModel(string assetId, GameObject model)
+        public void SetModel(string assetId)
         {
             if (this.assetId == assetId)
             {
@@ -39,21 +40,22 @@ namespace EAR.Entity
                 prev = TransformData.TransformToTransformData(child);
                 Destroy(child.gameObject);
             }
-            GameObject newChild = Instantiate(model);
+            GameObject newChild = Instantiate(AssetContainer.Instance.GetModel(assetId));
             newChild.transform.parent = transform;
             if (prev != null)
                 TransformData.TransformDataToTransfrom(prev, newChild.transform);
-            OnModelEntityChanged?.Invoke(assetId, this);
+            OnModelEntityChanged?.Invoke(this);
         }
 
-        public static ModelEntity InstantNewEntity(GameObject model, ModelData modelData)
+        public static ModelEntity InstantNewEntity(ModelData modelData)
         {
             ModelEntity modelEntity = new GameObject().AddComponent<ModelEntity>();
+            GameObject model = AssetContainer.Instance.GetModel(modelData.assetId);
             GameObject child = Instantiate(model);
             child.transform.parent = modelEntity.transform;
             modelEntity.SetId(modelData.id);
             modelEntity.assetId = modelData.assetId;
-            OnModelEntityCreated?.Invoke(modelData.assetId, modelEntity);
+            OnModelEntityCreated?.Invoke(modelEntity);
             return modelEntity;
         }
 

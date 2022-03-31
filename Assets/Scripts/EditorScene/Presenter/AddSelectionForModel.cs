@@ -13,7 +13,7 @@ namespace EAR.Editor.Presenter
             ModelEntity.OnModelEntityChanged += AddSelection;
         }
 
-        private void AddSelection(string assetId, ModelEntity model)
+        private void AddSelection(ModelEntity model)
         {
             Selectable selectable = model.GetComponent<Selectable>();
             if (!selectable)

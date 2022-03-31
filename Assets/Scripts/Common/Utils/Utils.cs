@@ -77,9 +77,9 @@ namespace EAR
                 );
         }
 
-        public void GetImageAsTexture2D(string imageUrl, Action<Texture2D, object> callback, Action<string, object> errorCallback = null, object param = null)
+        public void GetImageAsTexture2D(string imageUrl, Action<Texture2D> callback, Action<string> errorCallback = null)
         {
-            StartCoroutine(GetImageCoroutine(imageUrl, callback, errorCallback, param));
+            StartCoroutine(GetImageCoroutine(imageUrl, callback, errorCallback));
         }
 
         public static Bounds GetUIBounds(GameObject UIObject)
@@ -141,7 +141,7 @@ namespace EAR
             return bounds;
         }
 
-        private IEnumerator GetImageCoroutine(string imageUrl, Action<Texture2D, object> callback, Action<string, object> errorCallback, object param)
+        private IEnumerator GetImageCoroutine(string imageUrl, Action<Texture2D> callback, Action<string> errorCallback)
         {
             using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(imageUrl))
             {
@@ -149,7 +149,7 @@ namespace EAR
 
                 if (uwr.result != UnityWebRequest.Result.Success)
                 {
-                    errorCallback?.Invoke(uwr.error, param);
+                    errorCallback?.Invoke(uwr.error);
                 }
                 else
                 {
@@ -158,10 +158,10 @@ namespace EAR
                     // https://answers.unity.com/questions/391612/any-way-to-validate-wwwtexture.html
                     if (texture.width < 10 && texture.height < 10)
                     {
-                        errorCallback?.Invoke("Error loading texture", param);
+                        errorCallback?.Invoke("Error loading texture");
                         yield break;
                     }
-                    callback?.Invoke(texture, param);
+                    callback?.Invoke(texture);
                 }
             }
         }

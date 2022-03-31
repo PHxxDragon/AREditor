@@ -48,6 +48,12 @@ namespace EAR.Integration
             assetObject2.type = AssetObject.MODEL_TYPE;
             assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/3/1648694213397_enc_wolf.zip";
             assetInformation.assets.Add(assetObject2);
+            AssetObject assetObject3 = new AssetObject();
+            assetObject3.assetsId = "lkjfioewuffewffdsf";
+            assetObject3.name = "image 1112";
+            assetObject3.type = AssetObject.IMAGE_TYPE;
+            assetObject3.url = "https://library.vuforia.com/sites/default/files/vuforia-library/articles/solution/Magic%20Leap%20Related%20Content/Astronaut-scaled.jpg";
+            assetInformation.assets.Add(assetObject3);
             LoadModule(JsonUtility.ToJson(assetInformation));
 #endif
         }

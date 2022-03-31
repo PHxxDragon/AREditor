@@ -1,11 +1,34 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using EAR.Entity;
 
 namespace EAR.AssetManager
 {
     public class AssetContainer : MonoBehaviour
     {
+        private static AssetContainer instance;
+
+        public static AssetContainer Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
+        void Awake()
+        {
+            if (!instance)
+            {
+                instance = this;
+            }
+            else
+            {
+                Debug.LogError("Two instance of asset container found");
+            }
+        }
+
         public Action<AssetObject> OnAssetObjectAdded;
 
         private readonly Dictionary<string, (AssetObject, GameObject)> models = new Dictionary<string, (AssetObject, GameObject)>();
@@ -13,6 +36,12 @@ namespace EAR.AssetManager
 
         [SerializeField]
         private GameObject disabledContainer;
+
+        [SerializeField]
+        private NoteEntity notePrefab;
+
+        [SerializeField]
+        private ImageEntity imagePrefab;
 
         public List<AssetObject> GetModelAssets()
         {
@@ -55,6 +84,16 @@ namespace EAR.AssetManager
         public Texture2D GetImage(string assetId)
         {
             return images[assetId].Item2;
+        }
+
+        public NoteEntity GetNotePrefab()
+        {
+            return notePrefab;
+        }
+
+        public ImageEntity GetImagePrefab()
+        {
+            return imagePrefab;
         }
     }
 }

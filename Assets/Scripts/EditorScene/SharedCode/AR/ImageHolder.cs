@@ -18,7 +18,7 @@ namespace EAR.AR
             Utils.Instance.GetImageAsTexture2D(imageUrl, GenerateMesh, SetActiveFalse);
         }
 
-        private void SetActiveFalse(string arg1, object arg2)
+        private void SetActiveFalse(string arg1)
         {
             gameObject.SetActive(false);
         }
@@ -32,7 +32,7 @@ namespace EAR.AR
             }
         }
 
-        private void GenerateMesh(Texture2D texture2D, object param)
+        private void GenerateMesh(Texture2D texture2D)
         {
             mesh = new Mesh();
             MeshFilter meshFilter = GetComponent<MeshFilter>();
