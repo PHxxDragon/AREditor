@@ -23,9 +23,10 @@ namespace EAR
         public string assetsId;
         public string url;
         public string type;
+        public string name;
+        public string extension;
 
         //type == "model"
-        public string extension;
         public bool isZipFile;
     }
 }

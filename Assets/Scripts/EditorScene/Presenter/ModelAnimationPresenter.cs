@@ -18,8 +18,15 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private SelectionManager selectionManager;
 
-        void Start()
+        private ModelEntity model;
+
+        void Awake()
         {
+            animationBar.DropdownValueChangeEvent += DropdownValueChangeEventSubscriber;
+            animationBar.PlayToggleClickEvent += PlayToggleClickEventSubscriber;
+            animationBar.SliderValueChangeEvent += SliderValueChangeEventSubscriber;
+            animationPlayer.AnimationProgressChangeEvent += AnimationProgressChangeEventSubscriber;
+            animationPlayer.AnimationStartEvent += AnimationStartEventSubscriber;
             selectionManager.OnObjectSelected += (Selectable selectable) =>
             {
                 ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
@@ -28,19 +35,31 @@ namespace EAR.Editor.Presenter
                     ModelSelect(modelEntity);
                 }
             };
+            selectionManager.OnObjectDeselected += (Selectable selectable) =>
+            {
+                ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
+                if (modelEntity == model)
+                {
+                    ModelDeselect(modelEntity);
+                }
+            };
+        }
+
+        private void ModelDeselect(ModelEntity modelEntity)
+        {
+            model = null;
+            if (animationBar)
+                animationBar.gameObject.SetActive(false);
         }
 
         private void ModelSelect(ModelEntity modelEntity)
         {
             if (animationPlayer.SetModel(modelEntity))
             {
+                model = modelEntity;
                 animationBar.gameObject.SetActive(true);
-                animationBar.AddDropdownOption(animationPlayer.GetAnimationList());
-                animationBar.DropdownValueChangeEvent += DropdownValueChangeEventSubscriber;
-                animationBar.PlayToggleClickEvent += PlayToggleClickEventSubscriber;
-                animationBar.SliderValueChangeEvent += SliderValueChangeEventSubscriber;
-                animationPlayer.AnimationProgressChangeEvent += AnimationProgressChangeEventSubscriber;
-                animationPlayer.AnimationStartEvent += AnimationStartEventSubscriber;
+                animationBar.SetDropdownOption(animationPlayer.GetAnimationList(), animationPlayer.GetCurrentIndex());
+                
             }
         }
 

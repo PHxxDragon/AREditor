@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EAR.Entity;
 using System;
+using System.Collections;
 using System.Linq;
 
 namespace EAR.AnimationPlayer
@@ -37,36 +38,49 @@ namespace EAR.AnimationPlayer
 
         public void SetAnimationState(float value)
         {
-            _currentAnimationState.normalizedTime = value;
+            if (_animation != null)
+            {
+                _currentAnimationState.normalizedTime = value;
+            }
         }
 
         public bool SetModel(ModelEntity model)
         {
-            _animation = model.GetComponent<Animation>();
-            _animationList = model.GetComponent<AnimationList>();
+            _animation = model != null ? model.GetComponentInChildren<Animation>() : null ;
+            _animationList = model != null ? model.GetComponentInChildren<AnimationList>() : null;
             if (_animation == null || _animationList == null)
             {
                 _currentIndex = -1;
                 _clipCount = -1;
+                _currentAnimationState = null;
                 return false;
             }
             if (!_animation.isPlaying)
             {
                 _animation.Play(_animationList.Clips[STATIC_POSE_INDEX].name);
                 _animation.Stop();
-                AnimationStartEvent?.Invoke(false);
                 _currentAnimationState = _animation[_animationList.Clips[0].name];
                 _currentIndex = 0;
+                _clipCount = _animation.GetClipCount();
+                AnimationStartEvent?.Invoke(false);
             }
             else
             {
-                _currentIndex = -1;
+                _clipCount = _animation.GetClipCount();
                 foreach (AnimationState state in _animation)
                 {
-                    _currentIndex++;
                     if (state.weight == 1)
                     {
                         _currentAnimationState = state;
+                        _currentIndex = -1;
+                        for (int i = 0; i < _animationList.Clips.Count; i++)
+                        {
+                            if (state.name == _animationList.Clips[i].name)
+                            {
+                                _currentIndex = i;
+                                break;
+                            }
+                        }
                         break;
                     }
                 }
@@ -75,7 +89,6 @@ namespace EAR.AnimationPlayer
                     Debug.LogError("Cannot find active animation state ");
                 }
             }
-            _clipCount = _animation.GetClipCount();
             return true;
         }
 
@@ -90,6 +103,10 @@ namespace EAR.AnimationPlayer
 
         public void PlayAnimation(int index)
         {
+            if (_currentIndex == index)
+                return;
+
+            _currentIndex = index;
             if (_animation != null && _animationList != null)
             {
                 //reset the current animation state
@@ -106,6 +123,7 @@ namespace EAR.AnimationPlayer
                 _currentAnimationState.speed = 1;
                 _animation.Play(_animationList.Clips[index].name);
             }
+
             if (index == 0)
             {
                 _animation.Stop();
@@ -115,7 +133,6 @@ namespace EAR.AnimationPlayer
             {
                 AnimationStartEvent?.Invoke(true);
             }
-            _currentIndex = index;
         }
 
         public int GetCurrentIndex()

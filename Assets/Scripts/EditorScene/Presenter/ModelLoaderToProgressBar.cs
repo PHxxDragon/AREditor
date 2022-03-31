@@ -11,6 +11,8 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private ProgressBar progressBar;
 
+        private int startCount = 0;
+
         void Awake()
         {
             if (modelLoader != null && progressBar != null)
@@ -24,11 +26,16 @@ namespace EAR.Editor.Presenter
         private void ModelLoadStart(string assetId)
         {
             progressBar.EnableProgressBar();
+            startCount++;
         }
 
         private void ModelLoadEnd(string assetId, GameObject model)
         {
-            progressBar.DisableProgressBar();
+            startCount--;
+            if (startCount == 0)
+            {
+                progressBar.DisableProgressBar();
+            }
         }
 
         private void ProgressChanged(float progress, string text)

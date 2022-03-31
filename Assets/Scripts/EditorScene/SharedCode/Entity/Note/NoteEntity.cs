@@ -77,11 +77,6 @@ namespace EAR.Entity
             }*/
         }
 
-        public void InitNoteData()
-        {
-            text.text = LocalizationManager.GetLocalizedText("NoteFirstText");
-        }
-
         public NoteData GetNoteData()
         {
             NoteData noteData = new NoteData();

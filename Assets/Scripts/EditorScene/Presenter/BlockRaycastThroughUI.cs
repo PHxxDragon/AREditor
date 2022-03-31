@@ -47,13 +47,17 @@ namespace EAR.Editor.Presenter
                 return;
             }
 
-            PointerEventData pointerEventData = new PointerEventData(eventSystem);
-            pointerEventData.position = Input.mousePosition;
-            List<RaycastResult> results = new List<RaycastResult>();
-            raycaster.Raycast(pointerEventData, results);
-            if (results.Count > 0)
+            GraphicRaycaster[] graphicRaycasters = raycaster.GetComponentsInChildren<GraphicRaycaster>();
+            foreach (GraphicRaycaster caster in graphicRaycasters)
             {
-                isBlocked = true;
+                PointerEventData pointerEventData = new PointerEventData(eventSystem);
+                pointerEventData.position = Input.mousePosition;
+                List<RaycastResult> results = new List<RaycastResult>();
+                caster.Raycast(pointerEventData, results);
+                if (results.Count > 0)
+                {
+                    isBlocked = true;
+                }
             }
         }
     }

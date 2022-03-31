@@ -28,6 +28,11 @@ namespace EAR.AddObject
 
         public void StartPreviewAndAdd(GameObject objectPrefab, GameObject previewPrefab, Action<GameObject> callback = null, Action<GameObject> previewInitCallback = null)
         {
+            if (isPreviewOn)
+            {
+                StopPreview();
+            }
+
             isPreviewOn = true;
             this.objectPrefab = objectPrefab;
             previewObject = Instantiate(previewPrefab);
@@ -36,15 +41,20 @@ namespace EAR.AddObject
             this.callback = callback;
         }
 
-        public void StopPreview()
+        public void StopPreview(GameObject objectPrefab)
         {
-            if (isPreviewOn)
+            if (isPreviewOn && objectPrefab == this.objectPrefab)
             {
-                isPreviewOn = false;
-                Destroy(previewObject);
-                previewObject = null;
-                objectPrefab = null;
+                StopPreview();
             }
+        }
+
+        private void StopPreview()
+        {
+            isPreviewOn = false;
+            Destroy(previewObject);
+            previewObject = null;
+            objectPrefab = null;
         }
 
         void Update()
@@ -63,7 +73,14 @@ namespace EAR.AddObject
                     Vector3 behindPos = 2 * previewObject.transform.position - cameraPos;
                     behindPos.y = 0;
                     previewObject.transform.LookAt(behindPos);
+
                     Bounds bounds = Utils.GetUIBounds(previewObject);
+                    Bounds emptyBound = new Bounds();
+                    if (bounds == emptyBound)
+                    {
+                        bounds = Utils.GetModelBounds(previewObject);
+                    }
+
                     Vector3 pos = previewObject.transform.position;
                     pos.y = pos.y + bounds.extents.y - bounds.center.y;
                     previewObject.transform.position = pos;

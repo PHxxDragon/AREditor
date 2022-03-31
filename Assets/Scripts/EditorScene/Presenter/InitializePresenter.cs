@@ -39,10 +39,10 @@ namespace EAR.Editor.Presenter
 
         private MetadataObject metadata;
         private int assetCount;
+        private Dictionary<string, AssetObject> assetObjectDict = new Dictionary<string, AssetObject>();
 
         void Awake()
         {
-            Debug.Log("start in presenter");
             if (reactPlugin != null)
             {
                 reactPlugin.LoadModuleCalledEvent += LoadModuleCallback;
@@ -75,6 +75,7 @@ namespace EAR.Editor.Presenter
                         assetCount -= 1;
                         break;
                 }
+                assetObjectDict.Add(assetObject.assetsId, assetObject);
             }
 
             modelLoader.OnLoadEnded += OnLoadEnded;
@@ -109,7 +110,7 @@ namespace EAR.Editor.Presenter
 
         private void OnLoadEnded(string assetId, GameObject model)
         {
-            assetContainer.AddModel(assetId, model);
+            assetContainer.AddModel(assetObjectDict[assetId], model);
             assetCount -= 1;
         }
 

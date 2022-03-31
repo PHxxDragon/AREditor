@@ -41,3 +41,9 @@ Settings,Settings,Cài đặt
 AmbientLight,Ambient light,Ánh sáng môi trường
 DirectionalLight,Directional light,Ánh sáng định hướng
 Color,Color,Màu
+AddModel,Add model,Thêm mô hình
+AddImage,Add image,Thêm hình ảnh
+EditModel,Edit model,Sửa mô hình
+Model,Model,Mô hình
+Asset,Asset,Asset
+ChooseModelAsset,Choose model asset,Chọn mô hình

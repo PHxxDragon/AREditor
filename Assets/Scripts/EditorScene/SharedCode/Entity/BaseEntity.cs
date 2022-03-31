@@ -7,6 +7,11 @@ namespace EAR.Entity
         private string id;
         private string entityName;
 
+        public virtual bool IsValidEntity()
+        {
+            return true;
+        }
+
         protected void SetId(string id = "")
         {
             if (id != "")

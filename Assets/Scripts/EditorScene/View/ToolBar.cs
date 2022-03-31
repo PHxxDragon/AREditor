@@ -15,6 +15,10 @@ namespace EAR.View
         [SerializeField]
         private Toggle noteAddToggle;
         [SerializeField]
+        private Toggle modelAddToggle;
+        [SerializeField]
+        private Toggle imageAddToggle;
+        [SerializeField]
         private Button saveButton;
         [SerializeField]
         private Button undoButton;
@@ -51,12 +55,32 @@ namespace EAR.View
             rotateToggle.onValueChanged.AddListener(RotateToggleActive);
             scaleToggle.onValueChanged.AddListener(ScaleToggleActive);
             noteAddToggle.onValueChanged.AddListener(NoteToggleActive);
+            modelAddToggle.onValueChanged.AddListener(ModelToggleActive);
+            imageAddToggle.onValueChanged.AddListener(ImageToggleActive);
             saveButton.onClick.AddListener(SaveButtonClick);
             undoButton.onClick.AddListener(UndoButtonClick);
             redoButton.onClick.AddListener(RedoButtonClick);
             screenshotButton.onClick.AddListener(ScreenshotButtonClick);
             settingButton.onClick.AddListener(SettingButtonClick);
             ApplyGlobalStates();
+        }
+
+        private void ImageToggleActive(bool isOn)
+        {
+            if (isOn)
+            {
+                OnToolChanged?.Invoke(activeTool, ToolEnum.AddImage);
+                activeTool = ToolEnum.AddImage;
+            }
+        }
+
+        private void ModelToggleActive(bool isOn)
+        {
+            if (isOn)
+            {
+                OnToolChanged?.Invoke(activeTool, ToolEnum.AddModel);
+                activeTool = ToolEnum.AddModel;
+            }
         }
 
         private void SettingButtonClick()

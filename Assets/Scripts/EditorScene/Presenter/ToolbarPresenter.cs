@@ -78,13 +78,19 @@ namespace EAR.Editor.Presenter
             List<ModelData> modelDatas = new List<ModelData>();
             foreach (ModelEntity model in container.GetComponentsInChildren<ModelEntity>())
             {
-                modelDatas.Add(model.GetModelData());
+                if (model.IsValidEntity())
+                {
+                    modelDatas.Add(model.GetModelData());
+                }
             }
 
             List<NoteData> noteDatas = new List<NoteData>();
             foreach (NoteEntity note in container.GetComponentsInChildren<NoteEntity>())
             {
-                noteDatas.Add(note.GetNoteData());
+                if (note.IsValidEntity())
+                {
+                    noteDatas.Add(note.GetNoteData());
+                }
             }
             metadataObject.noteDatas = noteDatas;
 

@@ -1,5 +1,5 @@
 using UnityEngine;
-using EAR.AR;
+using EAR.Entity;
 using EAR.Selection;
 using System.Collections;
 
@@ -7,25 +7,30 @@ namespace EAR.Editor.Presenter
 {
     public class AddSelectionForModel : MonoBehaviour
     {
-        [SerializeField]
-        private ModelLoader modelLoader;
-
         void Start()
         {
-            if (modelLoader != null)
-            {
-                modelLoader.OnLoadEnded += AddSelection;
-            }
+            ModelEntity.OnModelEntityCreated += AddSelection;
+            ModelEntity.OnModelEntityChanged += AddSelection;
         }
 
-        private void AddSelection(string assetId, GameObject model)
+        private void AddSelection(string assetId, ModelEntity model)
         {
-            model.AddComponent<Selectable>();
-            StartCoroutine(AddCollider(model));
+            Selectable selectable = model.GetComponent<Selectable>();
+            if (!selectable)
+            {
+                model.gameObject.AddComponent<Selectable>();
+            }
+            StartCoroutine(AddCollider(model.gameObject));
         }
 
         private IEnumerator AddCollider(GameObject model)
         {
+            BoxCollider boxCollider = model.GetComponent<BoxCollider>();
+            if (boxCollider)
+            {
+                Destroy(boxCollider);
+            }
+
             TransformData transformData = TransformData.TransformToTransformData(model.transform);
             TransformData.ResetTransform(model.transform);
             Bounds bound = Utils.GetModelBounds(model);

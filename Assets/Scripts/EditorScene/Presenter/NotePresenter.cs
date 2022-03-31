@@ -4,6 +4,7 @@ using EAR.Selection;
 using EAR.EARCamera;
 using EAR.UndoRedo;
 using EAR.Entity;
+using EAR.Localization;
 using UnityEngine;
 
 namespace EAR.Editor.Presenter
@@ -136,18 +137,18 @@ namespace EAR.Editor.Presenter
             {
                 objectPreviewAndAdd.StartPreviewAndAdd(notePrefab, notePreviewPrefab, (GameObject note) =>
                 {
-                    note.GetComponent<NoteEntity>().InitNoteData();
+                    note.GetComponent<NoteEntity>().SetText(LocalizationManager.GetLocalizedText("NoteFirstText"));
                     note.transform.parent = noteContainer.transform;
                     toolBar.SetDefaultTool();
                     IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
                     undoRedoManager.AddCommand(command);
                 }, (GameObject note) =>
                 {
-                    note.GetComponent<NoteEntity>().InitNoteData();
+                    note.GetComponent<NoteEntity>().SetText(LocalizationManager.GetLocalizedText("NoteFirstText"));
                 });
             } else
             {
-                objectPreviewAndAdd.StopPreview();
+                objectPreviewAndAdd.StopPreview(notePrefab);
             }
         }
     }

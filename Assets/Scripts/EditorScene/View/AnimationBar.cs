@@ -31,8 +31,9 @@ namespace EAR.View
             toggle.isOn = isOn;
         }
 
-        public void AddDropdownOption(List<string> options)
+        public void SetDropdownOption(List<string> options, int value)
         {
+            dropdown.ClearOptions();
             List<TMP_Dropdown.OptionData> optionDatas = new List<TMP_Dropdown.OptionData>();
             foreach (string option in options)
             {
@@ -41,6 +42,7 @@ namespace EAR.View
                 optionDatas.Add(optionData);
             }
             dropdown.AddOptions(optionDatas);
+            dropdown.value = value;
         }
 
         public void SetSliderValue(float value)
