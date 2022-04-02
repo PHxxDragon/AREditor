@@ -49,3 +49,6 @@ Asset,Asset,Asset
 ChooseModelAsset,Choose model asset,Chọn mô hình
 EditImage,Edit image,Sửa hình ảnh
 Image,Image,Hình ảnh
+Play,Play,Play
+EditButton,Edit button,Sửa nút bấm
+Listener,Listener,Đối tượng

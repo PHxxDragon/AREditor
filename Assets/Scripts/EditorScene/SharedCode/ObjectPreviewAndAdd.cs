@@ -14,9 +14,10 @@ namespace EAR.AddObject
         private Collider raycastPlane;
 
         private bool isPreviewOn;
-        private GameObject objectPrefab;
         private GameObject previewObject;
-        private Action<GameObject> callback;
+        private Action<TransformData> callback;
+
+        private string key;
 
         void Start()
         {
@@ -26,7 +27,7 @@ namespace EAR.AddObject
             }
         }
 
-        public void StartPreviewAndAdd(GameObject objectPrefab, GameObject previewPrefab, Action<GameObject> callback = null, Action<GameObject> previewInitCallback = null)
+        public void StartPreviewAndAdd(string key, GameObject previewPrefab, Action<TransformData> callback = null, Action<GameObject> previewInitCallback = null)
         {
             if (isPreviewOn)
             {
@@ -34,16 +35,16 @@ namespace EAR.AddObject
             }
 
             isPreviewOn = true;
-            this.objectPrefab = objectPrefab;
+            this.key = key;
             previewObject = Instantiate(previewPrefab);
             previewInitCallback?.Invoke(previewObject);
             previewObject.SetActive(false);
             this.callback = callback;
         }
 
-        public void StopPreview(GameObject objectPrefab)
+        public void StopPreview(string key)
         {
-            if (isPreviewOn && objectPrefab == this.objectPrefab)
+            if (isPreviewOn && this.key == key)
             {
                 StopPreview();
             }
@@ -54,7 +55,7 @@ namespace EAR.AddObject
             isPreviewOn = false;
             Destroy(previewObject);
             previewObject = null;
-            objectPrefab = null;
+            key = null;
         }
 
         void Update()
@@ -91,9 +92,7 @@ namespace EAR.AddObject
                         CheckMouseRaycastBlocked?.Invoke(ref isBlocked);
                         if (!isBlocked)
                         {
-                            GameObject note = Instantiate(objectPrefab);
-                            note.transform.SetPositionAndRotation(previewObject.transform.position, previewObject.transform.rotation);
-                            callback?.Invoke(note);
+                            callback?.Invoke(TransformData.TransformToTransformData(previewObject.transform));
                             StopPreview();
                         }
                     }

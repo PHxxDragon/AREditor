@@ -14,6 +14,29 @@ namespace EAR
     }
 
     [Serializable]
+    public class ButtonData
+    {
+        public string id;
+        public string name;
+
+        public TransformData transform;
+        public string activatorEntityId;
+        public List<ButtonActionData> actionDatas;
+    }
+
+    [SerializeField]
+    public class ButtonActionData
+    {
+        public enum ActionType
+        {
+            Show, Hide, PlayAnimation
+        }
+
+        public string targetEntityId;
+        public ActionType actionType;
+    }
+
+    [Serializable]
     public class ImageData
     {
         public string id;
@@ -43,14 +66,14 @@ namespace EAR
         public RectTransformData noteContentRectTransformData;
 
         public string noteContent;
-        public Color textBackgroundColor;
+        public Color textBackgroundColor = Color.white;
 
-        public Vector4 borderWidth;
-        public Vector4 textBorderRadius;
-        public Color borderColor;
+        public Vector4 borderWidth = Vector4.zero;
+        public Vector4 textBorderRadius = Vector4.zero;
+        public Color borderColor = Color.white;
 
         public int fontSize;
-        public Color textColor;
+        public Color textColor = Color.black;
 
         public float boxWidth;
     }

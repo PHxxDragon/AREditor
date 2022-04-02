@@ -11,16 +11,14 @@ namespace EAR.Editor.Presenter
 {
     public class NotePresenter : MonoBehaviour
     {
+        private const string KEY = "NotePresenter";
+
         [SerializeField]
         private ToolBar toolBar;
         [SerializeField]
         private ObjectPreviewAndAdd objectPreviewAndAdd;
         [SerializeField]
-        private GameObject notePrefab;
-        [SerializeField]
         private GameObject notePreviewPrefab;
-        [SerializeField]
-        private GameObject noteContainer;
         [SerializeField]
         private SelectionManager selectionManager;
         [SerializeField]
@@ -60,13 +58,14 @@ namespace EAR.Editor.Presenter
                     if (noteEditorWindow) noteEditorWindow.CloseEditor();
                 }
             };
-            selectionManager.CheckMouseRaycastBlocked += (ref bool isBlocked) =>
+            //TODO
+/*            selectionManager.CheckMouseRaycastBlocked += (ref bool isBlocked) =>
             {
                 if (toolBar.GetActiveTool() == ToolEnum.AddNote)
                 {
                     isBlocked = true;
                 }
-            };
+            };*/
 
             noteEditorWindow.OnTextInputFieldChanged += (string value) =>
             {
@@ -135,10 +134,12 @@ namespace EAR.Editor.Presenter
         {
             if (current == ToolEnum.AddNote)
             {
-                objectPreviewAndAdd.StartPreviewAndAdd(notePrefab, notePreviewPrefab, (GameObject note) =>
+                objectPreviewAndAdd.StartPreviewAndAdd(KEY, notePreviewPrefab, (TransformData transfomData) =>
                 {
-                    note.GetComponent<NoteEntity>().SetText(LocalizationManager.GetLocalizedText("NoteFirstText"));
-                    note.transform.parent = noteContainer.transform;
+                    NoteData noteData = new NoteData();
+                    noteData.noteContent = LocalizationManager.GetLocalizedText("NoteFirstText");
+                    noteData.noteTransformData = transfomData;
+                    NoteEntity note = NoteEntity.InstantNewEntity(noteData);
                     toolBar.SetDefaultTool();
                     IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
                     undoRedoManager.AddCommand(command);
@@ -148,7 +149,7 @@ namespace EAR.Editor.Presenter
                 });
             } else
             {
-                objectPreviewAndAdd.StopPreview(notePrefab);
+                objectPreviewAndAdd.StopPreview(KEY);
             }
         }
     }

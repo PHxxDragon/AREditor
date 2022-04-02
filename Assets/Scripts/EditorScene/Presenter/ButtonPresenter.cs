@@ -2,46 +2,42 @@ using EAR.View;
 using EAR.AddObject;
 using EAR.Selection;
 using EAR.AssetManager;
-using EAR.Entity;
 using UnityEngine;
 
 namespace EAR.Editor.Presenter
 {
-    public class ImagePresenter : MonoBehaviour
+    public class ButtonPresenter : MonoBehaviour
     {
-        private const string KEY = "ImagePresenter";
         [SerializeField]
         private ToolBar toolbar;
         [SerializeField]
         private ObjectPreviewAndAdd objectPreviewAndAdd;
         [SerializeField]
-        private GameObject imagePreviewPrefab;
+        private GameObject buttonPreviewPrefab;
         [SerializeField]
         private SelectionManager selectionManager;
         [SerializeField]
-        private ImageEditorWindow imageEditorWindow;
+        private ButtonEditorWindow buttonEditorWindow;
 
-        private ImageEntity currentImage;
+        //private ImageEntity currentImage;
 
-        void Start()
+        /*void Start()
         {
             toolbar.OnToolChanged += (ToolEnum prev, ToolEnum current) => {
                 if (current == ToolEnum.AddImage)
                 {
-                    objectPreviewAndAdd.StartPreviewAndAdd(KEY, imagePreviewPrefab, (TransformData transform) =>
+                    objectPreviewAndAdd.StartPreviewAndAdd(imagePrefab, imagePreviewPrefab, (GameObject image) =>
                     {
-                        ImageData imageData = new ImageData();
-                        imageData.transform = transform;
-                        ImageEntity.InstantNewEntity(imageData);
+                        image.transform.parent = container.transform;
                         toolbar.SetDefaultTool();
                         //TODO
-                        /*                        IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
-                                                undoRedoManager.AddCommand(command);*/
+                        *//*                        IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
+                                                undoRedoManager.AddCommand(command);*//*
                     });
                 }
                 else
                 {
-                    objectPreviewAndAdd.StopPreview(KEY);
+                    objectPreviewAndAdd.StopPreview(imagePrefab);
                 }
             };
             selectionManager.OnObjectSelected += (Selectable selectable) =>
@@ -68,10 +64,11 @@ namespace EAR.Editor.Presenter
 
             imageEditorWindow.OnModelAssetSelected += (string assetId) =>
             {
-                Texture2D image = AssetContainer.Instance.GetImage(assetId);
+                Texture2D image = assetContainer.GetImage(assetId);
                 currentImage.SetImage(assetId);
             };
-        }
+        }*/
     }
 }
+
 

@@ -101,11 +101,31 @@ namespace EAR.Entity
 
         private void PopulateData(NoteData data)
         {
-            TransformData.TransformDataToTransfrom(data.noteTransformData, transform);
-            RectTransformData.RectTransformDataToRectTransform(data.noteContentRectTransformData, noteContainer);
-            text.text = data.noteContent;
-            SetBoxWidth(data.boxWidth);
-            SetFontSize(data.fontSize);
+            if (data.noteTransformData != null)
+            {
+                TransformData.TransformDataToTransfrom(data.noteTransformData, transform);
+            }
+
+            if (data.noteContentRectTransformData != null)
+            {
+                RectTransformData.RectTransformDataToRectTransform(data.noteContentRectTransformData, noteContainer);
+            }
+            
+            if (data.noteContent != null)
+            {
+                text.text = data.noteContent;
+            }
+            
+            if (data.boxWidth > 0)
+            {
+                SetBoxWidth(data.boxWidth);
+            }
+            
+            if (data.fontSize > 0)
+            {
+                SetFontSize(data.fontSize);
+            }
+            
             SetTextBackgroundColor(data.textBackgroundColor);
             SetTextBorderRadius(data.textBorderRadius);
             SetTextColor(data.textColor);

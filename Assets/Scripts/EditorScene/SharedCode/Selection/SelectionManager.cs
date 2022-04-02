@@ -9,9 +9,6 @@ namespace EAR.Selection
         public event Action<Selectable> OnObjectDeselected;
         public event Action<IUndoRedoCommand> NewCommandEvent;
 
-        public delegate void IsMouseRaycastBlocked(ref bool isBlocked);
-        public event IsMouseRaycastBlocked CheckMouseRaycastBlocked;
-
         private Selectable _currentSelection;
 
         void Start()
@@ -40,9 +37,7 @@ namespace EAR.Selection
         {
             if (Input.GetMouseButtonDown(0))
             {
-                bool isBlocked = false;
-                CheckMouseRaycastBlocked(ref isBlocked);
-                if (!isBlocked)
+                if (!GlobalStates.IsMouseRaycastBlocked())
                 {
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     foreach (RaycastHit hit in Physics.RaycastAll(ray))

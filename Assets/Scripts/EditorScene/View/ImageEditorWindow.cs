@@ -12,8 +12,6 @@ namespace EAR.View
 
         [SerializeField]
         private TMP_Dropdown dropdown;
-        [SerializeField]
-        private AssetContainer assetContainer;
 
         private List<AssetObject> assets = new List<AssetObject>();
 
@@ -26,7 +24,7 @@ namespace EAR.View
                     OnModelAssetSelected?.Invoke(assets[index - 1].assetsId);
                 }
             });
-            assetContainer.OnAssetObjectAdded += (AssetObject assetObject) =>
+            AssetContainer.Instance.OnAssetObjectAdded += (AssetObject assetObject) =>
             {
                 if (assetObject.type == AssetObject.IMAGE_TYPE)
                 {

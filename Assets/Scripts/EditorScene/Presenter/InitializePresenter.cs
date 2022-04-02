@@ -24,11 +24,6 @@ namespace EAR.Editor.Presenter
         private CameraController cameraController;
         [SerializeField]
         private EnvironmentEditorWindow environmentEditorWindow;
-        [SerializeField]
-        private AssetContainer assetContainer;
-
-        [SerializeField]
-        private GameObject container;
 
         [SerializeField]
         private Modal modalPrefab;
@@ -90,7 +85,7 @@ namespace EAR.Editor.Presenter
             Utils.Instance.GetImageAsTexture2D(url,
             (image) =>
             {
-                assetContainer.AddImage(assetObjectDict[assetId], image);
+                AssetContainer.Instance.AddImage(assetObjectDict[assetId], image);
                 assetCount -= 1;
             }, (error) =>
             {
@@ -126,7 +121,7 @@ namespace EAR.Editor.Presenter
 
         private void OnLoadEnded(string assetId, GameObject model)
         {
-            assetContainer.AddModel(assetObjectDict[assetId], model);
+            AssetContainer.Instance.AddModel(assetObjectDict[assetId], model);
             assetCount -= 1;
         }
 
@@ -146,7 +141,6 @@ namespace EAR.Editor.Presenter
                     try
                     {
                         ModelEntity modelEntity = ModelEntity.InstantNewEntity(modelData);
-                        modelEntity.gameObject.transform.parent = container.transform;
                     } catch (KeyNotFoundException)
                     {
                         Debug.Log("Missing asset found");
@@ -159,7 +153,6 @@ namespace EAR.Editor.Presenter
                 foreach(NoteData noteData in metadataObject.noteDatas)
                 {
                     NoteEntity note = NoteEntity.InstantNewEntity(noteData);
-                    note.gameObject.transform.parent = container.transform;
                 }
             }
 
@@ -172,7 +165,7 @@ namespace EAR.Editor.Presenter
                 environmentEditorWindow.SetDirectionalLight(new LightData());
             }
 
-            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(container));
+            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(EntityContainer.Instance.GetContainer()));
         }
 
         private void InitMetadata(AssetInformation assetInformation)
@@ -187,7 +180,6 @@ namespace EAR.Editor.Presenter
                     ModelData modelData = new ModelData();
                     modelData.assetId = assetObject.assetsId;
                     ModelEntity modelEntity = ModelEntity.InstantNewEntity(modelData);
-                    modelEntity.gameObject.transform.parent = container.transform;
                     Bounds bounds = Utils.GetModelBounds(modelEntity.gameObject);
                     float ratio = scaleToSize / bounds.extents.magnitude;
                     modelEntity.transform.position = -(bounds.center * ratio) + new Vector3(0, distanceToPlane + bounds.extents.y * ratio, 0);
@@ -196,7 +188,7 @@ namespace EAR.Editor.Presenter
                 }
             }
 
-            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(container));
+            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(EntityContainer.Instance.GetContainer()));
         }
     }
 }

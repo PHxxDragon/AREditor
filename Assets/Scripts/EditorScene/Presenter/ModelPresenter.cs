@@ -9,22 +9,18 @@ namespace EAR.Editor.Presenter
 {
     public class ModelPresenter : MonoBehaviour
     {
+        private const string KEY = "ModelPrefab";
+
         [SerializeField]
         private ToolBar toolbar;
         [SerializeField]
         private ObjectPreviewAndAdd objectPreviewAndAdd;
-        [SerializeField]
-        private GameObject container;
-        [SerializeField]
-        private GameObject modelPrefab;
         [SerializeField]
         private GameObject modelPreviewPrefab;
         [SerializeField]
         private SelectionManager selectionManager;
         [SerializeField]
         private ModelEditorWindow modelEditorWindow;
-        [SerializeField]
-        private AssetContainer assetContainer;
 
         private ModelEntity currentModel;
 
@@ -33,9 +29,11 @@ namespace EAR.Editor.Presenter
             toolbar.OnToolChanged += (ToolEnum prev, ToolEnum current) => {
                 if (current == ToolEnum.AddModel)
                 {
-                    objectPreviewAndAdd.StartPreviewAndAdd(modelPrefab, modelPreviewPrefab, (GameObject model) =>
+                    objectPreviewAndAdd.StartPreviewAndAdd(KEY, modelPreviewPrefab, (TransformData transformData) =>
                     {
-                        model.transform.parent = container.transform;
+                        ModelData modelData = new ModelData();
+                        modelData.transform = transformData;
+                        ModelEntity.InstantNewEntity(modelData);
                         toolbar.SetDefaultTool();
                         //TODO
 /*                        IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
@@ -43,7 +41,7 @@ namespace EAR.Editor.Presenter
                     });
                 } else
                 {
-                    objectPreviewAndAdd.StopPreview(modelPrefab);
+                    objectPreviewAndAdd.StopPreview(KEY);
                 }
             };
             selectionManager.OnObjectSelected += (Selectable selectable) =>
@@ -70,7 +68,7 @@ namespace EAR.Editor.Presenter
 
             modelEditorWindow.OnModelAssetSelected += (string assetId) =>
             {
-                GameObject model = assetContainer.GetModel(assetId);
+                GameObject model = AssetContainer.Instance.GetModel(assetId);
                 currentModel.SetModel(assetId);
             };
         }

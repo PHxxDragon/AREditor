@@ -6,9 +6,6 @@ namespace EAR.Entity
 {
     public class ModelEntity : BaseEntity
     {
-        public static event Action<ModelEntity> OnModelEntityCreated;
-        public static event Action<ModelEntity> OnModelEntityChanged;
-
         private string assetId;
 
         public override bool IsValidEntity()
@@ -44,7 +41,7 @@ namespace EAR.Entity
             newChild.transform.parent = transform;
             if (prev != null)
                 TransformData.TransformDataToTransfrom(prev, newChild.transform);
-            OnModelEntityChanged?.Invoke(this);
+            OnEntityChanged?.Invoke(this);
         }
 
         public static ModelEntity InstantNewEntity(ModelData modelData)
@@ -55,7 +52,7 @@ namespace EAR.Entity
             child.transform.parent = modelEntity.transform;
             modelEntity.SetId(modelData.id);
             modelEntity.assetId = modelData.assetId;
-            OnModelEntityCreated?.Invoke(modelEntity);
+            OnEntityCreated?.Invoke(modelEntity);
             return modelEntity;
         }
 

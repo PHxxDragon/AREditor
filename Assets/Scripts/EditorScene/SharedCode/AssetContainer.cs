@@ -43,6 +43,9 @@ namespace EAR.AssetManager
         [SerializeField]
         private ImageEntity imagePrefab;
 
+        [SerializeField]
+        private ButtonEntity buttonPrefab;
+
         public List<AssetObject> GetModelAssets()
         {
             List<AssetObject> assetObjects = new List<AssetObject>();
@@ -94,6 +97,11 @@ namespace EAR.AssetManager
         public ImageEntity GetImagePrefab()
         {
             return imagePrefab;
+        }
+
+        public ButtonEntity GetButtonPrefab()
+        {
+            return buttonPrefab;
         }
     }
 }

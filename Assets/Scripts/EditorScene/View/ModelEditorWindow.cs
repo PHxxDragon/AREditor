@@ -12,8 +12,6 @@ namespace EAR.View
 
         [SerializeField]
         private TMP_Dropdown dropdown;
-        [SerializeField]
-        private AssetContainer assetContainer;
 
         private List<AssetObject> assets = new List<AssetObject>();
 
@@ -26,7 +24,11 @@ namespace EAR.View
                     OnModelAssetSelected?.Invoke(assets[index - 1].assetsId);
                 }
             });
-            assetContainer.OnAssetObjectAdded += (AssetObject assetObject) =>
+        }
+
+        void Start()
+        {
+            AssetContainer.Instance.OnAssetObjectAdded += (AssetObject assetObject) =>
             {
                 if (assetObject.type == AssetObject.MODEL_TYPE)
                 {
@@ -38,10 +40,6 @@ namespace EAR.View
                     dropdown.AddOptions(optionDatas);
                 }
             };
-        }
-
-        void Start()
-        {
             CloseEditor();
         }
 

@@ -22,7 +22,6 @@ namespace EAR.EARCamera
         public KeyCode ResetKey = KeyCode.F;
 
         public delegate void IsBlocked(ref bool isBlocked);
-        public event IsBlocked CheckMouseRaycastBlocked;
         public event IsBlocked CheckKeyboardBlocked;
 
         private Transform cameraTransform;
@@ -88,9 +87,7 @@ namespace EAR.EARCamera
         {
             if (Input.GetMouseButton(0))
             {
-                bool isBlocked = false;
-                CheckMouseRaycastBlocked?.Invoke(ref isBlocked);
-                if (!isBlocked)
+                if (!GlobalStates.IsMouseRaycastBlocked())
                 {
                     if (Input.GetKey(RotateAroundKey))
                     {
@@ -120,9 +117,7 @@ namespace EAR.EARCamera
 
             if (Input.GetAxis("Mouse ScrollWheel") != 0f)
             {
-                bool isBlocked = false;
-                CheckMouseRaycastBlocked?.Invoke(ref isBlocked);
-                if (!isBlocked)
+                if (!GlobalStates.IsMouseRaycastBlocked())
                 {
                     float ScrollAmount = Mathf.Clamp(Input.GetAxis("Mouse ScrollWheel"), -1, 1) * ScrollSpeed;
 

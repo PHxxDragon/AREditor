@@ -7,9 +7,6 @@ namespace EAR.Entity
 {
     public class ImageEntity : BaseEntity
     {
-        public static event Action<ImageEntity> OnImageEntityCreated;
-        //public static event Action<ImageEntity> OnImageEntityChanged;
-
         [SerializeField]
         private Image image;
 
@@ -35,19 +32,33 @@ namespace EAR.Entity
             Texture2D image = AssetContainer.Instance.GetImage(assetId);
             this.image.sprite = Utils.Instance.Texture2DToSprite(image);
             this.assetId = assetId;
+            //OnEntityChanged?.Invoke(this);
         }
 
         public static ImageEntity InstantNewEntity(ImageData imageData)
         {
             ImageEntity imagePrefab = AssetContainer.Instance.GetImagePrefab();
-            Texture2D image = AssetContainer.Instance.GetImage(imageData.assetId);
             ImageEntity imageEntity = Instantiate(imagePrefab);
-            imageEntity.assetId = imageData.assetId;
             imageEntity.SetId(imageData.id);
-            imageEntity.SetEntityName(imageData.name);
-            TransformData.TransformDataToTransfrom(imageData.transform, imageEntity.transform);
-            imageEntity.image.sprite = Utils.Instance.Texture2DToSprite(image);
-            OnImageEntityCreated?.Invoke(imageEntity);
+
+            if (imageData.assetId != null)
+            {
+                Texture2D image = AssetContainer.Instance.GetImage(imageData.assetId);
+                imageEntity.image.sprite = Utils.Instance.Texture2DToSprite(image);
+                imageEntity.assetId = imageData.assetId;
+            }
+
+            if (!string.IsNullOrEmpty(imageData.name))
+            {
+                imageEntity.SetEntityName(imageData.name);
+            }
+
+            if (imageData.transform != null)
+            {
+                TransformData.TransformDataToTransfrom(imageData.transform, imageEntity.transform);
+            }
+            
+            OnEntityCreated?.Invoke(imageEntity);
             return imageEntity;
         }
 

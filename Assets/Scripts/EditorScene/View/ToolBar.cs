@@ -12,12 +12,19 @@ namespace EAR.View
         private Toggle rotateToggle;
         [SerializeField]
         private Toggle scaleToggle;
+
         [SerializeField]
         private Toggle noteAddToggle;
         [SerializeField]
         private Toggle modelAddToggle;
         [SerializeField]
         private Toggle imageAddToggle;
+        [SerializeField]
+        private Toggle buttonAddToggle;
+
+        [SerializeField]
+        private Toggle playToggle;
+
         [SerializeField]
         private Button saveButton;
         [SerializeField]
@@ -57,12 +64,28 @@ namespace EAR.View
             noteAddToggle.onValueChanged.AddListener(NoteToggleActive);
             modelAddToggle.onValueChanged.AddListener(ModelToggleActive);
             imageAddToggle.onValueChanged.AddListener(ImageToggleActive);
+            buttonAddToggle.onValueChanged.AddListener(ButtonToggleActive);
             saveButton.onClick.AddListener(SaveButtonClick);
             undoButton.onClick.AddListener(UndoButtonClick);
             redoButton.onClick.AddListener(RedoButtonClick);
             screenshotButton.onClick.AddListener(ScreenshotButtonClick);
             settingButton.onClick.AddListener(SettingButtonClick);
+            playToggle.onValueChanged.AddListener(PlayToggleClick);
             ApplyGlobalStates();
+        }
+
+        private void PlayToggleClick(bool arg0)
+        {
+            GlobalStates.SetIsPlayMode(arg0);
+        }
+
+        private void ButtonToggleActive(bool isOn)
+        {
+            if (isOn)
+            {
+                OnToolChanged?.Invoke(activeTool, ToolEnum.AddButton);
+                activeTool = ToolEnum.AddButton;
+            }
         }
 
         private void ImageToggleActive(bool isOn)

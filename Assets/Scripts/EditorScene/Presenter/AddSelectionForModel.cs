@@ -9,18 +9,22 @@ namespace EAR.Editor.Presenter
     {
         void Start()
         {
-            ModelEntity.OnModelEntityCreated += AddSelection;
-            ModelEntity.OnModelEntityChanged += AddSelection;
+            BaseEntity.OnEntityCreated += AddSelection;
+            BaseEntity.OnEntityChanged += AddSelection;
         }
 
-        private void AddSelection(ModelEntity model)
+        private void AddSelection(BaseEntity entity)
         {
-            Selectable selectable = model.GetComponent<Selectable>();
-            if (!selectable)
+            ModelEntity model = entity as ModelEntity;
+            if (model != null)
             {
-                model.gameObject.AddComponent<Selectable>();
+                Selectable selectable = model.GetComponent<Selectable>();
+                if (!selectable)
+                {
+                    model.gameObject.AddComponent<Selectable>();
+                }
+                StartCoroutine(AddCollider(model.gameObject));
             }
-            StartCoroutine(AddCollider(model.gameObject));
         }
 
         private IEnumerator AddCollider(GameObject model)

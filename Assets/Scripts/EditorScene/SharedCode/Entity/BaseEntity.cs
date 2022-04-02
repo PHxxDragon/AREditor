@@ -1,11 +1,25 @@
 using UnityEngine;
+using System;
 
 namespace EAR.Entity
 {
     public class BaseEntity : MonoBehaviour
     {
+        public static Action<BaseEntity> OnEntityCreated;
+        public static Action<BaseEntity> OnEntityChanged;
+
         private string id;
-        private string entityName;
+        private string entityName = "Entity";
+
+        public virtual bool IsClickable()
+        {
+            return false;
+        }
+
+        public virtual bool IsViewable()
+        {
+            return true;
+        }
 
         public virtual bool IsValidEntity()
         {
@@ -14,12 +28,12 @@ namespace EAR.Entity
 
         protected void SetId(string id = "")
         {
-            if (id != "")
+            if (!string.IsNullOrEmpty(id))
             {
                 this.id = id;
             } else
             {
-                this.id = System.Guid.NewGuid().ToString();
+                this.id = Guid.NewGuid().ToString();
             }
         }
 
