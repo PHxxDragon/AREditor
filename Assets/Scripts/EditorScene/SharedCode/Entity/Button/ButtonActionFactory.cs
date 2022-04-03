@@ -11,7 +11,7 @@ namespace EAR.Entity.EntityAction
                 case ButtonActionData.ActionType.Hide:
                     return new HideAction(buttonActionData);
                 case ButtonActionData.ActionType.PlayAnimation:
-                    return null;
+                    return new PlayAnimationAction(buttonActionData);
                 default:
                     return null;
             }

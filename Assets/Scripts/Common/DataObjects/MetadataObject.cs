@@ -29,12 +29,14 @@ namespace EAR
     {
         public enum ActionType
         {
-            Show, Hide, PlayAnimation
+            Show, Hide, PlayAnimation, PlaySound
         }
 
-        public string targetEntityId;
         public ActionType actionType;
+        public string targetEntityId;
+        public string assetId;
         public int animationIndex;
+        
     }
 
     [Serializable]
