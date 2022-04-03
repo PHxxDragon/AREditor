@@ -1,17 +1,19 @@
 using System;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 using EAR.AssetManager;
-using System.Collections.Generic;
 
 namespace EAR.View
 {
     public class ImageEditorWindow : MonoBehaviour
     {
         public event Action<string> OnImageAssetSelected;
+        public event Action OnImageDelete;
 
         [SerializeField]
         private DropdownHelper dropdown;
+        [SerializeField]
+        private Button deleteButton;
 
         void Awake()
         {
@@ -19,6 +21,10 @@ namespace EAR.View
             {
                 OnImageAssetSelected?.Invoke((string) value);
             };
+            deleteButton.onClick.AddListener(() =>
+            {
+                OnImageDelete?.Invoke();
+            });
         }
 
         void Start()

@@ -102,7 +102,6 @@ namespace EAR.View
             {
                 Debug.Log("Key not found: " + value);
             }
-            
         }
     }
 }

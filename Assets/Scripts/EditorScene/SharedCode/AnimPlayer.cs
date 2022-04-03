@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using EAR.Entity;
 using System;
-using System.Collections;
 using System.Linq;
 
 namespace EAR.AnimationPlayer
@@ -20,6 +19,11 @@ namespace EAR.AnimationPlayer
         private AnimationState _currentAnimationState;
         private int _currentIndex = -1;
         private int _clipCount = -1;
+
+        void Awake()
+        {
+            SetModel(gameObject);
+        }
 
         public void ToggleAnimationPlay(bool play)
         {
@@ -44,7 +48,7 @@ namespace EAR.AnimationPlayer
             }
         }
 
-        public bool SetModel(ModelEntity model)
+        public bool SetModel(GameObject model)
         {
             _animation = model != null ? model.GetComponentInChildren<Animation>() : null ;
             _animationList = model != null ? model.GetComponentInChildren<AnimationList>() : null;
@@ -140,7 +144,7 @@ namespace EAR.AnimationPlayer
             return _currentIndex;
         }
 
-        public int GetMaxIndex()
+        public int GetAnimationCount()
         {
             return _clipCount;
         }

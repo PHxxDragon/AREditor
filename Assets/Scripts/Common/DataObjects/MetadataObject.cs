@@ -34,6 +34,7 @@ namespace EAR
 
         public string targetEntityId;
         public ActionType actionType;
+        public int animationIndex;
     }
 
     [Serializable]
@@ -51,6 +52,7 @@ namespace EAR
     {
         public string id;
         public string name;
+        public int defaultAnimation;
 
         public TransformData transform;
         public string assetId;

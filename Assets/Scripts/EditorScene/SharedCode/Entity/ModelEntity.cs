@@ -1,20 +1,37 @@
 using UnityEngine;
 using EAR.AssetManager;
+using EAR.AnimationPlayer;
 
 namespace EAR.Entity
 {
-    public class ModelEntity : BaseEntity
+    public class ModelEntity : VisibleEntity
     {
         private string assetId;
+        private int defaultAnimationIndex = 0;
 
         public override bool IsValidEntity()
         {
             return !string.IsNullOrEmpty(assetId);
         }
 
-        public override bool IsClickable()
+        public override void ResetEntityState()
         {
-            return !string.IsNullOrEmpty(assetId);
+            base.ResetEntityState();
+            AnimPlayer animPlayer = GetComponentInChildren<AnimPlayer>();
+            if (animPlayer)
+            {
+                animPlayer.PlayAnimation(0);
+            }
+        }
+
+        public override void StartDefaultState()
+        {
+            base.StartDefaultState();
+            AnimPlayer animPlayer = GetComponentInChildren<AnimPlayer>();
+            if (animPlayer)
+            {
+                animPlayer.PlayAnimation(defaultAnimationIndex);
+            }
         }
 
         public ModelData GetModelData()
@@ -24,7 +41,25 @@ namespace EAR.Entity
             modelData.assetId = assetId;
             modelData.name = GetEntityName();
             modelData.transform = TransformData.TransformToTransformData(transform);
+            modelData.defaultAnimation = defaultAnimationIndex;
             return modelData;
+        }
+
+        public void SetDefaultAnimation(int index)
+        {
+            defaultAnimationIndex = index;
+        }
+
+        public void PlayAnimation(int index)
+        {
+            AnimPlayer animPlayer = GetComponentInChildren<AnimPlayer>();
+            if (animPlayer)
+            {
+                if (index < animPlayer.GetAnimationCount())
+                {
+                    animPlayer.PlayAnimation(index);
+                }
+            }
         }
 
         public void SetModel(string assetId)
@@ -84,6 +119,11 @@ namespace EAR.Entity
             if (!string.IsNullOrEmpty(modelData.id))
             {
                 modelEntity.SetId(modelData.id);
+            }
+
+            if (modelData.defaultAnimation > 0)
+            {
+                modelEntity.defaultAnimationIndex = modelData.defaultAnimation;
             }
             
             OnEntityCreated?.Invoke(modelEntity);

@@ -69,6 +69,19 @@ namespace EAR.Editor.Presenter
             {
                 currentModel.SetModel(assetId);
             };
+
+            modelEditorWindow.OnModelDelete += () =>
+            {
+                //TODO
+                GameObject toDestroy = currentModel.gameObject;
+                selectionManager.DeselectAndGetCommand();
+                Destroy(toDestroy);
+            };
+
+            modelEditorWindow.OnDefaultAnimationSelected += (index) =>
+            {
+                currentModel.SetDefaultAnimation(index);
+            };
         }
     }
 }

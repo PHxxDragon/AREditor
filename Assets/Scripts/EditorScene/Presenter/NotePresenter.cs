@@ -74,11 +74,15 @@ namespace EAR.Editor.Presenter
 
             noteEditorWindow.OnDeleteButtonClick += () =>
             {
-                NoteEntity note = currentNote;
-                IUndoRedoCommand deselectCommand = selectionManager.DeselectAndGetCommand();
-                note.gameObject.SetActive(false);
-                IUndoRedoCommand command = new RemoveNoteCommand(note, deselectCommand);
-                undoRedoManager.AddCommand(command);
+                //TODO
+                /*                NoteEntity note = currentNote;
+                                IUndoRedoCommand deselectCommand = selectionManager.DeselectAndGetCommand();
+                                note.gameObject.SetActive(false);
+                                IUndoRedoCommand command = new RemoveNoteCommand(note, deselectCommand);
+                                undoRedoManager.AddCommand(command);*/
+                GameObject toDestroy = currentNote.gameObject;
+                selectionManager.DeselectAndGetCommand();
+                Destroy(toDestroy);
             };
 
             noteEditorWindow.OnFontSizeChanged += (int value) =>
@@ -143,9 +147,6 @@ namespace EAR.Editor.Presenter
                     toolBar.SetDefaultTool();
                     IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
                     undoRedoManager.AddCommand(command);
-                }, (GameObject note) =>
-                {
-                    note.GetComponent<NoteEntity>().SetText(LocalizationManager.GetLocalizedText("NoteFirstText"));
                 });
             } else
             {

@@ -14,7 +14,7 @@ namespace EAR.Entity.EntityAction
             try
             {
                 BaseEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId());
-                if (entity.IsViewable())
+                if (entity.IsValidEntity() && entity.IsViewable())
                 {
                     entity.gameObject.SetActive(true);
                 }

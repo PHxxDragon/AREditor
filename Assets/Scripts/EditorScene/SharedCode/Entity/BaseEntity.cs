@@ -12,23 +12,27 @@ namespace EAR.Entity
         private string id = Guid.NewGuid().ToString();
         private string entityName = "Entity";
 
-        private void Awake()
+        private Action<bool> action;
+
+        protected virtual void Awake()
         {
-            GlobalStates.OnIsPlayModeChange += (isPlayMode) =>
+            action = (isPlayMode) =>
             {
                 if (isPlayMode)
                 {
                     StartDefaultState();
-                } else
+                }
+                else
                 {
                     ResetEntityState();
                 }
             };
+            GlobalStates.OnIsPlayModeChange += action;
+
         }
 
         public virtual void StartDefaultState()
         {
-
         }
 
         public virtual void ResetEntityState()
@@ -73,6 +77,7 @@ namespace EAR.Entity
 
         void OnDestroy()
         {
+            GlobalStates.OnIsPlayModeChange -= action;
             OnEntityDestroy?.Invoke(this);
         }
     }

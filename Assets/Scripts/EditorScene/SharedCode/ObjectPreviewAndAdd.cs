@@ -5,9 +5,6 @@ namespace EAR.AddObject
 {
     public class ObjectPreviewAndAdd : MonoBehaviour
     {
-        public delegate void IsMouseRaycastBlocked(ref bool isBlocked);
-        public event IsMouseRaycastBlocked CheckMouseRaycastBlocked;
-
         [SerializeField]
         private Camera mainCamera;
         [SerializeField]
@@ -88,9 +85,7 @@ namespace EAR.AddObject
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        bool isBlocked = false;
-                        CheckMouseRaycastBlocked?.Invoke(ref isBlocked);
-                        if (!isBlocked)
+                        if (!GlobalStates.IsMouseRaycastBlocked())
                         {
                             callback?.Invoke(TransformData.TransformToTransformData(previewObject.transform));
                             StopPreview();

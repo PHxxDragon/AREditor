@@ -5,7 +5,7 @@ using EAR.AssetManager;
 
 namespace EAR.Entity
 {
-    public class ImageEntity : BaseEntity
+    public class ImageEntity : VisibleEntity
     {
         [SerializeField]
         private Image image;
@@ -13,11 +13,6 @@ namespace EAR.Entity
         private string assetId;
 
         public override bool IsValidEntity()
-        {
-            return !string.IsNullOrEmpty(assetId);
-        }
-
-        public override bool IsClickable()
         {
             return !string.IsNullOrEmpty(assetId);
         }
@@ -66,7 +61,7 @@ namespace EAR.Entity
             {
                 TransformData.TransformDataToTransfrom(imageData.transform, imageEntity.transform);
             }
-            
+
             OnEntityCreated?.Invoke(imageEntity);
             return imageEntity;
         }

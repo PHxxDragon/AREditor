@@ -6,7 +6,7 @@ using Nobi.UiRoundedCorners;
 
 namespace EAR.Entity
 {
-    public class NoteEntity : BaseEntity
+    public class NoteEntity : VisibleEntity
     {
         [SerializeField]
         private TMP_Text text;
@@ -38,47 +38,9 @@ namespace EAR.Entity
         {
             NoteEntity notePrefab = AssetContainer.Instance.GetNotePrefab();
             NoteEntity noteEntity = Instantiate(notePrefab);
-            noteEntity.PopulateData(noteData);  
+            noteEntity.PopulateData(noteData);
+            OnEntityCreated?.Invoke(noteEntity);
             return noteEntity;
-        }
-
-        public override bool IsClickable()
-        {
-            return true;
-        }
-
-        void Start()
-        {
-/*            button.onClick.AddListener(() =>
-            {
-                if (!isCompleted) return;
-                
-                if (noteContainer.transform.localScale != Vector3.zero)
-                {
-                    isCompleted = false;
-                    originalScale = noteContainer.transform.localScale;
-                    noteContainer.transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InQuart).OnComplete(() =>
-                    {
-                        isCompleted = true;
-                    });
-                } else
-                {
-                    isCompleted = false;
-                    noteContainer.transform.DOScale(originalScale, 0.2f).SetEase(Ease.OutQuart).OnComplete(() =>
-                    {
-                        isCompleted = true;
-                    });
-                }
-                
-            });
-            if (eventCamera == null)
-            {
-                eventCamera = Camera.main;
-                foreach (Canvas canvas in canvases)
-                {
-                    canvas.worldCamera = eventCamera;
-                }
-            }*/
         }
 
         public NoteData GetNoteData()
@@ -130,13 +92,17 @@ namespace EAR.Entity
             {
                 SetFontSize(data.fontSize);
             }
+
+            if (data.id != null)
+            {
+                SetId(data.id);
+            }
             
             SetTextBackgroundColor(data.textBackgroundColor);
             SetTextBorderRadius(data.textBorderRadius);
             SetTextColor(data.textColor);
             SetBorderColor(data.borderColor);
             SetTextBorderWidth(data.borderWidth);
-            SetId(data.id);
         }
 
         public void SetHeight(float height)

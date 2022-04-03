@@ -69,6 +69,14 @@ namespace EAR.Editor.Presenter
             {
                 currentImage.SetImage(assetId);
             };
+
+            imageEditorWindow.OnImageDelete += () =>
+            {
+                //TODO
+                GameObject toDestroy = currentImage.gameObject;
+                selectionManager.DeselectAndGetCommand();
+                Destroy(toDestroy);
+            };
         }
     }
 }

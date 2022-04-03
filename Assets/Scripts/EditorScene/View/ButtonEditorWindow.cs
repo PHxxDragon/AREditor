@@ -12,6 +12,7 @@ namespace EAR.View
         public event Action<int, ButtonActionData> OnButtonActionDataChanged;
         public event Action<ButtonActionData> OnButtonActionDataAdded;
         public event Action<int> OnButtonActionDataDelete;
+        public event Action OnButtonDelete;
 
         [SerializeField]
         private DropdownHelper listenerEntityId;
@@ -21,6 +22,8 @@ namespace EAR.View
         private ButtonActionPanel actionPanelPrefab;
         [SerializeField]
         private Button addButton;
+        [SerializeField]
+        private Button deleteButton;
 
         private void Awake()
         {
@@ -33,6 +36,10 @@ namespace EAR.View
                 ButtonActionData buttonActionData = new ButtonActionData();
                 OnButtonActionDataAdded?.Invoke(buttonActionData);
                 BindButtonActionDataPanel(buttonActionData);
+            });
+            deleteButton.onClick.AddListener(() =>
+            {
+                OnButtonDelete?.Invoke();
             });
         }
 
@@ -110,7 +117,7 @@ namespace EAR.View
 
         private bool IsEntitySelectable(BaseEntity baseEntity)
         {
-            return baseEntity.IsClickable();
+            return baseEntity.IsValidEntity() && baseEntity.IsClickable();
         }
     }
 }

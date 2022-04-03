@@ -6,19 +6,21 @@ using UnityEngine;
 
 namespace EAR.Entity
 {
-    public class ButtonEntity : BaseEntity
+    public class ButtonEntity : InvisibleEntity
     {
         private string activatorEntityId;
         public readonly List<ButtonAction> actions = new List<ButtonAction>();
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             GlobalStates.OnIsPlayModeChange += (isPlayMode) =>
             {
                 try
                 {
                     BaseEntity baseEntity = EntityContainer.Instance.GetEntity(activatorEntityId);
-                    if (baseEntity.IsClickable())
+                    if (baseEntity.IsValidEntity() && baseEntity.IsClickable())
                     {
                         if (isPlayMode)
                         {

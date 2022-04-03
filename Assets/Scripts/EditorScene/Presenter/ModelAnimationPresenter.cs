@@ -14,58 +14,95 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private AnimationBar animationBar;
         [SerializeField]
-        private AnimPlayer animationPlayer;
-        [SerializeField]
         private SelectionManager selectionManager;
 
         private ModelEntity model;
+        private AnimPlayer animationPlayer;
 
         void Awake()
+        {
+            modelLoader.OnLoadEnded += (string assetId, GameObject model) =>
+            {
+                if (model.GetComponentInChildren<Animation>())
+                {
+                    model.AddComponent<AnimPlayer>();
+                }
+            };
+
+            if (!GlobalStates.IsEnableEditor())
+            {
+                AttachListeners();
+            }
+
+            GlobalStates.OnEnableEditorChange += (value) =>
+            {
+                if (value)
+                {
+                    AttachListeners();
+                } else
+                {
+                    DetachListeners();
+                }
+            };
+            
+        }
+
+        private void AttachListeners()
         {
             animationBar.DropdownValueChangeEvent += DropdownValueChangeEventSubscriber;
             animationBar.PlayToggleClickEvent += PlayToggleClickEventSubscriber;
             animationBar.SliderValueChangeEvent += SliderValueChangeEventSubscriber;
-            animationPlayer.AnimationProgressChangeEvent += AnimationProgressChangeEventSubscriber;
-            animationPlayer.AnimationStartEvent += AnimationStartEventSubscriber;
-            selectionManager.OnObjectSelected += (Selectable selectable) =>
-            {
-                ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
-                if (modelEntity)
-                {
-                    ModelSelect(modelEntity);
-                }
-            };
-            selectionManager.OnObjectDeselected += (Selectable selectable) =>
-            {
-                ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
-                if (modelEntity == model)
-                {
-                    ModelDeselect(modelEntity);
-                }
-            };
+            selectionManager.OnObjectSelected += ModelSelect;
+            selectionManager.OnObjectDeselected += ModelDeselect;
         }
 
-        private void ModelDeselect(ModelEntity modelEntity)
+        private void DetachListeners()
         {
-            model = null;
-            if (animationBar)
-                animationBar.gameObject.SetActive(false);
+            animationBar.DropdownValueChangeEvent -= DropdownValueChangeEventSubscriber;
+            animationBar.PlayToggleClickEvent -= PlayToggleClickEventSubscriber;
+            animationBar.SliderValueChangeEvent -= SliderValueChangeEventSubscriber;
+            selectionManager.OnObjectSelected -= ModelSelect;
+            selectionManager.OnObjectDeselected -= ModelDeselect;
         }
 
-        private void ModelSelect(ModelEntity modelEntity)
+        private void ModelDeselect(Selectable selectable)
         {
-            if (animationPlayer.SetModel(modelEntity))
+            ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
+            if (modelEntity == model)
+            {
+                model = null;
+                if (animationBar)
+                    animationBar.gameObject.SetActive(false);
+                if (animationPlayer)
+                {
+                    animationPlayer.AnimationProgressChangeEvent -= AnimationProgressChangeEventSubscriber;
+                    animationPlayer.AnimationStartEvent -= AnimationStartEventSubscriber;
+                }
+            }
+        }
+
+        private void ModelSelect(Selectable selectable)
+        {
+            ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
+            if (modelEntity)
             {
                 model = modelEntity;
-                animationBar.gameObject.SetActive(true);
-                animationBar.SetDropdownOption(animationPlayer.GetAnimationList(), animationPlayer.GetCurrentIndex());
-                
+                animationPlayer = modelEntity.GetComponentInChildren<AnimPlayer>();
+                if (animationPlayer)
+                {
+                    animationPlayer.AnimationProgressChangeEvent += AnimationProgressChangeEventSubscriber;
+                    animationPlayer.AnimationStartEvent += AnimationStartEventSubscriber;
+                    animationBar.gameObject.SetActive(true);
+                    animationBar.SetDropdownOption(animationPlayer.GetAnimationList(), animationPlayer.GetCurrentIndex());
+                }
             }
+                
         }
 
         private void SliderValueChangeEventSubscriber(float obj)
         {
-            animationPlayer.SetAnimationState(obj);
+            if (animationPlayer)
+                animationPlayer.SetAnimationState(obj);
         }
 
         private void AnimationStartEventSubscriber(bool obj)
@@ -75,7 +112,8 @@ namespace EAR.Editor.Presenter
 
         private void PlayToggleClickEventSubscriber(bool obj)
         {
-            animationPlayer.ToggleAnimationPlay(obj);
+            if (animationPlayer)
+                animationPlayer.ToggleAnimationPlay(obj);
         }
 
         private void AnimationProgressChangeEventSubscriber(float obj)
@@ -85,7 +123,8 @@ namespace EAR.Editor.Presenter
 
         private void DropdownValueChangeEventSubscriber(int obj)
         {
-            animationPlayer.PlayAnimation(obj);
+            if (animationPlayer)
+                animationPlayer.PlayAnimation(obj);
         }
     }
 }

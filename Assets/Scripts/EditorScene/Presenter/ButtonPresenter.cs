@@ -88,7 +88,13 @@ namespace EAR.Editor.Presenter
             {
                 currentButton.actions[index] = ButtonActionFactory.CreateButtonAction(buttonActionData);
             };
-
+            buttonEditorWindow.OnButtonDelete += () =>
+            {
+                //TODO
+                GameObject toDestroy = currentButton.gameObject;
+                selectionManager.DeselectAndGetCommand();
+                Destroy(toDestroy);
+            };
         }
     }
 }
