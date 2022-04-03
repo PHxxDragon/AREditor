@@ -22,6 +22,11 @@ namespace EAR
             return isBlocked;
         }
 
+        public static bool IsPlayMode()
+        {
+            return isPlayMode;
+        }
+
         public static bool IsEnableEditor()
         {
             return enableEditor;

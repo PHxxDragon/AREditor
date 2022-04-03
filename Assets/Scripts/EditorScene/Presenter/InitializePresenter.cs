@@ -17,7 +17,7 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private ModelLoader modelLoader;
         [SerializeField]
-        private float scaleToSize = 0.5f;
+        private float scaleToSize = 1f;
         [SerializeField]
         private float distanceToPlane = 0f;
         [SerializeField]
@@ -62,16 +62,16 @@ namespace EAR.Editor.Presenter
                 switch(assetObject.type)
                 {
                     case AssetObject.MODEL_TYPE:
-                        modelLoader.LoadModel(assetObject.assetsId, assetObject.url, assetObject.extension, assetObject.isZipFile);
+                        modelLoader.LoadModel(assetObject.assetId, assetObject.url, assetObject.extension, assetObject.isZipFile);
                         break;
                     case AssetObject.IMAGE_TYPE:
-                        LoadImage(assetObject.assetsId, assetObject.url);
+                        LoadImage(assetObject.assetId, assetObject.url);
                         break;
                     default:
                         assetCount -= 1;
                         break;
                 }
-                assetObjectDict.Add(assetObject.assetsId, assetObject);
+                assetObjectDict.Add(assetObject.assetId, assetObject);
             }
 
             modelLoader.OnLoadEnded += OnLoadEnded;
@@ -165,7 +165,7 @@ namespace EAR.Editor.Presenter
                 environmentEditorWindow.SetDirectionalLight(new LightData());
             }
 
-            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(EntityContainer.Instance.GetContainer()));
+            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(EntityContainer.Instance.gameObject));
         }
 
         private void InitMetadata(AssetInformation assetInformation)
@@ -178,7 +178,7 @@ namespace EAR.Editor.Presenter
                 if (assetObject.type == AssetObject.MODEL_TYPE)
                 {
                     ModelData modelData = new ModelData();
-                    modelData.assetId = assetObject.assetsId;
+                    modelData.assetId = assetObject.assetId;
                     ModelEntity modelEntity = ModelEntity.InstantNewEntity(modelData);
                     Bounds bounds = Utils.GetModelBounds(modelEntity.gameObject);
                     float ratio = scaleToSize / bounds.extents.magnitude;
@@ -188,7 +188,7 @@ namespace EAR.Editor.Presenter
                 }
             }
 
-            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(EntityContainer.Instance.GetContainer()));
+            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(EntityContainer.Instance.gameObject));
         }
     }
 }

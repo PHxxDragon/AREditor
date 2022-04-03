@@ -16,13 +16,21 @@ namespace EAR.Entity.EntityAction
                 BaseEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId());
                 if (entity.IsViewable())
                 {
-                    entity.enabled = false;
+                    entity.gameObject.SetActive(false);
                 }
             } catch (KeyNotFoundException)
             {
                 Debug.Log("Key not found");
             }
             
+        }
+
+        public override ButtonActionData GetButtonActionData()
+        {
+            ButtonActionData buttonActionData = new ButtonActionData();
+            buttonActionData.actionType = ButtonActionData.ActionType.Hide;
+            buttonActionData.targetEntityId = GetTargetEntityId();
+            return buttonActionData;
         }
     }
 }

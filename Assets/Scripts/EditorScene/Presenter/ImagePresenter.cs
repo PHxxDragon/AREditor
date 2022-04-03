@@ -1,7 +1,6 @@
 using EAR.View;
 using EAR.AddObject;
 using EAR.Selection;
-using EAR.AssetManager;
 using EAR.Entity;
 using UnityEngine;
 
@@ -66,9 +65,8 @@ namespace EAR.Editor.Presenter
                 }
             };
 
-            imageEditorWindow.OnModelAssetSelected += (string assetId) =>
+            imageEditorWindow.OnImageAssetSelected += (string assetId) =>
             {
-                Texture2D image = AssetContainer.Instance.GetImage(assetId);
                 currentImage.SetImage(assetId);
             };
         }

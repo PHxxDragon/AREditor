@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 using EAR.AssetManager;
 
 namespace EAR.Entity
@@ -10,7 +9,12 @@ namespace EAR.Entity
 
         public override bool IsValidEntity()
         {
-            return assetId != "";
+            return !string.IsNullOrEmpty(assetId);
+        }
+
+        public override bool IsClickable()
+        {
+            return !string.IsNullOrEmpty(assetId);
         }
 
         public ModelData GetModelData()
@@ -37,21 +41,51 @@ namespace EAR.Entity
                 prev = TransformData.TransformToTransformData(child);
                 Destroy(child.gameObject);
             }
-            GameObject newChild = Instantiate(AssetContainer.Instance.GetModel(assetId));
+
+            GameObject model = string.IsNullOrEmpty(assetId) ? AssetContainer.Instance.GetModelPrefab() : AssetContainer.Instance.GetModel(assetId);
+            GameObject newChild = Instantiate(model);
             newChild.transform.parent = transform;
             if (prev != null)
+            {
                 TransformData.TransformDataToTransfrom(prev, newChild.transform);
+            }
             OnEntityChanged?.Invoke(this);
         }
 
         public static ModelEntity InstantNewEntity(ModelData modelData)
         {
             ModelEntity modelEntity = new GameObject().AddComponent<ModelEntity>();
-            GameObject model = AssetContainer.Instance.GetModel(modelData.assetId);
-            GameObject child = Instantiate(model);
-            child.transform.parent = modelEntity.transform;
-            modelEntity.SetId(modelData.id);
-            modelEntity.assetId = modelData.assetId;
+            if (!string.IsNullOrEmpty(modelData.assetId))
+            {
+                GameObject model = AssetContainer.Instance.GetModel(modelData.assetId);
+                GameObject child = Instantiate(model);
+                modelEntity.assetId = modelData.assetId;
+                child.transform.parent = modelEntity.transform;
+            } else
+            {
+                GameObject model = AssetContainer.Instance.GetModelPrefab();
+                GameObject child = Instantiate(model);
+                child.transform.parent = modelEntity.transform;
+            }
+
+            if (!string.IsNullOrEmpty(modelData.name))
+            {
+                modelEntity.SetEntityName(modelData.name);
+            } else
+            {
+                modelEntity.SetEntityName("New model");
+            }
+            
+            if (modelData.transform != null)
+            {
+                TransformData.TransformDataToTransfrom(modelData.transform, modelEntity.transform);
+            }
+            
+            if (!string.IsNullOrEmpty(modelData.id))
+            {
+                modelEntity.SetId(modelData.id);
+            }
+            
             OnEntityCreated?.Invoke(modelEntity);
             return modelEntity;
         }

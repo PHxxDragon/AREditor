@@ -53,7 +53,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3971553758683496774, guid: 00e455162f4df3949bd0f8caa115250f, type: 3}
       propertyPath: m_Name
-      value: ButtonPrefab
+      value: ButtonPrefabPreview
       objectReference: {fileID: 0}
     - target: {fileID: 5317567600572632000, guid: 00e455162f4df3949bd0f8caa115250f, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -61,4 +61,6 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 54d80a535b0dbe74ea00c9a2459bfaf0, type: 2}
     m_RemovedComponents:
     - {fileID: 3636833794918225843, guid: 00e455162f4df3949bd0f8caa115250f, type: 3}
+    - {fileID: 8674166072933450520, guid: 00e455162f4df3949bd0f8caa115250f, type: 3}
+    - {fileID: 2020088065922664795, guid: 00e455162f4df3949bd0f8caa115250f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 00e455162f4df3949bd0f8caa115250f, type: 3}

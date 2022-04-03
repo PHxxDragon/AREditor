@@ -42,6 +42,11 @@ namespace EAR.Entity
             return noteEntity;
         }
 
+        public override bool IsClickable()
+        {
+            return true;
+        }
+
         void Start()
         {
 /*            button.onClick.AddListener(() =>

@@ -7,9 +7,34 @@ namespace EAR.Entity
     {
         public static Action<BaseEntity> OnEntityCreated;
         public static Action<BaseEntity> OnEntityChanged;
+        public static Action<BaseEntity> OnEntityDestroy;
 
-        private string id;
+        private string id = Guid.NewGuid().ToString();
         private string entityName = "Entity";
+
+        private void Awake()
+        {
+            GlobalStates.OnIsPlayModeChange += (isPlayMode) =>
+            {
+                if (isPlayMode)
+                {
+                    StartDefaultState();
+                } else
+                {
+                    ResetEntityState();
+                }
+            };
+        }
+
+        public virtual void StartDefaultState()
+        {
+
+        }
+
+        public virtual void ResetEntityState()
+        {
+
+        }
 
         public virtual bool IsClickable()
         {
@@ -26,15 +51,9 @@ namespace EAR.Entity
             return true;
         }
 
-        protected void SetId(string id = "")
+        protected void SetId(string id)
         {
-            if (!string.IsNullOrEmpty(id))
-            {
-                this.id = id;
-            } else
-            {
-                this.id = Guid.NewGuid().ToString();
-            }
+            this.id = id;
         }
 
         public void SetEntityName(string entityName)
@@ -50,6 +69,11 @@ namespace EAR.Entity
         public string GetEntityName()
         {
             return entityName;
+        }
+
+        void OnDestroy()
+        {
+            OnEntityDestroy?.Invoke(this);
         }
     }
 }

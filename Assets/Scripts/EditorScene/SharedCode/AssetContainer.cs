@@ -38,7 +38,13 @@ namespace EAR.AssetManager
         private GameObject disabledContainer;
 
         [SerializeField]
+        private GameObject modelPrefab;
+
+        [SerializeField]
         private NoteEntity notePrefab;
+
+        [SerializeField]
+        private Texture2D defaultTexture;
 
         [SerializeField]
         private ImageEntity imagePrefab;
@@ -69,7 +75,7 @@ namespace EAR.AssetManager
         public void AddModel(AssetObject assetObject, GameObject model)
         {
             OnAssetObjectAdded?.Invoke(assetObject);
-            models.Add(assetObject.assetsId, (assetObject, model));
+            models.Add(assetObject.assetId, (assetObject, model));
             model.transform.parent = disabledContainer.transform;
         }
 
@@ -81,12 +87,17 @@ namespace EAR.AssetManager
         public void AddImage(AssetObject assetObject, Texture2D image)
         {
             OnAssetObjectAdded?.Invoke(assetObject);
-            images.Add(assetObject.assetsId, (assetObject, image));
+            images.Add(assetObject.assetId, (assetObject, image));
         }
 
         public Texture2D GetImage(string assetId)
         {
             return images[assetId].Item2;
+        }
+
+        public GameObject GetModelPrefab()
+        {
+            return modelPrefab;
         }
 
         public NoteEntity GetNotePrefab()
@@ -97,6 +108,11 @@ namespace EAR.AssetManager
         public ImageEntity GetImagePrefab()
         {
             return imagePrefab;
+        }
+
+        public Texture2D GetDefaultImage()
+        {
+            return defaultTexture;
         }
 
         public ButtonEntity GetButtonPrefab()

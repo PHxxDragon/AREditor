@@ -10,18 +10,27 @@ namespace EAR.Entity.EntityAction
         }
         public override void ExecuteAction()
         {
+            Debug.Log("Show action execute");
             try
             {
                 BaseEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId());
                 if (entity.IsViewable())
                 {
-                    entity.enabled = true;
+                    entity.gameObject.SetActive(true);
                 }
             } catch (KeyNotFoundException)
             {
                 Debug.Log("Key not found");
             }
             
+        }
+
+        public override ButtonActionData GetButtonActionData()
+        {
+            ButtonActionData buttonActionData = new ButtonActionData();
+            buttonActionData.actionType = ButtonActionData.ActionType.Show;
+            buttonActionData.targetEntityId = GetTargetEntityId();
+            return buttonActionData;
         }
     }
 }

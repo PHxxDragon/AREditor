@@ -1,8 +1,6 @@
 using UnityEngine;
-using TMPro;
 using EAR.AssetManager;
 using System;
-using System.Collections.Generic;
 
 namespace EAR.View
 {
@@ -11,33 +9,26 @@ namespace EAR.View
         public event Action<string> OnModelAssetSelected;
 
         [SerializeField]
-        private TMP_Dropdown dropdown;
-
-        private List<AssetObject> assets = new List<AssetObject>();
+        private DropdownHelper dropdown;
 
         void Awake()
         {
-            dropdown.onValueChanged.AddListener((index) =>
+            dropdown.OnDropdownValueChanged += (obj) =>
             {
-                if (index != 0)
-                {
-                    OnModelAssetSelected?.Invoke(assets[index - 1].assetsId);
-                }
-            });
+                OnModelAssetSelected?.Invoke((string)obj);
+            };
         }
 
         void Start()
         {
+            //TODO
+            dropdown.ClearData();
+            dropdown.AddData(string.Empty, "Choose model asset");
             AssetContainer.Instance.OnAssetObjectAdded += (AssetObject assetObject) =>
             {
                 if (assetObject.type == AssetObject.MODEL_TYPE)
                 {
-                    assets.Add(assetObject);
-                    TMP_Dropdown.OptionData optionData = new TMP_Dropdown.OptionData();
-                    optionData.text = assetObject.name;
-                    List<TMP_Dropdown.OptionData> optionDatas = new List<TMP_Dropdown.OptionData>();
-                    optionDatas.Add(optionData);
-                    dropdown.AddOptions(optionDatas);
+                    dropdown.AddData(assetObject.assetId, assetObject.name);
                 }
             };
             CloseEditor();
@@ -55,14 +46,13 @@ namespace EAR.View
 
         public void PopulateData(ModelData modelData)
         {
-            int index = 0;
-            for (int i = 0; i < assets.Count; i++) { 
-                if (assets[i].assetsId == modelData.assetId)
-                {
-                    index = i + 1;
-                }
-            }           
-            dropdown.value = index;
+            if (string.IsNullOrEmpty(modelData.assetId))
+            {
+                dropdown.SelectValue(string.Empty);
+            } else
+            {
+                dropdown.SelectValue(modelData.assetId);
+            }
         }
     }
 }

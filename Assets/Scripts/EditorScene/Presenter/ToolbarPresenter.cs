@@ -67,7 +67,7 @@ namespace EAR.Editor.Presenter
         {
             MetadataObject metadataObject = new MetadataObject();
             List<ModelData> modelDatas = new List<ModelData>();
-            foreach (ModelEntity model in EntityContainer.Instance.GetContainer().GetComponentsInChildren<ModelEntity>())
+            foreach (ModelEntity model in EntityContainer.Instance.GetEntities())
             {
                 if (model.IsValidEntity())
                 {
@@ -76,7 +76,7 @@ namespace EAR.Editor.Presenter
             }
 
             List<NoteData> noteDatas = new List<NoteData>();
-            foreach (NoteEntity note in EntityContainer.Instance.GetContainer().GetComponentsInChildren<NoteEntity>())
+            foreach (NoteEntity note in EntityContainer.Instance.GetEntities())
             {
                 if (note.IsValidEntity())
                 {

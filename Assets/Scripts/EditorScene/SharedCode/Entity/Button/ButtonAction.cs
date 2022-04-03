@@ -9,6 +9,8 @@ namespace EAR.Entity.EntityAction
             targetEntityId = buttonActionData.targetEntityId;
         }
 
+        public abstract ButtonActionData GetButtonActionData();
+
         public void SetTargetEntityId(string entityId)
         {
             targetEntityId = entityId;

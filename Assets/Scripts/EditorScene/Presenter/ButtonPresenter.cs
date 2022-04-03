@@ -1,13 +1,16 @@
 using EAR.View;
 using EAR.AddObject;
 using EAR.Selection;
-using EAR.AssetManager;
+using EAR.Entity;
+using EAR.Entity.EntityAction;
 using UnityEngine;
 
 namespace EAR.Editor.Presenter
 {
     public class ButtonPresenter : MonoBehaviour
     {
+        private const string KEY = "ButtonPresenter";
+
         [SerializeField]
         private ToolBar toolbar;
         [SerializeField]
@@ -19,55 +22,74 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private ButtonEditorWindow buttonEditorWindow;
 
-        //private ImageEntity currentImage;
+        private ButtonEntity currentButton;
 
-        /*void Start()
+        void Start()
         {
-            toolbar.OnToolChanged += (ToolEnum prev, ToolEnum current) => {
-                if (current == ToolEnum.AddImage)
+            toolbar.OnToolChanged += (ToolEnum prev, ToolEnum current) =>
+            {
+                if (current == ToolEnum.AddButton)
                 {
-                    objectPreviewAndAdd.StartPreviewAndAdd(imagePrefab, imagePreviewPrefab, (GameObject image) =>
+                    objectPreviewAndAdd.StartPreviewAndAdd(KEY, buttonPreviewPrefab, (TransformData transformData) =>
                     {
-                        image.transform.parent = container.transform;
+                        ButtonData buttonData = new ButtonData();
+                        buttonData.transform = transformData;
+                        ButtonEntity buttonEntity = ButtonEntity.InstantNewEntity(buttonData);
                         toolbar.SetDefaultTool();
                         //TODO
-                        *//*                        IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
-                                                undoRedoManager.AddCommand(command);*//*
+/*                        IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
+                        undoRedoManager.AddCommand(command);*/
                     });
                 }
                 else
                 {
-                    objectPreviewAndAdd.StopPreview(imagePrefab);
+                    objectPreviewAndAdd.StopPreview(KEY);
                 }
             };
+
+            
+
             selectionManager.OnObjectSelected += (Selectable selectable) =>
             {
-                ImageEntity imageEntity = selectable.GetComponent<ImageEntity>();
-                if (imageEntity != null)
+                ButtonEntity buttonEntity = selectable.GetComponent<ButtonEntity>();
+                if (buttonEntity != null)
                 {
-                    currentImage = imageEntity;
-                    imageEditorWindow.PopulateData(currentImage.GetImageData());
-                    imageEditorWindow.OpenEditor();
+                    currentButton = buttonEntity;
+                    buttonEditorWindow.PopulateData(currentButton.GetButtonData());
+                    buttonEditorWindow.OpenEditor();
                 }
             };
 
             selectionManager.OnObjectDeselected += (Selectable selectable) =>
             {
-                ImageEntity imageEntity = selectable.GetComponent<ImageEntity>();
-                if (imageEntity == currentImage)
+                ButtonEntity buttonEntity = selectable.GetComponent<ButtonEntity>();
+                if (buttonEntity == currentButton)
                 {
-                    currentImage = null;
-                    if (imageEditorWindow)
-                        imageEditorWindow.CloseEditor();
+                    currentButton = null;
+                    if (buttonEditorWindow)
+                        buttonEditorWindow.CloseEditor();
                 }
             };
 
-            imageEditorWindow.OnModelAssetSelected += (string assetId) =>
+            buttonEditorWindow.OnListenerEntityIdChanged += (entityId) =>
             {
-                Texture2D image = assetContainer.GetImage(assetId);
-                currentImage.SetImage(assetId);
+                currentButton.SetActivatorEntityId(entityId);
             };
-        }*/
+
+            buttonEditorWindow.OnButtonActionDataAdded += (buttonActionData) =>
+            {
+                currentButton.actions.Add(ButtonActionFactory.CreateButtonAction(buttonActionData));
+            };
+            buttonEditorWindow.OnButtonActionDataDelete += (index) =>
+            {
+                currentButton.actions.RemoveAt(index);
+            };
+            buttonEditorWindow.OnButtonActionDataChanged += (index, buttonActionData) =>
+            {
+                currentButton.actions[index] = ButtonActionFactory.CreateButtonAction(buttonActionData);
+            };
+
+        }
     }
 }
 

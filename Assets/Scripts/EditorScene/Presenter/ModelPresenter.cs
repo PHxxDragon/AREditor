@@ -3,7 +3,6 @@ using UnityEngine;
 using EAR.AddObject;
 using EAR.Selection;
 using EAR.Entity;
-using EAR.AssetManager;
 
 namespace EAR.Editor.Presenter
 {
@@ -68,7 +67,6 @@ namespace EAR.Editor.Presenter
 
             modelEditorWindow.OnModelAssetSelected += (string assetId) =>
             {
-                GameObject model = AssetContainer.Instance.GetModel(assetId);
                 currentModel.SetModel(assetId);
             };
         }

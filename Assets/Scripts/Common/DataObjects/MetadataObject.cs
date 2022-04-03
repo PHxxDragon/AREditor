@@ -21,7 +21,7 @@ namespace EAR
 
         public TransformData transform;
         public string activatorEntityId;
-        public List<ButtonActionData> actionDatas;
+        public List<ButtonActionData> actionDatas = new List<ButtonActionData>();
     }
 
     [SerializeField]

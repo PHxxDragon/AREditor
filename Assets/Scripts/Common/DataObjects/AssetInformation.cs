@@ -16,14 +16,14 @@ namespace EAR
     {
         public const string MODEL_TYPE = "model";
         public const string IMAGE_TYPE = "image";
+        public const string SOUND_TYPE = "sound";
         public const string FONT_TYPE = "font";
         public const string VIDEO_TYPE = "video";
-        public const string SOUND_TYPE = "sound";
 
-        public string assetsId;
+        public string assetId;
+        public string name;
         public string url;
         public string type;
-        public string name;
         public string extension;
 
         //type == "model"

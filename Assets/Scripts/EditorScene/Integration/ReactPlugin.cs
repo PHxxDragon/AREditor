@@ -32,24 +32,24 @@ namespace EAR.Integration
             //LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646795054315_enc_aa.zip\",\"imageUrl\":\"\",\"metadataString\":\"\",\"extension\":\"obj\",\"isZipFile\":true,\"enableEditor\":true,\"enableScreenshot\":true}");
             //LoadModule("{\"modelUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip\",\"imageUrl\":\"https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/3/1646979043558_Gawr_Gura (1).png\",\"metadataString\":\"\",\"extension\":\"gltf\",\"isZipFile\":true,\"enableEditor\":true,\"enableScreenshot\":true}");
             AssetInformation assetInformation = new AssetInformation();
-/*            AssetObject assetObject = new AssetObject();
-            assetObject.assetsId = "alksdjfals;df";
+            AssetObject assetObject = new AssetObject();
+            assetObject.assetId = "alksdjfals;df";
             assetObject.extension = "gltf";
             assetObject.isZipFile = true;
             assetObject.name = "Model 1";
             assetObject.type = AssetObject.MODEL_TYPE;
             assetObject.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip";
-            assetInformation.assets.Add(assetObject);*/
-            AssetObject assetObject2 = new AssetObject();
-            assetObject2.assetsId = "akjsdflasvkcvhxvuiy";
+            assetInformation.assets.Add(assetObject);
+            /* AssetObject assetObject2 = new AssetObject();
+            assetObject2.assetId = "akjsdflasvkcvhxvuiy";
             assetObject2.extension = "gltf";
             assetObject2.isZipFile = true;
             assetObject2.name = "Model wolf wolf";
             assetObject2.type = AssetObject.MODEL_TYPE;
             assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/3/1648694213397_enc_wolf.zip";
-            assetInformation.assets.Add(assetObject2);
+            assetInformation.assets.Add(assetObject2);*/
             AssetObject assetObject3 = new AssetObject();
-            assetObject3.assetsId = "lkjfioewuffewffdsf";
+            assetObject3.assetId = "lkjfioewuffewffdsf";
             assetObject3.name = "image 1112";
             assetObject3.type = AssetObject.IMAGE_TYPE;
             assetObject3.url = "https://library.vuforia.com/sites/default/files/vuforia-library/articles/solution/Magic%20Leap%20Related%20Content/Astronaut-scaled.jpg";

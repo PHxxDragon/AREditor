@@ -33,33 +33,46 @@ namespace EAR.Selection
             return _currentSelection != null;
         }
 
+        void Awake()
+        {
+            GlobalStates.OnIsPlayModeChange +=(isPlayMode) =>
+            {
+                if (isPlayMode)
+                {
+                    DeselectWithUndo();
+                }
+            };
+        }
+
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !GlobalStates.IsPlayMode() && !GlobalStates.IsMouseRaycastBlocked())
             {
-                if (!GlobalStates.IsMouseRaycastBlocked())
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                foreach (RaycastHit hit in Physics.RaycastAll(ray))
                 {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    foreach (RaycastHit hit in Physics.RaycastAll(ray))
+                    Selectable selectable = hit.transform.GetComponentInParent<Selectable>();
+                    if (selectable != null && _currentSelection != selectable)
                     {
-                        Selectable selectable = hit.transform.GetComponentInParent<Selectable>();
-                        if (selectable != null && _currentSelection != selectable)
-                        {
-                            SelectObject(selectable);
-                            IUndoRedoCommand command = new SelectCommand(selectable, SelectObject, DeselectObject);
-                            NewCommandEvent?.Invoke(command);
-                            return;
-                        }
-                    }
-
-                    if (_currentSelection != null)
-                    {
-                        IUndoRedoCommand command = new DeselectCommand(_currentSelection, DeselectObject, SelectObject);
+                        SelectObject(selectable);
+                        IUndoRedoCommand command = new SelectCommand(selectable, SelectObject, DeselectObject);
                         NewCommandEvent?.Invoke(command);
+                        return;
                     }
-                    DeselectObject();
                 }
+
+                DeselectWithUndo();
             }
+        }
+
+        private void DeselectWithUndo()
+        {
+            if (_currentSelection != null)
+            {
+                IUndoRedoCommand command = new DeselectCommand(_currentSelection, DeselectObject, SelectObject);
+                NewCommandEvent?.Invoke(command);
+            }
+            DeselectObject();
         }
 
         public IUndoRedoCommand DeselectAndGetCommand()

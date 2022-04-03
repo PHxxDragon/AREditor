@@ -8,38 +8,31 @@ namespace EAR.View
 {
     public class ImageEditorWindow : MonoBehaviour
     {
-        public event Action<string> OnModelAssetSelected;
+        public event Action<string> OnImageAssetSelected;
 
         [SerializeField]
-        private TMP_Dropdown dropdown;
-
-        private List<AssetObject> assets = new List<AssetObject>();
+        private DropdownHelper dropdown;
 
         void Awake()
         {
-            dropdown.onValueChanged.AddListener((index) =>
+            dropdown.OnDropdownValueChanged += (value) =>
             {
-                if (index != 0)
-                {
-                    OnModelAssetSelected?.Invoke(assets[index - 1].assetsId);
-                }
-            });
-            AssetContainer.Instance.OnAssetObjectAdded += (AssetObject assetObject) =>
-            {
-                if (assetObject.type == AssetObject.IMAGE_TYPE)
-                {
-                    assets.Add(assetObject);
-                    TMP_Dropdown.OptionData optionData = new TMP_Dropdown.OptionData();
-                    optionData.text = assetObject.name;
-                    List<TMP_Dropdown.OptionData> optionDatas = new List<TMP_Dropdown.OptionData>();
-                    optionDatas.Add(optionData);
-                    dropdown.AddOptions(optionDatas);
-                }
+                OnImageAssetSelected?.Invoke((string) value);
             };
         }
 
         void Start()
         {
+            //TODO
+            dropdown.ClearData();
+            dropdown.AddData(string.Empty, "Choose image asset");
+            AssetContainer.Instance.OnAssetObjectAdded += (AssetObject assetObject) =>
+            {
+                if (assetObject.type == AssetObject.IMAGE_TYPE)
+                {
+                    dropdown.AddData(assetObject.assetId, assetObject.name);
+                }
+            };
             CloseEditor();
         }
 
@@ -55,15 +48,13 @@ namespace EAR.View
 
         public void PopulateData(ImageData imageData)
         {
-            int index = 0;
-            for (int i = 0; i < assets.Count; i++)
+            if (string.IsNullOrEmpty(imageData.assetId))
             {
-                if (assets[i].assetsId == imageData.assetId)
-                {
-                    index = i + 1;
-                }
+                dropdown.SelectValue(string.Empty);
+            } else
+            {
+                dropdown.SelectValue(imageData.assetId);
             }
-            dropdown.value = index;
         }
     }
 }

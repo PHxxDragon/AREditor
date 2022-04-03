@@ -14,7 +14,12 @@ namespace EAR.Entity
 
         public override bool IsValidEntity()
         {
-            return assetId != "";
+            return !string.IsNullOrEmpty(assetId);
+        }
+
+        public override bool IsClickable()
+        {
+            return !string.IsNullOrEmpty(assetId);
         }
 
         public ImageData GetImageData()
@@ -29,7 +34,7 @@ namespace EAR.Entity
 
         public void SetImage(string assetId)
         {
-            Texture2D image = AssetContainer.Instance.GetImage(assetId);
+            Texture2D image = string.IsNullOrEmpty(assetId) ? AssetContainer.Instance.GetDefaultImage() : AssetContainer.Instance.GetImage(assetId);
             this.image.sprite = Utils.Instance.Texture2DToSprite(image);
             this.assetId = assetId;
             //OnEntityChanged?.Invoke(this);
@@ -39,7 +44,11 @@ namespace EAR.Entity
         {
             ImageEntity imagePrefab = AssetContainer.Instance.GetImagePrefab();
             ImageEntity imageEntity = Instantiate(imagePrefab);
-            imageEntity.SetId(imageData.id);
+
+            if (!string.IsNullOrEmpty(imageData.id))
+            {
+                imageEntity.SetId(imageData.id);
+            }
 
             if (imageData.assetId != null)
             {

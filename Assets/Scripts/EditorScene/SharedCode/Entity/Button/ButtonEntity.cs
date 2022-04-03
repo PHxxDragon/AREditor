@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using EAR.Entity.EntityAction;
 using EAR.AssetManager;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace EAR.Entity
     public class ButtonEntity : BaseEntity
     {
         private string activatorEntityId;
-        private readonly List<ButtonAction> actions = new List<ButtonAction>();
+        public readonly List<ButtonAction> actions = new List<ButtonAction>();
 
         void Awake()
         {
@@ -35,18 +36,52 @@ namespace EAR.Entity
                 } catch (KeyNotFoundException)
                 {
                     Debug.Log("Key not found");
+                } catch (ArgumentNullException)
+                {
+                    Debug.Log("Key null");
                 }
             };
+        }
+
+        public ButtonData GetButtonData()
+        {
+            ButtonData buttonData = new ButtonData();
+            buttonData.transform = TransformData.TransformToTransformData(transform);
+            buttonData.name = GetEntityName();
+            buttonData.id = GetId();
+            buttonData.activatorEntityId = activatorEntityId;
+            foreach (ButtonAction buttonAction in actions)
+            {
+                buttonData.actionDatas.Add(buttonAction.GetButtonActionData());
+            }
+            return buttonData;
         }
 
         public static ButtonEntity InstantNewEntity(ButtonData buttonData)
         {
             ButtonEntity buttonPrefab = AssetContainer.Instance.GetButtonPrefab();
             ButtonEntity buttonEntity = Instantiate(buttonPrefab);
-            buttonEntity.SetId(buttonData.id);
-            buttonEntity.SetEntityName(buttonData.name);
-            buttonEntity.SetActivatorEntityId(buttonData.activatorEntityId);
-            TransformData.TransformDataToTransfrom(buttonData.transform, buttonEntity.transform);
+
+            if (!string.IsNullOrEmpty(buttonData.id))
+            {
+                buttonEntity.SetId(buttonData.id);
+            }
+            
+            if (!string.IsNullOrEmpty(buttonEntity.name))
+            {
+                buttonEntity.SetEntityName(buttonData.name);
+            }
+           
+            if (!string.IsNullOrEmpty(buttonEntity.activatorEntityId))
+            {
+                buttonEntity.SetActivatorEntityId(buttonData.activatorEntityId);
+            }
+
+            if (buttonEntity.transform != null)
+            {
+                TransformData.TransformDataToTransfrom(buttonData.transform, buttonEntity.transform);
+            }
+            
             OnEntityCreated?.Invoke(buttonEntity);
             return buttonEntity;
         }
