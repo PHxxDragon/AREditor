@@ -16,6 +16,11 @@ namespace EAR.Entity
             gameObject.SetActive(isVisible);
         }
 
+        public void SetVisibility(bool isVisible)
+        {
+            this.isVisible = isVisible;
+        }
+
         public override bool IsViewable()
         {
             return true;

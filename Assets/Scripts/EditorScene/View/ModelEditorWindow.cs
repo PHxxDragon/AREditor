@@ -4,15 +4,22 @@ using EAR.AssetManager;
 using EAR.AnimationPlayer;
 using System;
 using System.Collections.Generic;
+using TMPro;
 
 namespace EAR.View
 {
     public class ModelEditorWindow : MonoBehaviour
     {
+        public event Action<string> OnNameChanged;
+        public event Action<bool> OnVisibilityChanged;
         public event Action<string> OnModelAssetSelected;
         public event Action<int> OnDefaultAnimationSelected;
         public event Action OnModelDelete;
 
+        [SerializeField]
+        private TMP_InputField nameInputField;
+        [SerializeField]
+        private Toggle isVisible;
         [SerializeField]
         private DropdownHelper assetDropdown;
         [SerializeField]
@@ -51,6 +58,14 @@ namespace EAR.View
                     assetDropdown.AddData(assetObject.assetId, assetObject.name);
                 }
             };
+            nameInputField.onValueChanged.AddListener((name) =>
+            {
+                OnNameChanged?.Invoke(name);
+            });
+            isVisible.onValueChanged.AddListener((isVisible) =>
+            {
+                OnVisibilityChanged?.Invoke(isVisible);
+            });
             CloseEditor();
         }
 

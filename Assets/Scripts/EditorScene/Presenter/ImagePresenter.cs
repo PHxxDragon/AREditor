@@ -65,6 +65,16 @@ namespace EAR.Editor.Presenter
                 }
             };
 
+            imageEditorWindow.OnNameChanged += (string name) =>
+            {
+                currentImage.SetEntityName(name);
+            };
+
+            imageEditorWindow.OnVisibilityChanged += (bool visibility) =>
+            {
+                currentImage.SetVisibility(visibility);
+            };
+
             imageEditorWindow.OnImageAssetSelected += (string assetId) =>
             {
                 currentImage.SetImage(assetId);

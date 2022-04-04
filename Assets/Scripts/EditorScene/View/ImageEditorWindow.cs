@@ -2,14 +2,21 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using EAR.AssetManager;
+using TMPro;
 
 namespace EAR.View
 {
     public class ImageEditorWindow : MonoBehaviour
     {
+        public event Action<string> OnNameChanged;
+        public event Action<bool> OnVisibilityChanged;
         public event Action<string> OnImageAssetSelected;
         public event Action OnImageDelete;
 
+        [SerializeField]
+        private TMP_InputField nameInputField;
+        [SerializeField]
+        private Toggle isVisible;
         [SerializeField]
         private DropdownHelper dropdown;
         [SerializeField]
@@ -24,6 +31,14 @@ namespace EAR.View
             deleteButton.onClick.AddListener(() =>
             {
                 OnImageDelete?.Invoke();
+            });
+            nameInputField.onValueChanged.AddListener((name) =>
+            {
+                OnNameChanged?.Invoke(name);
+            });
+            isVisible.onValueChanged.AddListener((isVisible) =>
+            {
+                OnVisibilityChanged?.Invoke(isVisible);
             });
         }
 

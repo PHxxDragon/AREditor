@@ -7,6 +7,9 @@ namespace EAR.View
 {
     public class NoteEditorWindow : MonoBehaviour
     {
+        public event Action<string> OnNameChanged;
+        public event Action<bool> OnVisibilityChanged;
+
         public event Action<string> OnTextInputFieldChanged;
 
         public event Action<Color> OnBackgroundColorChanged;
@@ -22,6 +25,10 @@ namespace EAR.View
 
         public event Action OnDeleteButtonClick;
 
+        [SerializeField]
+        private TMP_InputField nameInputField;
+        [SerializeField]
+        private Toggle isVisible;
         [SerializeField]
         private TMP_InputField textInputField;
         [SerializeField]
@@ -109,6 +116,14 @@ namespace EAR.View
             {
                 OnBoxWidthChanged?.Invoke(value);
             };
+            nameInputField.onValueChanged.AddListener((name) =>
+            {
+                OnNameChanged?.Invoke(name);
+            });
+            isVisible.onValueChanged.AddListener((isVisible) =>
+            {
+                OnVisibilityChanged?.Invoke(isVisible);
+            });
 
             CloseEditor();
         }

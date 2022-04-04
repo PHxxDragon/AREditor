@@ -1,6 +1,7 @@
 using EAR.Entity;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System;
 using System.Collections.Generic;
 
@@ -8,12 +9,15 @@ namespace EAR.View
 {
     public class ButtonEditorWindow : MonoBehaviour
     {
+        public event Action<string> OnNameChanged;
         public event Action<string> OnListenerEntityIdChanged;
         public event Action<int, ButtonActionData> OnButtonActionDataChanged;
         public event Action<ButtonActionData> OnButtonActionDataAdded;
         public event Action<int> OnButtonActionDataDelete;
         public event Action OnButtonDelete;
 
+        [SerializeField]
+        private TMP_InputField nameInputField;
         [SerializeField]
         private DropdownHelper listenerEntityId;
         [SerializeField]
@@ -36,6 +40,10 @@ namespace EAR.View
                 ButtonActionData buttonActionData = new ButtonActionData();
                 OnButtonActionDataAdded?.Invoke(buttonActionData);
                 BindButtonActionDataPanel(buttonActionData);
+            });
+            nameInputField.onValueChanged.AddListener((name) =>
+            {
+                OnNameChanged?.Invoke(name);
             });
             deleteButton.onClick.AddListener(() =>
             {

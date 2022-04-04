@@ -71,6 +71,11 @@ namespace EAR.Editor.Presenter
                 }
             };
 
+            buttonEditorWindow.OnNameChanged += (string name) =>
+            {
+                currentButton.SetEntityName(name);
+            };
+
             buttonEditorWindow.OnListenerEntityIdChanged += (entityId) =>
             {
                 currentButton.SetActivatorEntityId(entityId);

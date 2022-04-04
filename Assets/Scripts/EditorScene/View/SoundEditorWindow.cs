@@ -2,16 +2,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using EAR.AssetManager;
 using System;
+using TMPro;
 
 namespace EAR.View
 {
     public class SoundEditorWindow : MonoBehaviour
     {
+        public event Action<string> OnNameChanged;
         public event Action<string> OnSoundAssetSelected;
         public event Action<bool> OnPlayAtStartChanged;
         public event Action<bool> OnLoopChanged;
         public event Action OnDelete;
 
+        [SerializeField]
+        private TMP_InputField nameInputField;
         [SerializeField]
         private DropdownHelper assetDropdown;
         [SerializeField]
@@ -34,6 +38,10 @@ namespace EAR.View
             loopToggle.onValueChanged.AddListener((value) =>
             {
                 OnLoopChanged?.Invoke(value);
+            });
+            nameInputField.onValueChanged.AddListener((name) =>
+            {
+                OnNameChanged?.Invoke(name);
             });
             deleteButton.onClick.AddListener(() =>
             {

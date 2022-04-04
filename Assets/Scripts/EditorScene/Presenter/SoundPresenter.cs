@@ -66,6 +66,11 @@ namespace EAR.Editor.Presenter
                 }
             };
 
+            soundEditorWindow.OnNameChanged += (string name) =>
+            {
+                currentSound.SetEntityName(name);
+            };
+
             soundEditorWindow.OnSoundAssetSelected += (string assetId) =>
             {
                 currentSound.SetAudioClip(assetId);

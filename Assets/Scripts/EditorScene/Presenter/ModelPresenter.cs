@@ -65,6 +65,16 @@ namespace EAR.Editor.Presenter
                 }
             };
 
+            modelEditorWindow.OnNameChanged += (string name) =>
+            {
+                currentModel.SetEntityName(name);
+            };
+
+            modelEditorWindow.OnVisibilityChanged += (bool visibility) =>
+            {
+                currentModel.SetVisibility(visibility);
+            };
+
             modelEditorWindow.OnModelAssetSelected += (string assetId) =>
             {
                 currentModel.SetModel(assetId);

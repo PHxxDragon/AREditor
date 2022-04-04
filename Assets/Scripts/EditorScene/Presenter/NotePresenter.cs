@@ -59,13 +59,23 @@ namespace EAR.Editor.Presenter
                 }
             };
             //TODO
-/*            selectionManager.CheckMouseRaycastBlocked += (ref bool isBlocked) =>
+            /*            selectionManager.CheckMouseRaycastBlocked += (ref bool isBlocked) =>
+                        {
+                            if (toolBar.GetActiveTool() == ToolEnum.AddNote)
+                            {
+                                isBlocked = true;
+                            }
+                        };*/
+
+            noteEditorWindow.OnNameChanged += (string name) =>
             {
-                if (toolBar.GetActiveTool() == ToolEnum.AddNote)
-                {
-                    isBlocked = true;
-                }
-            };*/
+                currentNote.SetEntityName(name);
+            };
+
+            noteEditorWindow.OnVisibilityChanged += (bool visibility) =>
+            {
+                currentNote.SetVisibility(visibility);
+            };
 
             noteEditorWindow.OnTextInputFieldChanged += (string value) =>
             {
