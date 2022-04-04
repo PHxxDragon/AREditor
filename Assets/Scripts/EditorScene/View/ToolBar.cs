@@ -21,6 +21,8 @@ namespace EAR.View
         private Toggle imageAddToggle;
         [SerializeField]
         private Toggle buttonAddToggle;
+        [SerializeField]
+        private Toggle soundAddToggle;
 
         [SerializeField]
         private Toggle playToggle;
@@ -65,6 +67,7 @@ namespace EAR.View
             modelAddToggle.onValueChanged.AddListener(ModelToggleActive);
             imageAddToggle.onValueChanged.AddListener(ImageToggleActive);
             buttonAddToggle.onValueChanged.AddListener(ButtonToggleActive);
+            soundAddToggle.onValueChanged.AddListener(SoundToggleActive);
             saveButton.onClick.AddListener(SaveButtonClick);
             undoButton.onClick.AddListener(UndoButtonClick);
             redoButton.onClick.AddListener(RedoButtonClick);
@@ -72,6 +75,15 @@ namespace EAR.View
             settingButton.onClick.AddListener(SettingButtonClick);
             playToggle.onValueChanged.AddListener(PlayToggleClick);
             ApplyGlobalStates();
+        }
+
+        private void SoundToggleActive(bool isOn)
+        {
+            if (isOn)
+            {
+                OnToolChanged?.Invoke(activeTool, ToolEnum.AddSound);
+                activeTool = ToolEnum.AddSound;
+            }
         }
 
         private void PlayToggleClick(bool arg0)

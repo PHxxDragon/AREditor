@@ -7,6 +7,7 @@ using EAR.Entity;
 using EAR.AssetManager;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace EAR.Editor.Presenter
 {
@@ -67,6 +68,9 @@ namespace EAR.Editor.Presenter
                     case AssetObject.IMAGE_TYPE:
                         LoadImage(assetObject.assetId, assetObject.url);
                         break;
+                    case AssetObject.SOUND_TYPE:
+                        LoadSound(assetObject.assetId, assetObject.url, assetObject.extension);
+                        break;
                     default:
                         assetCount -= 1;
                         break;
@@ -78,6 +82,21 @@ namespace EAR.Editor.Presenter
             modelLoader.OnLoadError += OnLoadError;
 
             StartCoroutine(LoadMetadataAfterAssets(assetInformation));
+        }
+
+        private void LoadSound(string assetId, string url, string extension)
+        {
+            Utils.Instance.GetSound(url, extension,
+            (audioClip) =>
+            {
+                AssetContainer.Instance.AddSound(assetObjectDict[assetId], audioClip);
+                assetCount -= 1;
+            }, (error) =>
+            {
+                Modal modal = Instantiate(modalPrefab, canvas.transform);
+                modal.SetModalContent("Error", error);
+                modal.DisableCancelButton();
+            });
         }
 
         private void LoadImage(string assetId, string url)

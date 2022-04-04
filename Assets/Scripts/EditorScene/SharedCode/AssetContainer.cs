@@ -33,6 +33,7 @@ namespace EAR.AssetManager
 
         private readonly Dictionary<string, (AssetObject, GameObject)> models = new Dictionary<string, (AssetObject, GameObject)>();
         private readonly Dictionary<string, (AssetObject, Texture2D)> images = new Dictionary<string, (AssetObject, Texture2D)>();
+        private readonly Dictionary<string, (AssetObject, AudioClip)> sounds = new Dictionary<string, (AssetObject, AudioClip)>();
 
         [SerializeField]
         private GameObject disabledContainer;
@@ -52,25 +53,8 @@ namespace EAR.AssetManager
         [SerializeField]
         private ButtonEntity buttonPrefab;
 
-        public List<AssetObject> GetModelAssets()
-        {
-            List<AssetObject> assetObjects = new List<AssetObject>();
-            foreach (var tuple in models.Values)
-            {
-                assetObjects.Add(tuple.Item1);
-            }
-            return assetObjects;
-        }
-
-        public List<AssetObject> GetImageAssets()
-        {
-            List<AssetObject> assetObjects = new List<AssetObject>();
-            foreach (var tuple in images.Values)
-            {
-                assetObjects.Add(tuple.Item1);
-            }
-            return assetObjects;
-        }
+        [SerializeField]
+        private SoundEntity soundPrefab;
 
         public void AddModel(AssetObject assetObject, GameObject model)
         {
@@ -93,6 +77,17 @@ namespace EAR.AssetManager
         public Texture2D GetImage(string assetId)
         {
             return images[assetId].Item2;
+        }
+
+        public void AddSound(AssetObject assetObject, AudioClip sound)
+        {
+            OnAssetObjectAdded?.Invoke(assetObject);
+            sounds.Add(assetObject.assetId, (assetObject, sound));
+        }
+
+        public AudioClip GetSound(string assetId)
+        {
+            return sounds[assetId].Item2;
         }
 
         public GameObject GetModelPrefab()
@@ -118,6 +113,11 @@ namespace EAR.AssetManager
         public ButtonEntity GetButtonPrefab()
         {
             return buttonPrefab;
+        }
+
+        public SoundEntity GetSoundPrefab()
+        {
+            return soundPrefab;
         }
     }
 }

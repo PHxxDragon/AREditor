@@ -77,6 +77,11 @@ namespace EAR
                 );
         }
 
+        public void GetSound(string soundUrl, string extension, Action<AudioClip> callback, Action<string> errorCallback = null)
+        {
+            StartCoroutine(GetSoundCoroutine(soundUrl, extension, callback, errorCallback));
+        } 
+
         public void GetImageAsTexture2D(string imageUrl, Action<Texture2D> callback, Action<string> errorCallback = null)
         {
             StartCoroutine(GetImageCoroutine(imageUrl, callback, errorCallback));
@@ -139,6 +144,34 @@ namespace EAR
                 }
             }
             return bounds;
+        }
+
+        private IEnumerator GetSoundCoroutine(string soundUrl, string extension, Action<AudioClip> callback, Action<string> errorCallback)
+        {
+            using (UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip(soundUrl, GetAudioTypeFromExtension(extension)))
+            {
+                yield return uwr.SendWebRequest();
+                if (uwr.result != UnityWebRequest.Result.Success)
+                {
+                    errorCallback?.Invoke(uwr.error);
+                }
+                else
+                {
+                    AudioClip audioClip = DownloadHandlerAudioClip.GetContent(uwr);
+                    callback?.Invoke(audioClip);
+                }
+            }
+        }
+
+        private AudioType GetAudioTypeFromExtension(string extension)
+        {
+            switch (extension)
+            {
+                case "wav":
+                    return AudioType.WAV;
+                default:
+                    return AudioType.MPEG;
+            }
         }
 
         private IEnumerator GetImageCoroutine(string imageUrl, Action<Texture2D> callback, Action<string> errorCallback)

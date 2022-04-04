@@ -10,6 +10,7 @@ namespace EAR
         public List<ModelData> modelDatas = new List<ModelData>();
         public List<NoteData> noteDatas = new List<NoteData>();
         public List<LightData> lightDatas = new List<LightData>();
+        public List<SoundData> soundDatas = new List<SoundData>();
         public Color ambientColor = Color.white;
     }
 
@@ -36,7 +37,18 @@ namespace EAR
         public string targetEntityId;
         public string assetId;
         public int animationIndex;
-        
+    }
+
+    [SerializeField]
+    public class SoundData
+    {
+        public string id;
+        public string name;
+
+        public TransformData transform;
+        public string assetId;
+        public bool playAtStart;
+        public bool loop;
     }
 
     [Serializable]

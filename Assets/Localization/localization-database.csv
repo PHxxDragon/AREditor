@@ -58,3 +58,8 @@ ActionType,Action type,Loại hành động
 TargetEntity,Target entity,Mục tiêu
 AddButton,Add button,Thêm nút bấm
 Animation,Animation,Animation
+AddSound,Add sound,Thêm âm thanh
+EditSound,Edit sound,Sửa âm thanh
+Sound,Sound,Âm thanh
+PlayAtStart,Play at start,Phát lúc bắt đầu
+Loop,Loop,Lặp lại
