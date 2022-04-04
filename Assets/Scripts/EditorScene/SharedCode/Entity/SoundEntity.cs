@@ -37,9 +37,6 @@ namespace EAR.Entity
         public void PlaySound()
         {
             AudioSource audioSource = GetComponentInChildren<AudioSource>();
-            Debug.Log(audioSource);
-            Debug.Log(audioSource.clip);
-            Debug.Log(audioSource.clip.name);
             audioSource.Play();
         }
 

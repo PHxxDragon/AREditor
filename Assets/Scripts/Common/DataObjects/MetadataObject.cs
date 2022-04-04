@@ -30,12 +30,11 @@ namespace EAR
     {
         public enum ActionType
         {
-            Show, Hide, PlayAnimation, PlaySound
+            Show, Hide, PlayAnimation, PlaySound, StopSound
         }
 
         public ActionType actionType;
         public string targetEntityId;
-        public string assetId;
         public int animationIndex;
     }
 
