@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace EAR.Selection
@@ -10,6 +11,7 @@ namespace EAR.Selection
         public event Action<IUndoRedoCommand> NewCommandEvent;
 
         private Selectable _currentSelection;
+        private List<Selectable> selectionHistory = new List<Selectable>();
 
         void Start()
         {
@@ -49,19 +51,46 @@ namespace EAR.Selection
             if (Input.GetMouseButtonDown(0) && !GlobalStates.IsPlayMode() && !GlobalStates.IsMouseRaycastBlocked())
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                foreach (RaycastHit hit in Physics.RaycastAll(ray))
+                RaycastHit[] hits = Physics.RaycastAll(ray);
+                HashSet<Selectable> selectables = new HashSet<Selectable>();
+                foreach (RaycastHit hit in hits)
                 {
                     Selectable selectable = hit.transform.GetComponentInParent<Selectable>();
-                    if (selectable != null && _currentSelection != selectable)
+                    if (selectable) 
                     {
-                        SelectObject(selectable);
-                        IUndoRedoCommand command = new SelectCommand(selectable, SelectObject, DeselectObject);
-                        NewCommandEvent?.Invoke(command);
-                        return;
+                        selectables.Add(selectable);
                     }
                 }
 
-                DeselectWithUndo();
+                int minLastIndex = int.MaxValue;
+                Selectable selectableWithMinLastIndex = null;
+                foreach (Selectable selectable in selectables)
+                {
+                    int currentLastIndex = selectionHistory.LastIndexOf(selectable);
+                    if (minLastIndex > currentLastIndex)
+                    {
+                        minLastIndex = currentLastIndex;
+                        selectableWithMinLastIndex = selectable;
+                    }
+                    if (minLastIndex == -1)
+                    {
+                        break;
+                    }
+                }
+
+                if (selectableWithMinLastIndex && selectableWithMinLastIndex != _currentSelection)
+                {
+                    selectionHistory.Add(selectableWithMinLastIndex);
+                    SelectObject(selectableWithMinLastIndex);
+                    IUndoRedoCommand command = new SelectCommand(selectableWithMinLastIndex, SelectObject, DeselectObject);
+                    NewCommandEvent?.Invoke(command);
+                }
+
+                if (selectables.Count == 0)
+                {
+                    selectionHistory.Clear();
+                    DeselectWithUndo();
+                }
             }
         }
 
