@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2884059570061183438}
   - component: {fileID: 8674166072933450520}
-  - component: {fileID: 6776705766587396880}
   - component: {fileID: 1484921670022896515}
   - component: {fileID: 3565560137484750036}
+  - component: {fileID: 1783054310707783836}
   m_Layer: 0
   m_Name: SoundPrefab
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3971553758683496774}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 299.08298, y: 164.03735, z: 17.640358}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_Children:
   - {fileID: 32601029351061650}
   m_Father: {fileID: 0}
@@ -47,19 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f312ce8743d5b3f40b87531283fef72c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &6776705766587396880
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3971553758683496774}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1484921670022896515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,7 +79,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0.10593414
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -168,6 +155,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!135 &1783054310707783836
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3971553758683496774}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 105.83114
+  m_Center: {x: 0, y: 0, z: 0.8182525}
 --- !u!1001 &2029225519156627145
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -180,24 +180,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2043107752669429339, guid: 07e8c43e499d6934b8057b8545309ffa, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.005
-      objectReference: {fileID: 0}
-    - target: {fileID: 2043107752669429339, guid: 07e8c43e499d6934b8057b8545309ffa, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.005
-      objectReference: {fileID: 0}
-    - target: {fileID: 2043107752669429339, guid: 07e8c43e499d6934b8057b8545309ffa, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.005
-      objectReference: {fileID: 0}
-    - target: {fileID: 2043107752669429339, guid: 07e8c43e499d6934b8057b8545309ffa, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2043107752669429339, guid: 07e8c43e499d6934b8057b8545309ffa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -51
       objectReference: {fileID: 0}
     - target: {fileID: 2043107752669429339, guid: 07e8c43e499d6934b8057b8545309ffa, type: 3}
       propertyPath: m_LocalPosition.z

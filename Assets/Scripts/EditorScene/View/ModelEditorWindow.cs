@@ -44,20 +44,18 @@ namespace EAR.View
             {
                 OnModelDelete?.Invoke();
             });
-        }
 
-        void Start()
-        {
-            //TODO
             assetDropdown.ClearData();
             assetDropdown.AddData(string.Empty, "Choose model asset");
-            AssetContainer.Instance.OnAssetObjectAdded += (AssetObject assetObject) =>
+
+            if (AssetContainer.Instance)
             {
-                if (assetObject.type == AssetObject.MODEL_TYPE)
-                {
-                    assetDropdown.AddData(assetObject.assetId, assetObject.name);
-                }
-            };
+                SetAssetListener(AssetContainer.Instance);
+            } else
+            {
+                AssetContainer.OnInstanceCreated += SetAssetListener;
+            }
+
             nameInputField.onValueChanged.AddListener((name) =>
             {
                 OnNameChanged?.Invoke(name);
@@ -67,6 +65,17 @@ namespace EAR.View
                 OnVisibilityChanged?.Invoke(isVisible);
             });
             CloseEditor();
+        }
+
+        private void SetAssetListener(AssetContainer instance)
+        {
+            instance.OnAssetObjectAdded += (AssetObject assetObject) =>
+            {
+                if (assetObject.type == AssetObject.MODEL_TYPE)
+                {
+                    assetDropdown.AddData(assetObject.assetId, assetObject.name);
+                }
+            };
         }
 
         private void UpdateAnimationDropdown(string assetId)
@@ -105,16 +114,11 @@ namespace EAR.View
 
         public void PopulateData(ModelData modelData)
         {
-            if (string.IsNullOrEmpty(modelData.assetId))
-            {
-                assetDropdown.SelectValue(string.Empty);
-            } else
-            {
-                assetDropdown.SelectValue(modelData.assetId);
-            }
-
+            assetDropdown.SelectValue(modelData.assetId);
             UpdateAnimationDropdown(modelData.assetId);
             animationDropdown.SelectValue(modelData.defaultAnimation);
+            nameInputField.text = modelData.name;
+            isVisible.isOn = modelData.isVisible;
         }
     }
 }

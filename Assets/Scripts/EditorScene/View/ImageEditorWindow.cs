@@ -69,13 +69,9 @@ namespace EAR.View
 
         public void PopulateData(ImageData imageData)
         {
-            if (string.IsNullOrEmpty(imageData.assetId))
-            {
-                dropdown.SelectValue(string.Empty);
-            } else
-            {
-                dropdown.SelectValue(imageData.assetId);
-            }
+            dropdown.SelectValue(imageData.assetId);
+            nameInputField.text = imageData.name;
+            isVisible.isOn = imageData.isVisible;
         }
     }
 }

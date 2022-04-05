@@ -76,17 +76,10 @@ namespace EAR.View
 
         public void PopulateData(SoundData soundData)
         {
-            if (string.IsNullOrEmpty(soundData.assetId))
-            {
-                assetDropdown.SelectValue(string.Empty);
-            }
-            else
-            {
-                assetDropdown.SelectValue(soundData.assetId);
-            }
-
+            assetDropdown.SelectValue(soundData.assetId);
             playAtStartToggle.isOn = soundData.playAtStart;
             loopToggle.isOn = soundData.loop;
+            nameInputField.text = soundData.name;
         }
     }
 }

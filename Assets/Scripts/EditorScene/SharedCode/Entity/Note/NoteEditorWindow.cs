@@ -61,6 +61,8 @@ namespace EAR.View
 
         public void PopulateData(NoteData noteData)
         {
+            nameInputField.text = noteData.name;
+            isVisible.isOn = noteData.isVisible;
             textInputField.text = noteData.noteContent;
             backgroundColorSelector.SetColor(noteData.textBackgroundColor);
             borderWidth.SetValue(noteData.borderWidth.x);
@@ -71,7 +73,7 @@ namespace EAR.View
         }
         
 
-        void Start()
+        void Awake()
         {
             deleteButton.onClick.AddListener(() =>
             {

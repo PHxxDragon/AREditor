@@ -5,8 +5,14 @@ namespace EAR.Entity
 {
     public class SoundEntity : InvisibleEntity
 {
+        private static int count = 1;
         private string assetId;
         private bool playAtStart;
+
+        public override string GetDefaultName()
+        {
+            return "New sound " + count++;
+        }
 
         public override bool IsValidEntity()
         {
@@ -58,14 +64,7 @@ namespace EAR.Entity
 
             AudioSource audioSource = GetComponentInChildren<AudioSource>();
             this.assetId = assetId;
-            if (!string.IsNullOrEmpty(assetId))
-            {
-                AudioClip audioClip = AssetContainer.Instance.GetSound(assetId);
-                audioSource.clip = audioClip;
-            } else
-            {
-                audioSource.clip = null;
-            }
+            audioSource.clip = AssetContainer.Instance.GetSound(assetId);
         }
 
         public SoundData GetSoundData()

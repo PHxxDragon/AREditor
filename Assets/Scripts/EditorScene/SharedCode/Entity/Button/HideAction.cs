@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace EAR.Entity.EntityAction
@@ -11,18 +12,11 @@ namespace EAR.Entity.EntityAction
 
         public override void ExecuteAction()
         {
-            try
+            BaseEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId());
+            if (entity.IsValidEntity() && entity.IsViewable())
             {
-                BaseEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId());
-                if (entity.IsValidEntity() && entity.IsViewable())
-                {
-                    entity.gameObject.SetActive(false);
-                }
-            } catch (KeyNotFoundException)
-            {
-                Debug.Log("Key not found");
+                entity.gameObject.SetActive(false);
             }
-            
         }
 
         public override ButtonActionData GetButtonActionData()

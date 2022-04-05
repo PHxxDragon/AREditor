@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EAR.Entity;
 using System.Linq;
+using System;
 
 public class EntityContainer : MonoBehaviour
 {
@@ -48,7 +49,18 @@ public class EntityContainer : MonoBehaviour
 
     public BaseEntity GetEntity(string entityId)
     {
-        return entityDict[entityId];
+        try
+        {
+            return entityDict[entityId];
+        }
+        catch (KeyNotFoundException)
+        {
+            return null;
+        }
+        catch (ArgumentNullException)
+        {
+            return null;
+        }
     }
 
     public BaseEntity[] GetEntities()

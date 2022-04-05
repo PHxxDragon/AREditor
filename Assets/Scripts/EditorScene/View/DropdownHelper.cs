@@ -100,7 +100,10 @@ namespace EAR.View
                 dropdown.value = objectToIndex[value];
             } catch (KeyNotFoundException)
             {
-                Debug.Log("Key not found: " + value);
+                dropdown.value = 0;
+            } catch (ArgumentNullException)
+            {
+                dropdown.value = 0;
             }
         }
     }

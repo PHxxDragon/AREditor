@@ -67,10 +67,10 @@ namespace EAR.AddObject
                         previewObject.SetActive(true);
 
                     previewObject.gameObject.transform.position = hitInfo.point;
-                    Vector3 cameraPos = mainCamera.transform.position;
+/*                    Vector3 cameraPos = mainCamera.transform.position;
                     Vector3 behindPos = 2 * previewObject.transform.position - cameraPos;
                     behindPos.y = 0;
-                    previewObject.transform.LookAt(behindPos);
+                    previewObject.transform.LookAt(behindPos);*/
 
                     Bounds bounds = Utils.GetUIBounds(previewObject);
                     Bounds emptyBound = new Bounds();

@@ -14,17 +14,10 @@ namespace EAR.Entity.EntityAction
         }
         public override void ExecuteAction()
         {
-            try
+            ModelEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId()) as ModelEntity;
+            if (entity)
             {
-                ModelEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId()) as ModelEntity;
-                if (entity)
-                {
-                    entity.PlayAnimation(animationIndex);
-                }
-            }
-            catch (KeyNotFoundException)
-            {
-                Debug.Log("Key not found");
+                entity.PlayAnimation(animationIndex);
             }
         }
 

@@ -10,19 +10,11 @@ namespace EAR.Entity.EntityAction
         }
         public override void ExecuteAction()
         {
-            try
+            SoundEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId()) as SoundEntity;
+            if (entity && entity.IsValidEntity())
             {
-                SoundEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId()) as SoundEntity;
-                if (entity && entity.IsValidEntity())
-                {
-                    entity.PlaySound();
-                }
+                entity.PlaySound();
             }
-            catch (KeyNotFoundException)
-            {
-                Debug.Log("Key not found");
-            }
-
         }
 
         public override ButtonActionData GetButtonActionData()

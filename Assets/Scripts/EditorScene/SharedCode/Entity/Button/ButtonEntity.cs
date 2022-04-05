@@ -8,8 +8,14 @@ namespace EAR.Entity
 {
     public class ButtonEntity : InvisibleEntity
     {
+        private static int count = 1;
         private string activatorEntityId;
         public readonly List<ButtonAction> actions = new List<ButtonAction>();
+
+        public override string GetDefaultName()
+        {
+            return "New button " + count++;
+        }
 
         protected override void Awake()
         {
@@ -17,30 +23,21 @@ namespace EAR.Entity
 
             GlobalStates.OnIsPlayModeChange += (isPlayMode) =>
             {
-                try
+                BaseEntity baseEntity = EntityContainer.Instance.GetEntity(activatorEntityId);
+                if (baseEntity && baseEntity.IsValidEntity() && baseEntity.IsClickable())
                 {
-                    BaseEntity baseEntity = EntityContainer.Instance.GetEntity(activatorEntityId);
-                    if (baseEntity.IsValidEntity() && baseEntity.IsClickable())
+                    if (isPlayMode)
                     {
-                        if (isPlayMode)
-                        {
-                            EntityClickListener entityClickListener = baseEntity.gameObject.AddComponent<EntityClickListener>();
-                            entityClickListener.OnEntityClicked += ActivateButton;
-                        } else
-                        {
-                            EntityClickListener entityClickListener = baseEntity.gameObject.GetComponent<EntityClickListener>();
-                            Destroy(entityClickListener);
-                        }  
+                        EntityClickListener entityClickListener = baseEntity.gameObject.AddComponent<EntityClickListener>();
+                        entityClickListener.OnEntityClicked += ActivateButton;
                     } else
                     {
-                        Debug.LogError("Unclickable entity");
-                    }
-                } catch (KeyNotFoundException)
+                        EntityClickListener entityClickListener = baseEntity.gameObject.GetComponent<EntityClickListener>();
+                        Destroy(entityClickListener);
+                    }  
+                } else
                 {
-                    Debug.Log("Key not found");
-                } catch (ArgumentNullException)
-                {
-                    Debug.Log("Key null");
+                    Debug.Log("Unclickable entity");
                 }
             };
         }
@@ -68,12 +65,12 @@ namespace EAR.Entity
             {
                 buttonEntity.SetId(buttonData.id);
             }
-            
+
             if (!string.IsNullOrEmpty(buttonEntity.name))
             {
                 buttonEntity.SetEntityName(buttonData.name);
             }
-           
+
             if (!string.IsNullOrEmpty(buttonEntity.activatorEntityId))
             {
                 buttonEntity.SetActivatorEntityId(buttonData.activatorEntityId);
@@ -83,8 +80,12 @@ namespace EAR.Entity
             {
                 TransformData.TransformDataToTransfrom(buttonData.transform, buttonEntity.transform);
             }
-            
-            OnEntityCreated?.Invoke(buttonEntity);
+
+            foreach (ButtonActionData buttonActionData in buttonData.actionDatas)
+            {
+                buttonEntity.actions.Add(ButtonActionFactory.CreateButtonAction(buttonActionData));
+            }
+
             return buttonEntity;
         }
 

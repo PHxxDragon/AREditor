@@ -8,6 +8,7 @@ namespace EAR.AssetManager
     public class AssetContainer : MonoBehaviour
     {
         private static AssetContainer instance;
+        public static event Action<AssetContainer> OnInstanceCreated;
 
         public static AssetContainer Instance
         {
@@ -22,6 +23,7 @@ namespace EAR.AssetManager
             if (!instance)
             {
                 instance = this;
+                OnInstanceCreated?.Invoke(this);
             }
             else
             {
@@ -65,7 +67,16 @@ namespace EAR.AssetManager
 
         public GameObject GetModel(string assetId)
         {
-            return models[assetId].Item2;
+            try
+            {
+                return models[assetId].Item2;
+            } catch (KeyNotFoundException)
+            {
+                return null;
+            } catch (ArgumentNullException)
+            {
+                return null;
+            }
         }
 
         public void AddImage(AssetObject assetObject, Texture2D image)
@@ -76,7 +87,18 @@ namespace EAR.AssetManager
 
         public Texture2D GetImage(string assetId)
         {
-            return images[assetId].Item2;
+            try
+            {
+                return images[assetId].Item2;
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
+            catch (ArgumentNullException)
+            {
+                return null;
+            }
         }
 
         public void AddSound(AssetObject assetObject, AudioClip sound)
@@ -87,7 +109,18 @@ namespace EAR.AssetManager
 
         public AudioClip GetSound(string assetId)
         {
-            return sounds[assetId].Item2;
+            try
+            {
+                return sounds[assetId].Item2;
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
+            catch (ArgumentNullException)
+            {
+                return null;
+            }
         }
 
         public GameObject GetModelPrefab()

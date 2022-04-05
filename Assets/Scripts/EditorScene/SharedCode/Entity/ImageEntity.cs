@@ -7,10 +7,16 @@ namespace EAR.Entity
 {
     public class ImageEntity : VisibleEntity
     {
+        private static int count = 1;
         [SerializeField]
         private Image image;
 
         private string assetId;
+
+        public override string GetDefaultName()
+        {
+            return "New image " + count++;
+        }
 
         public override bool IsValidEntity()
         {
@@ -24,12 +30,17 @@ namespace EAR.Entity
             imageData.id = GetId();
             imageData.name = GetEntityName();
             imageData.transform = TransformData.TransformToTransformData(transform);
+            imageData.isVisible = isVisible;
             return imageData;
         }
 
         public void SetImage(string assetId)
         {
-            Texture2D image = string.IsNullOrEmpty(assetId) ? AssetContainer.Instance.GetDefaultImage() : AssetContainer.Instance.GetImage(assetId);
+            Texture2D image = AssetContainer.Instance.GetImage(assetId); 
+            if (!image)
+            {
+                AssetContainer.Instance.GetDefaultImage();
+            }
             this.image.sprite = Utils.Instance.Texture2DToSprite(image);
             this.assetId = assetId;
             //OnEntityChanged?.Invoke(this);

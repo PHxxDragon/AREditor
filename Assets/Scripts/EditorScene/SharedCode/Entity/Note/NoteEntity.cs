@@ -8,6 +8,8 @@ namespace EAR.Entity
 {
     public class NoteEntity : VisibleEntity
     {
+        private static int count = 1;
+
         [SerializeField]
         private TMP_Text text;
         [SerializeField]
@@ -33,6 +35,11 @@ namespace EAR.Entity
         private Camera eventCamera;
 
         private Vector3 originalScale;
+
+        public override string GetDefaultName()
+        {
+            return "New note " + count++;
+        }
 
         public static NoteEntity InstantNewEntity(NoteData noteData)
         {
@@ -63,6 +70,7 @@ namespace EAR.Entity
             noteData.textColor = GetTextColor();
             noteData.borderWidth = GetTextBorderWidth();
             noteData.borderColor = GetBorderColor();
+            noteData.isVisible = isVisible;
             return noteData;
         }
 

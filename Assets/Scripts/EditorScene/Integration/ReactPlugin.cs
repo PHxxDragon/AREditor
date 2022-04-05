@@ -52,7 +52,7 @@ namespace EAR.Integration
             assetObject3.assetId = "lkjfioewuffewffdsf";
             assetObject3.name = "image 1112";
             assetObject3.type = AssetObject.IMAGE_TYPE;
-            assetObject3.url = "https://library.vuforia.com/sites/default/files/vuforia-library/articles/solution/Magic%20Leap%20Related%20Content/Astronaut-scaled.jpg";
+            assetObject3.url = "http://localhost:4000/wolf.jpg";
             assetInformation.assets.Add(assetObject3);
             AssetObject assetObject4 = new AssetObject();
             assetObject4.assetId = "lakjdfadfdsafaf";

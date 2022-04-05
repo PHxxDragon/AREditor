@@ -58,6 +58,7 @@ namespace EAR
 
         public TransformData transform;
         public string assetId;
+        public bool isVisible;
     }
 
     [Serializable]
@@ -69,6 +70,7 @@ namespace EAR
 
         public TransformData transform;
         public string assetId;
+        public bool isVisible;
     }
 
     [Serializable]
@@ -76,6 +78,8 @@ namespace EAR
     {
         public string id;
         public string name;
+
+        public bool isVisible;
 
         public TransformData noteTransformData;
         public RectTransformData noteContentRectTransformData;

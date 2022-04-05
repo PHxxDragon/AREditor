@@ -6,8 +6,14 @@ namespace EAR.Entity
 {
     public class ModelEntity : VisibleEntity
     {
+        private static int count = 1;
         private string assetId;
         private int defaultAnimationIndex = 0;
+
+        public override string GetDefaultName()
+        {
+            return "New model " + count++; 
+        }
 
         public override bool IsValidEntity()
         {
@@ -42,6 +48,7 @@ namespace EAR.Entity
             modelData.name = GetEntityName();
             modelData.transform = TransformData.TransformToTransformData(transform);
             modelData.defaultAnimation = defaultAnimationIndex;
+            modelData.isVisible = isVisible;
             return modelData;
         }
 
@@ -77,7 +84,11 @@ namespace EAR.Entity
                 Destroy(child.gameObject);
             }
 
-            GameObject model = string.IsNullOrEmpty(assetId) ? AssetContainer.Instance.GetModelPrefab() : AssetContainer.Instance.GetModel(assetId);
+            GameObject model = AssetContainer.Instance.GetModel(assetId);
+            if (!model) {
+                model = AssetContainer.Instance.GetModelPrefab();
+            }
+
             GameObject newChild = Instantiate(model);
             newChild.transform.parent = transform;
             if (prev != null)
@@ -106,9 +117,6 @@ namespace EAR.Entity
             if (!string.IsNullOrEmpty(modelData.name))
             {
                 modelEntity.SetEntityName(modelData.name);
-            } else
-            {
-                modelEntity.SetEntityName("New model");
             }
             
             if (modelData.transform != null)

@@ -10,12 +10,13 @@ namespace EAR.Entity
         public static Action<BaseEntity> OnEntityDestroy;
 
         private string id = Guid.NewGuid().ToString();
-        private string entityName = "Entity";
+        private string entityName;
 
         private Action<bool> action;
 
         protected virtual void Awake()
         {
+            entityName = GetDefaultName();
             action = (isPlayMode) =>
             {
                 if (isPlayMode)
@@ -29,6 +30,11 @@ namespace EAR.Entity
             };
             GlobalStates.OnIsPlayModeChange += action;
 
+        }
+
+        public virtual string GetDefaultName()
+        {
+            return "New Entity";
         }
 
         public virtual void StartDefaultState()
@@ -62,7 +68,10 @@ namespace EAR.Entity
 
         public void SetEntityName(string entityName)
         {
-            this.entityName = entityName;
+            if (!string.IsNullOrEmpty(entityName))
+            {
+                this.entityName = entityName;
+            }
         }
 
         public string GetId()

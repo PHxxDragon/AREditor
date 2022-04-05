@@ -49,10 +49,6 @@ namespace EAR.View
             {
                 OnButtonDelete?.Invoke();
             });
-        }
-
-        void Start()
-        {
             CloseEditor();
         }
 
@@ -84,15 +80,9 @@ namespace EAR.View
         public void PopulateData(ButtonData buttonData)
         {
             UpdateEntityList();
-
-            if (string.IsNullOrEmpty(buttonData.activatorEntityId))
-            {
-                listenerEntityId.SelectValue(string.Empty);
-            } else
-            {
-                listenerEntityId.SelectValue(buttonData.activatorEntityId);
-            }
+            listenerEntityId.SelectValue(buttonData.activatorEntityId);
             PopulateData(buttonData.actionDatas);
+            nameInputField.name = buttonData.name;
         }
 
         private void PopulateData(List<ButtonActionData> buttonActionDatas)
