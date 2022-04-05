@@ -32,7 +32,7 @@ namespace EAR.Entity
 
         }
 
-        public virtual string GetDefaultName()
+        protected virtual string GetDefaultName()
         {
             return "New Entity";
         }

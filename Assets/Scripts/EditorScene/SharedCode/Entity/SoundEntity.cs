@@ -9,7 +9,7 @@ namespace EAR.Entity
         private string assetId;
         private bool playAtStart;
 
-        public override string GetDefaultName()
+        protected override string GetDefaultName()
         {
             return "New sound " + count++;
         }
