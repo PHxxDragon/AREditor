@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using EAR.Container;
+
 
 namespace EAR.Entity.EntityAction
 {
@@ -11,7 +13,7 @@ namespace EAR.Entity.EntityAction
         public override void ExecuteAction()
         {
             SoundEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId()) as SoundEntity;
-            if (entity && entity.IsValidEntity())
+            if (entity)
             {
                 entity.PlaySound();
             }

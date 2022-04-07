@@ -18,11 +18,6 @@ namespace EAR.Entity
             return "New image " + count++;
         }
 
-        public override bool IsValidEntity()
-        {
-            return !string.IsNullOrEmpty(assetId);
-        }
-
         public ImageData GetImageData()
         {
             ImageData imageData = new ImageData();
@@ -39,7 +34,7 @@ namespace EAR.Entity
             Texture2D image = AssetContainer.Instance.GetImage(assetId); 
             if (!image)
             {
-                AssetContainer.Instance.GetDefaultImage();
+                image = AssetContainer.Instance.GetDefaultImage();
             }
             this.image.sprite = Utils.Instance.Texture2DToSprite(image);
             this.assetId = assetId;
@@ -56,11 +51,15 @@ namespace EAR.Entity
                 imageEntity.SetId(imageData.id);
             }
 
-            if (imageData.assetId != null)
+            Texture2D image = AssetContainer.Instance.GetImage(imageData.assetId);
+            if (image)
             {
-                Texture2D image = AssetContainer.Instance.GetImage(imageData.assetId);
                 imageEntity.image.sprite = Utils.Instance.Texture2DToSprite(image);
                 imageEntity.assetId = imageData.assetId;
+            } else
+            {
+                image = AssetContainer.Instance.GetDefaultImage();
+                imageEntity.image.sprite = Utils.Instance.Texture2DToSprite(image);
             }
 
             if (!string.IsNullOrEmpty(imageData.name))

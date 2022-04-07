@@ -40,7 +40,7 @@ namespace EAR.Integration
                         assetObject.type = AssetObject.MODEL_TYPE;
                         assetObject.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip";
                         assetInformation.assets.Add(assetObject);*/
-            AssetObject assetObject2 = new AssetObject();
+/*            AssetObject assetObject2 = new AssetObject();
             assetObject2.assetId = "akjsdflasvkcvhxvuiy";
             assetObject2.extension = "gltf";
             assetObject2.isZipFile = true;
@@ -60,7 +60,8 @@ namespace EAR.Integration
             assetObject4.type = AssetObject.SOUND_TYPE;
             assetObject4.url = "http://localhost:4000/sound.wav";
             assetObject4.extension = "wav";
-            assetInformation.assets.Add(assetObject4);
+            assetInformation.assets.Add(assetObject4);*/
+            assetInformation.metadataString = LocalStorage.Load("abcd");
             LoadModule(JsonUtility.ToJson(assetInformation));
 #endif
         }
@@ -70,6 +71,9 @@ namespace EAR.Integration
             Debug.Log(metadata);
 #if UNITY_WEBGL == true && UNITY_EDITOR == false
             SaveMetadata(metadata);
+#endif
+#if UNITY_EDITOR == true
+            LocalStorage.Save("abcd", metadata);
 #endif
         }
 

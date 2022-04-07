@@ -34,8 +34,11 @@ namespace EAR.View
 
         public void SetColor(Color color)
         {
-            image.color = color;
-            OnColorChanged?.Invoke(color);
+            if (image.color != color)
+            {
+                image.color = color;
+                OnColorChanged?.Invoke(color);
+            }
         }
 
         public Color GetColor()

@@ -4,6 +4,7 @@ using EAR.AnimationPlayer;
 using System;
 using System.Collections.Generic;
 using EAR.Entity;
+using EAR.Container;
 
 namespace EAR.View
 {

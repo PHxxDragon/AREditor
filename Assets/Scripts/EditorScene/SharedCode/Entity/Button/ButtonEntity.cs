@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using System;
 using EAR.Entity.EntityAction;
 using EAR.AssetManager;
 using UnityEngine;
+using EAR.Container;
 
 namespace EAR.Entity
 {
@@ -24,7 +24,7 @@ namespace EAR.Entity
             GlobalStates.OnIsPlayModeChange += (isPlayMode) =>
             {
                 BaseEntity baseEntity = EntityContainer.Instance.GetEntity(activatorEntityId);
-                if (baseEntity && baseEntity.IsValidEntity() && baseEntity.IsClickable())
+                if (baseEntity && baseEntity.IsClickable())
                 {
                     if (isPlayMode)
                     {
@@ -66,17 +66,17 @@ namespace EAR.Entity
                 buttonEntity.SetId(buttonData.id);
             }
 
-            if (!string.IsNullOrEmpty(buttonEntity.name))
+            if (!string.IsNullOrEmpty(buttonData.name))
             {
                 buttonEntity.SetEntityName(buttonData.name);
             }
 
-            if (!string.IsNullOrEmpty(buttonEntity.activatorEntityId))
+            if (!string.IsNullOrEmpty(buttonData.activatorEntityId))
             {
                 buttonEntity.SetActivatorEntityId(buttonData.activatorEntityId);
             }
 
-            if (buttonEntity.transform != null)
+            if (buttonData.transform != null)
             {
                 TransformData.TransformDataToTransfrom(buttonData.transform, buttonEntity.transform);
             }
@@ -86,6 +86,7 @@ namespace EAR.Entity
                 buttonEntity.actions.Add(ButtonActionFactory.CreateButtonAction(buttonActionData));
             }
 
+            OnEntityCreated?.Invoke(buttonEntity);
             return buttonEntity;
         }
 

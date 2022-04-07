@@ -21,14 +21,6 @@ namespace EAR.Editor.Presenter
 
         void Awake()
         {
-            modelLoader.OnLoadEnded += (string assetId, GameObject model) =>
-            {
-                if (model.GetComponentInChildren<Animation>())
-                {
-                    model.AddComponent<AnimPlayer>();
-                }
-            };
-
             if (!GlobalStates.IsEnableEditor())
             {
                 AttachListeners();

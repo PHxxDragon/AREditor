@@ -7,7 +7,7 @@ namespace EAR.Editor.Presenter
 {
     public class AddSelectionForModel : MonoBehaviour
     {
-        void Start()
+        void Awake()
         {
             BaseEntity.OnEntityCreated += AddSelection;
             BaseEntity.OnEntityChanged += AddSelection;

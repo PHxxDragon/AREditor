@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-using System;
-using UnityEngine;
+using EAR.Container;
 
 namespace EAR.Entity.EntityAction
 {
@@ -13,7 +11,7 @@ namespace EAR.Entity.EntityAction
         public override void ExecuteAction()
         {
             BaseEntity entity = EntityContainer.Instance.GetEntity(GetTargetEntityId());
-            if (entity.IsValidEntity() && entity.IsViewable())
+            if (entity.IsViewable())
             {
                 entity.gameObject.SetActive(false);
             }

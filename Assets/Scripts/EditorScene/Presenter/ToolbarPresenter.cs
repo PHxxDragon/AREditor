@@ -6,6 +6,7 @@ using EAR.AR;
 using EAR.Entity;
 using System.Collections.Generic;
 using RuntimeHandle;
+using EAR.Container;
 
 namespace EAR.Editor.Presenter 
 {
@@ -23,6 +24,8 @@ namespace EAR.Editor.Presenter
         private RuntimeTransformHandle runtimeTransformHandle;
         [SerializeField]
         private EnvironmentEditorWindow environmentEditorWindow;
+        [SerializeField]
+        private EnvironmentController environmentController;
 
         void Start()
         {
@@ -66,29 +69,30 @@ namespace EAR.Editor.Presenter
         private void SaveButtonClicked()
         {
             MetadataObject metadataObject = new MetadataObject();
-            List<ModelData> modelDatas = new List<ModelData>();
-            foreach (ModelEntity model in EntityContainer.Instance.GetEntities())
+            foreach (BaseEntity entity in EntityContainer.Instance.GetEntities())
             {
-                if (model.IsValidEntity())
+                if (entity is ModelEntity modelEntity)
                 {
-                    modelDatas.Add(model.GetModelData());
+                    metadataObject.modelDatas.Add(modelEntity.GetModelData());
+                } else if (entity is ImageEntity imageEntity)
+                {
+                    metadataObject.imageDatas.Add(imageEntity.GetImageData());
+                } else if (entity is NoteEntity noteEntity)
+                {
+                    metadataObject.noteDatas.Add(noteEntity.GetNoteData());
+                } else if (entity is ButtonEntity buttonEntity)
+                {
+                    metadataObject.buttonDatas.Add(buttonEntity.GetButtonData());
+                } else if (entity is SoundEntity soundEntity)
+                {
+                    metadataObject.soundDatas.Add(soundEntity.GetSoundData());
                 }
             }
-
-            List<NoteData> noteDatas = new List<NoteData>();
-            foreach (NoteEntity note in EntityContainer.Instance.GetEntities())
-            {
-                if (note.IsValidEntity())
-                {
-                    noteDatas.Add(note.GetNoteData());
-                }
-            }
-            metadataObject.noteDatas = noteDatas;
 
             metadataObject.ambientColor = RenderSettings.ambientLight;
 
             List<LightData> lightDatas = new List<LightData>();
-            lightDatas.Add(environmentEditorWindow.GetLightData());
+            lightDatas.Add(environmentController.GetLightData());
             metadataObject.lightDatas = lightDatas;
             reactPlugin.Save(JsonUtility.ToJson(metadataObject));
         }

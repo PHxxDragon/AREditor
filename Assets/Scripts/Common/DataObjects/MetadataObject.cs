@@ -11,6 +11,8 @@ namespace EAR
         public List<NoteData> noteDatas = new List<NoteData>();
         public List<LightData> lightDatas = new List<LightData>();
         public List<SoundData> soundDatas = new List<SoundData>();
+        public List<ButtonData> buttonDatas = new List<ButtonData>();
+        public List<ImageData> imageDatas = new List<ImageData>();
         public Color ambientColor = Color.white;
     }
 
@@ -25,7 +27,7 @@ namespace EAR
         public List<ButtonActionData> actionDatas = new List<ButtonActionData>();
     }
 
-    [SerializeField]
+    [Serializable]
     public class ButtonActionData
     {
         public enum ActionType
@@ -38,7 +40,7 @@ namespace EAR
         public int animationIndex;
     }
 
-    [SerializeField]
+    [Serializable]
     public class SoundData
     {
         public string id;

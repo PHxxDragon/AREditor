@@ -56,11 +56,6 @@ namespace EAR.Entity
             return true;
         }
 
-        public virtual bool IsValidEntity()
-        {
-            return true;
-        }
-
         protected void SetId(string id)
         {
             this.id = id;

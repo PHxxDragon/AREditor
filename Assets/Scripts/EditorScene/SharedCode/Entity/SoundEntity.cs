@@ -14,11 +14,6 @@ namespace EAR.Entity
             return "New sound " + count++;
         }
 
-        public override bool IsValidEntity()
-        {
-            return !string.IsNullOrEmpty(assetId);
-        }
-
         public override void StartDefaultState()
         {
             base.StartDefaultState();

@@ -15,11 +15,6 @@ namespace EAR.Entity
             return "New model " + count++; 
         }
 
-        public override bool IsValidEntity()
-        {
-            return !string.IsNullOrEmpty(assetId);
-        }
-
         public override void ResetEntityState()
         {
             base.ResetEntityState();
@@ -101,15 +96,15 @@ namespace EAR.Entity
         public static ModelEntity InstantNewEntity(ModelData modelData)
         {
             ModelEntity modelEntity = new GameObject().AddComponent<ModelEntity>();
-            if (!string.IsNullOrEmpty(modelData.assetId))
+            GameObject model = AssetContainer.Instance.GetModel(modelData.assetId);
+            if (model)
             {
-                GameObject model = AssetContainer.Instance.GetModel(modelData.assetId);
                 GameObject child = Instantiate(model);
                 modelEntity.assetId = modelData.assetId;
                 child.transform.parent = modelEntity.transform;
             } else
             {
-                GameObject model = AssetContainer.Instance.GetModelPrefab();
+                model = AssetContainer.Instance.GetModelPrefab();
                 GameObject child = Instantiate(model);
                 child.transform.parent = modelEntity.transform;
             }
@@ -133,7 +128,7 @@ namespace EAR.Entity
             {
                 modelEntity.defaultAnimationIndex = modelData.defaultAnimation;
             }
-            
+
             OnEntityCreated?.Invoke(modelEntity);
             return modelEntity;
         }

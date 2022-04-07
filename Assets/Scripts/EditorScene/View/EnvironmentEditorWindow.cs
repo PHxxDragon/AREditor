@@ -21,9 +21,10 @@ namespace EAR.View
         private InputFieldWithSlider cameraFOV;
 
         [SerializeField]
-        private Camera mainCamera;
+        private EnvironmentController environmentController;
+
         [SerializeField]
-        private Light directionalLight;
+        private Camera mainCamera;
 
         [SerializeField]
         private GraphicRaycaster raycaster;
@@ -37,13 +38,13 @@ namespace EAR.View
             ambientColor.OnColorChanged += (Color color) =>
             {
                 originalColor = color;
-                RenderSettings.ambientLight = ComposeHdrColor(originalColor, colorExposure);
+                environmentController.SetAmbientLight(ComposeHdrColor(originalColor, colorExposure));
             };
 
             ambientIntensity.OnValueChanged += (float value) =>
             {
                 colorExposure = value;
-                RenderSettings.ambientLight = ComposeHdrColor(originalColor, colorExposure);
+                environmentController.SetAmbientLight(ComposeHdrColor(originalColor, colorExposure));
             };
 
             cameraFOV.OnValueChanged += (float value) =>
@@ -52,11 +53,11 @@ namespace EAR.View
             };
             directionalColor.OnColorChanged += (Color color) =>
             {
-                directionalLight.color = color;
+                environmentController.SetDirectionalLightColor(color);
             };
             directionalIntensity.OnValueChanged += (float value) =>
             {
-                directionalLight.intensity = value;
+                environmentController.SetDirectionalLightIntensity(value);
             };
         }
 
@@ -80,28 +81,6 @@ namespace EAR.View
             cameraFOV.SetValue(mainCamera.fieldOfView);
 
             gameObject.SetActive(false);
-        }
-
-        public void SetAmbientColor(Color color)
-        {
-            RenderSettings.ambientLight = color;
-            DecomposeHdrColor(color, out originalColor, out colorExposure);
-            ambientColor.SetColor(originalColor);
-            ambientIntensity.SetValue(colorExposure);
-        }
-
-        public LightData GetLightData()
-        {
-            return new LightData(LightType.Directional, directionalLight.color, directionalLight.intensity, directionalLight.transform.forward);
-        }
-
-        public void SetDirectionalLight(LightData lightData)
-        {
-            directionalLight.color = lightData.color;
-            directionalColor.SetColor(lightData.color);
-            directionalLight.intensity = lightData.intensity;
-            directionalIntensity.SetValue(lightData.intensity);
-            directionalLight.transform.forward = lightData.direction;
         }
 
         //https://github.com/Unity-Technologies/UnityCsReference/blob/master/Editor/Mono/GUI/ColorMutator.cs

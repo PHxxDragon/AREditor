@@ -7,26 +7,21 @@ using UnityEngine.Networking;
 using EAR.DownloadHandler;
 using System.Collections;
 using System.Collections.Generic;
+using EAR.AnimationPlayer;
 
 namespace EAR.AR
 {
     public class ModelLoader : MonoBehaviour
     {
-        public event Action<string> OnLoadStarted;
-        public event Action<string, GameObject> OnLoadEnded;
-        public event Action<string, string> OnLoadError;
-        public event Action<float, string> OnLoadProgressChanged;
-
         private List<GltfImportTask> tasks = new List<GltfImportTask>();
 
-        public void LoadModel(string assetId, string url, string extension, bool isZipFile)
+        public void LoadModel(string url, string extension, bool isZipFile, Action<GameObject> OnLoadEnded = null, Action<string> OnLoadError = null, Action<float, string> OnLoadProgressChanged = null)
         {
-            StartCoroutine(LoadModelCoroutine(assetId, url, extension, isZipFile));
+            StartCoroutine(LoadModelCoroutine(url, extension, isZipFile, OnLoadEnded, OnLoadError, OnLoadProgressChanged));
         }
 
-        private IEnumerator LoadModelCoroutine(string assetId, string url, string extension, bool isZipFile)
+        private IEnumerator LoadModelCoroutine(string url, string extension, bool isZipFile, Action<GameObject> OnLoadEnded = null, Action<string> OnLoadError = null, Action<float, string> OnLoadProgressChanged = null)
         {
-            OnLoadStarted?.Invoke(assetId);
             bool error = false;
             byte[] data = null;
             using (UnityWebRequest uwr = UnityWebRequest.Get(url))
@@ -44,13 +39,13 @@ namespace EAR.AR
                 {
                     Debug.Log("Connection Error: " + uwr.error);
                     error = true;
-                    OnLoadError?.Invoke(assetId, "Connection error");
+                    OnLoadError?.Invoke("Connection error");
                 }
                 else if (uwr.result == UnityWebRequest.Result.ProtocolError)
                 {
                     Debug.Log("Protocol Error: " + uwr.error);
                     error = true;
-                    OnLoadError?.Invoke(assetId, uwr.error);
+                    OnLoadError?.Invoke(uwr.error);
                 } else
                 {
                     data = uwr.downloadHandler.data;
@@ -60,23 +55,23 @@ namespace EAR.AR
             {
                 if (extension == "gltf" || extension == "glb")
                 {
-                    LoadModelUsingPiglet(assetId, data);
+                    LoadModelUsingPiglet(data, OnLoadEnded, OnLoadError, OnLoadProgressChanged);
                 }
                 else
                 {
-                    LoadModelUsingTrilib(assetId, data, extension, isZipFile);
+                    LoadModelUsingTrilib(data, extension, isZipFile, OnLoadEnded, OnLoadError, OnLoadProgressChanged);
                 }
             }
         }
 
         //======================================piglet================================================
 
-        private void LoadModelUsingPiglet(string assetId, byte[] data)
+        private void LoadModelUsingPiglet(byte[] data, Action<GameObject> OnLoadEnded = null, Action<string> OnLoadError = null, Action<float, string> OnLoadProgressChanged = null)
         {
             GltfImportTask task = RuntimeGltfImporter.GetImportTask(data);
-            SetOnComplete(assetId, task);
-            SetOnException(assetId, task);
-            task.OnProgress += OnProgress;
+            SetOnComplete(task, OnLoadEnded);
+            SetOnException(task, OnLoadError);
+            SetOnProgress(task, OnLoadProgressChanged);
             tasks.Add(task);
         }
 
@@ -99,79 +94,89 @@ namespace EAR.AR
                 tasks.RemoveAll((t) => removeTasks.Contains(t));
         }
 
-        void OnProgress(GltfImportStep step, int completed, int total)
+        void SetOnProgress(GltfImportTask task, Action<float, string> OnLoadProgressChanged = null)
         {
-            if (step == GltfImportStep.Download)
+            task.OnProgress = (GltfImportStep step, int completed, int total) =>
             {
-                float downloadedMB = (float)completed / 1000000;
-                if (total == 0)
+                if (step == GltfImportStep.Download)
                 {
-                    OnLoadProgressChanged?.Invoke(downloadedMB, string.Format("{0}: {1:0.00}MB", step, downloadedMB));
+                    float downloadedMB = (float)completed / 1000000;
+                    if (total == 0)
+                    {
+                        OnLoadProgressChanged?.Invoke(downloadedMB, string.Format("{0}: {1:0.00}MB", step, downloadedMB));
+                    }
+                    else
+                    {
+                        float totalMB = (float)total / 1000000;
+                        OnLoadProgressChanged?.Invoke(downloadedMB / totalMB, string.Format("{0}: {1:0.00}/{2:0.00}MB", step, downloadedMB, totalMB));
+                    }
                 }
                 else
                 {
-                    float totalMB = (float)total / 1000000;
-                    OnLoadProgressChanged?.Invoke(downloadedMB / totalMB, string.Format("{0}: {1:0.00}/{2:0.00}MB", step, downloadedMB, totalMB));
+                    OnLoadProgressChanged?.Invoke(((float)completed) / total, string.Format("{0}: {1}/{2}", step, completed, total));
                 }
-            }
-            else
-            {
-                OnLoadProgressChanged?.Invoke(((float)completed) / total, string.Format("{0}: {1}/{2}", step, completed, total));
-            }
-        }
-
-        private void SetOnComplete(string assetId, GltfImportTask task)
-        {
-            task.OnCompleted = (GameObject model) =>
-            {
-                OnLoadEnded?.Invoke(assetId, model);
             };
         }
 
-        private void SetOnException(string assetId, GltfImportTask task)
+        private void SetOnComplete(GltfImportTask task, Action<GameObject> OnLoadEnded = null)
+        {
+            task.OnCompleted = (GameObject model) =>
+            {
+                if (model.GetComponentInChildren<Animation>())
+                {
+                    model.AddComponent<AnimPlayer>();
+                }
+                OnLoadEnded?.Invoke(model);
+            };
+        }
+
+        private void SetOnException(GltfImportTask task, Action<string> OnLoadError)
         {
             task.OnException = (error) =>
             {
-                OnLoadError?.Invoke(assetId, "Error loading model " + assetId);
+                OnLoadError?.Invoke("Error loading model");
             };
         }
 
         //===========================================Trilib==========================================
 
-        private void LoadModelUsingTrilib(string assetId, byte[] data, string extension, bool isZipFile)
+        private void LoadModelUsingTrilib(byte[] data, string extension, bool isZipFile, Action<GameObject> OnLoadEnded = null, Action<string> OnLoadError = null, Action<float, string> OnLoadProgressChanged = null)
         {
             var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
             using MemoryStream memoryStream = new MemoryStream(data);
 
             if (isZipFile)
             {
-                AssetLoaderZip.LoadModelFromZipStream(memoryStream, null, GetOnMaterialsLoad(assetId), OnProgress, GetOnError(assetId), null, assetLoaderOptions);
+                AssetLoaderZip.LoadModelFromZipStream(memoryStream, null, GetOnMaterialsLoad(), GetOnProgress(), GetOnError(), null, assetLoaderOptions);
             }
             else
             {
-                AssetLoader.LoadModelFromStream(memoryStream, "model." + extension, extension, null, GetOnMaterialsLoad(assetId), OnProgress, GetOnError(assetId), null, assetLoaderOptions);
+                AssetLoader.LoadModelFromStream(memoryStream, "model." + extension, extension, null, GetOnMaterialsLoad(), GetOnProgress(), GetOnError(), null, assetLoaderOptions);
             }
         }
 
-        private Action<AssetLoaderContext> GetOnMaterialsLoad(string assetId)
+        private Action<AssetLoaderContext> GetOnMaterialsLoad(Action<GameObject> OnLoadEnded = null)
         {
             return (AssetLoaderContext obj) =>
             {
-                OnLoadEnded?.Invoke(assetId, obj.RootGameObject);
+                OnLoadEnded?.Invoke(obj.RootGameObject);
             };
         }
 
-        private Action<IContextualizedError> GetOnError(string assetId)
+        private Action<IContextualizedError> GetOnError(Action<string> OnLoadError = null)
         {
             return (obj) =>
             {
-                OnLoadError?.Invoke(assetId, "Error loading model " + assetId);
+                OnLoadError?.Invoke("Error loading model ");
             };
         }
 
-        private void OnProgress(AssetLoaderContext arg1, float arg2)
+        private Action<AssetLoaderContext, float> GetOnProgress(Action<float, string> OnLoadProgressChanged = null)
         {
-            OnLoadProgressChanged?.Invoke(arg2, "Loading...");
+            return (arg1, arg2) =>
+            {
+                OnLoadProgressChanged?.Invoke(arg2, "Loading...");
+            };
         }
     }
 }

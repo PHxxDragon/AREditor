@@ -77,14 +77,14 @@ namespace EAR
                 );
         }
 
-        public void GetSound(string soundUrl, string extension, Action<AudioClip> callback, Action<string> errorCallback = null)
+        public void GetSound(string soundUrl, string extension, Action<AudioClip> callback, Action<string> errorCallback = null, Action<float> progressCallback = null)
         {
-            StartCoroutine(GetSoundCoroutine(soundUrl, extension, callback, errorCallback));
+            StartCoroutine(GetSoundCoroutine(soundUrl, extension, callback, errorCallback, progressCallback));
         } 
 
-        public void GetImageAsTexture2D(string imageUrl, Action<Texture2D> callback, Action<string> errorCallback = null)
+        public void GetImageAsTexture2D(string imageUrl, Action<Texture2D> callback, Action<string> errorCallback = null, Action<float> progressCallback = null)
         {
-            StartCoroutine(GetImageCoroutine(imageUrl, callback, errorCallback));
+            StartCoroutine(GetImageCoroutine(imageUrl, callback, errorCallback, progressCallback));
         }
 
         public static Bounds GetUIBounds(GameObject UIObject)
@@ -146,11 +146,15 @@ namespace EAR
             return bounds;
         }
 
-        private IEnumerator GetSoundCoroutine(string soundUrl, string extension, Action<AudioClip> callback, Action<string> errorCallback)
+        private IEnumerator GetSoundCoroutine(string soundUrl, string extension, Action<AudioClip> callback, Action<string> errorCallback, Action<float> progressCallback)
         {
             using (UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip(soundUrl, GetAudioTypeFromExtension(extension)))
             {
-                yield return uwr.SendWebRequest();
+                UnityWebRequestAsyncOperation operation = uwr.SendWebRequest();
+                while (!operation.isDone) {
+                    progressCallback?.Invoke(operation.progress);
+                    yield return null;
+                }
                 if (uwr.result != UnityWebRequest.Result.Success)
                 {
                     errorCallback?.Invoke(uwr.error);
@@ -174,11 +178,16 @@ namespace EAR
             }
         }
 
-        private IEnumerator GetImageCoroutine(string imageUrl, Action<Texture2D> callback, Action<string> errorCallback)
+        private IEnumerator GetImageCoroutine(string imageUrl, Action<Texture2D> callback, Action<string> errorCallback, Action<float> progressCallback)
         {
             using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(imageUrl))
             {
-                yield return uwr.SendWebRequest();
+                UnityWebRequestAsyncOperation operation = uwr.SendWebRequest();
+                while (!operation.isDone)
+                {
+                    progressCallback?.Invoke(operation.progress);
+                    yield return null;
+                }
 
                 if (uwr.result != UnityWebRequest.Result.Success)
                 {

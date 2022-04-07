@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using System;
 using EAR.Entity;
+using EAR.AR;
 
 namespace EAR.AssetManager
 {
@@ -38,6 +40,9 @@ namespace EAR.AssetManager
         private readonly Dictionary<string, (AssetObject, AudioClip)> sounds = new Dictionary<string, (AssetObject, AudioClip)>();
 
         [SerializeField]
+        private ModelLoader modelLoader;
+
+        [SerializeField]
         private GameObject disabledContainer;
 
         [SerializeField]
@@ -58,7 +63,90 @@ namespace EAR.AssetManager
         [SerializeField]
         private SoundEntity soundPrefab;
 
-        public void AddModel(AssetObject assetObject, GameObject model)
+        private int assetCount;
+
+        public void LoadAssets(List<AssetObject> assetObjects, Action callback = null, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
+        {
+            assetCount = assetObjects.Count;
+            foreach (AssetObject assetObject in assetObjects)
+            {
+                switch (assetObject.type)
+                {
+                    case AssetObject.MODEL_TYPE:
+                        LoadModel(assetObject, assetObject.url, assetObject.extension, assetObject.isZipFile);
+                        break;
+                    case AssetObject.IMAGE_TYPE:
+                        LoadImage(assetObject, assetObject.url);
+                        break;
+                    case AssetObject.SOUND_TYPE:
+                        LoadSound(assetObject, assetObject.url, assetObject.extension);
+                        break;
+                    default:
+                        assetCount -= 1;
+                        break;
+                }
+            }
+            StartCoroutine(CheckForLoadAssetDone(callback));
+        }
+
+        private IEnumerator CheckForLoadAssetDone(Action callback)
+        {
+            while (true)
+            {
+                if (assetCount != 0)
+                {
+                    yield return new WaitForSecondsRealtime(0.2f);
+                }
+                else
+                {
+                    callback?.Invoke();
+                    break;
+                }
+            }
+        }
+
+        private void LoadModel(AssetObject assetObject, string url, string extension, bool isZipFile, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
+        {
+            modelLoader.LoadModel(url, extension, isZipFile,
+            (model) =>
+            {
+                AddModel(assetObject, model);
+                assetCount -= 1;
+            },
+            errorCallback, progressCallback);
+        }
+
+        private void LoadSound(AssetObject assetObject, string url, string extension, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
+        {
+            Utils.Instance.GetSound(url, extension,
+            (audioClip) =>
+            {
+                AssetContainer.Instance.AddSound(assetObject, audioClip);
+                assetCount -= 1;
+            },
+            errorCallback, 
+            (value) =>
+            {
+                progressCallback?.Invoke(value, "Loading sound");
+            });
+        }
+
+        private void LoadImage(AssetObject assetObject, string url, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
+        {
+            Utils.Instance.GetImageAsTexture2D(url,
+            (image) =>
+            {
+                AddImage(assetObject, image);
+                assetCount -= 1;
+            }, 
+            errorCallback, 
+            (value) =>
+            {
+                progressCallback?.Invoke(value, "Loading image");
+            });
+        }
+
+        private void AddModel(AssetObject assetObject, GameObject model)
         {
             OnAssetObjectAdded?.Invoke(assetObject);
             models.Add(assetObject.assetId, (assetObject, model));
@@ -79,7 +167,7 @@ namespace EAR.AssetManager
             }
         }
 
-        public void AddImage(AssetObject assetObject, Texture2D image)
+        private void AddImage(AssetObject assetObject, Texture2D image)
         {
             OnAssetObjectAdded?.Invoke(assetObject);
             images.Add(assetObject.assetId, (assetObject, image));
@@ -101,7 +189,7 @@ namespace EAR.AssetManager
             }
         }
 
-        public void AddSound(AssetObject assetObject, AudioClip sound)
+        private void AddSound(AssetObject assetObject, AudioClip sound)
         {
             OnAssetObjectAdded?.Invoke(assetObject);
             sounds.Add(assetObject.assetId, (assetObject, sound));

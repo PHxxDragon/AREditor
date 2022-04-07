@@ -2,6 +2,7 @@ using EAR.Entity;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using EAR.Container;
 using System;
 using System.Collections.Generic;
 
@@ -82,7 +83,7 @@ namespace EAR.View
             UpdateEntityList();
             listenerEntityId.SelectValue(buttonData.activatorEntityId);
             PopulateData(buttonData.actionDatas);
-            nameInputField.name = buttonData.name;
+            nameInputField.text = buttonData.name;
         }
 
         private void PopulateData(List<ButtonActionData> buttonActionDatas)
@@ -115,7 +116,7 @@ namespace EAR.View
 
         private bool IsEntitySelectable(BaseEntity baseEntity)
         {
-            return baseEntity.IsValidEntity() && baseEntity.IsClickable();
+            return baseEntity.IsClickable();
         }
     }
 }
