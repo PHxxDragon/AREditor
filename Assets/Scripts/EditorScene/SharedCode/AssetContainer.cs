@@ -64,22 +64,24 @@ namespace EAR.AssetManager
         private SoundEntity soundPrefab;
 
         private int assetCount;
+        private bool hasError;
 
         public void LoadAssets(List<AssetObject> assetObjects, Action callback = null, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
         {
             assetCount = assetObjects.Count;
+            hasError = false;
             foreach (AssetObject assetObject in assetObjects)
             {
                 switch (assetObject.type)
                 {
                     case AssetObject.MODEL_TYPE:
-                        LoadModel(assetObject, assetObject.url, assetObject.extension, assetObject.isZipFile);
+                        LoadModel(assetObject, assetObject.url, assetObject.extension, assetObject.isZipFile, errorCallback, progressCallback);
                         break;
                     case AssetObject.IMAGE_TYPE:
-                        LoadImage(assetObject, assetObject.url);
+                        LoadImage(assetObject, assetObject.url, errorCallback, progressCallback);
                         break;
                     case AssetObject.SOUND_TYPE:
-                        LoadSound(assetObject, assetObject.url, assetObject.extension);
+                        LoadSound(assetObject, assetObject.url, assetObject.extension, errorCallback, progressCallback);
                         break;
                     default:
                         assetCount -= 1;
@@ -96,8 +98,10 @@ namespace EAR.AssetManager
                 if (assetCount != 0)
                 {
                     yield return new WaitForSecondsRealtime(0.2f);
-                }
-                else
+                } else if (hasError)
+                {
+                    break;
+                }else
                 {
                     callback?.Invoke();
                     break;
@@ -112,8 +116,20 @@ namespace EAR.AssetManager
             {
                 AddModel(assetObject, model);
                 assetCount -= 1;
-            },
-            errorCallback, progressCallback);
+            }, (error) =>
+            {
+                if (!hasError)
+                {
+                    hasError = true;
+                    errorCallback?.Invoke(error + " asset name: " + assetObject.name);
+                }
+            }
+            , (value, text) => { 
+                if (!hasError)
+                {
+                    progressCallback?.Invoke(value, text);
+                }
+            });
         }
 
         private void LoadSound(AssetObject assetObject, string url, string extension, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
@@ -121,13 +137,21 @@ namespace EAR.AssetManager
             Utils.Instance.GetSound(url, extension,
             (audioClip) =>
             {
-                AssetContainer.Instance.AddSound(assetObject, audioClip);
+                AddSound(assetObject, audioClip);
                 assetCount -= 1;
-            },
-            errorCallback, 
-            (value) =>
+            }, (error) =>
             {
-                progressCallback?.Invoke(value, "Loading sound");
+                if (!hasError)
+                {
+                    hasError = true;
+                    errorCallback?.Invoke(error + " asset name: " + assetObject.name);
+                }
+            }
+            , (value) => {
+                if (!hasError)
+                {
+                    progressCallback?.Invoke(value, "Loading sound");
+                }
             });
         }
 
@@ -138,11 +162,19 @@ namespace EAR.AssetManager
             {
                 AddImage(assetObject, image);
                 assetCount -= 1;
-            }, 
-            errorCallback, 
-            (value) =>
+            }, (error) =>
             {
-                progressCallback?.Invoke(value, "Loading image");
+                if (!hasError)
+                {
+                    hasError = true;
+                    errorCallback?.Invoke(error + " asset name: " + assetObject.name);
+                }
+            }
+            , (value) => {
+                if (!hasError)
+                {
+                    progressCallback?.Invoke(value, "Loading image");
+                }
             });
         }
 

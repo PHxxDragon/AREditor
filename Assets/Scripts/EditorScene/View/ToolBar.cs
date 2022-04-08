@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EAR.View
 {
@@ -37,6 +39,11 @@ namespace EAR.View
         private Button screenshotButton;
         [SerializeField]
         private Button settingButton;
+
+        [SerializeField]
+        private List<GameObject> hideForModelDetail;
+        [SerializeField]
+        private GameObject showInPlayMode;
 
         private ToolEnum activeTool;
 
@@ -88,6 +95,7 @@ namespace EAR.View
 
         private void PlayToggleClick(bool arg0)
         {
+            showInPlayMode.gameObject.SetActive(arg0);
             GlobalStates.SetIsPlayMode(arg0);
         }
 
@@ -130,16 +138,35 @@ namespace EAR.View
 
         private void ApplyGlobalStates()
         {
-            gameObject.SetActive(GlobalStates.IsEnableEditor());
-            GlobalStates.OnEnableEditorChange += (bool value) =>
+            ApplyMode(GlobalStates.GetMode());
+            GlobalStates.OnModeChange += (value) =>
             {
-                gameObject.SetActive(value);
+                ApplyMode(value);
             };
             screenshotButton.gameObject.SetActive(GlobalStates.IsEnableScreenshot());
             GlobalStates.OnEnableScreenshotChange += (bool value) =>
             {
                 screenshotButton.gameObject.SetActive(value);
             };
+        }
+
+        private void ApplyMode(GlobalStates.Mode mode)
+        {
+            switch (mode)
+            {
+                case GlobalStates.Mode.ViewModel:
+                    gameObject.SetActive(false);
+                    hideForModelDetail.ForEach(gameObject => gameObject.SetActive(false));
+                    break;
+                case GlobalStates.Mode.EditModel:
+                    hideForModelDetail.ForEach(gameObject => gameObject.SetActive(false));
+                    gameObject.SetActive(true);
+                    break;
+                case GlobalStates.Mode.EditARModule:
+                    gameObject.SetActive(true);
+                    hideForModelDetail.ForEach(gameObject => gameObject.SetActive(true));
+                    break;
+            }
         }
 
         private void ScreenshotButtonClick()

@@ -23,11 +23,25 @@ namespace EAR.Selection
 
         private void ApplyGlobalState()
         {
-            gameObject.SetActive(GlobalStates.IsEnableEditor());
-            GlobalStates.OnEnableEditorChange += (bool value) =>
+            ApplyMode(GlobalStates.GetMode());
+            GlobalStates.OnModeChange += (value) =>
             {
-                gameObject.SetActive(value);
+                ApplyMode(value);
             };
+        }
+
+        private void ApplyMode(GlobalStates.Mode mode)
+        {
+            switch (mode)
+            {
+                case GlobalStates.Mode.ViewModel:
+                    gameObject.SetActive(false);
+                    break;
+                case GlobalStates.Mode.EditARModule:
+                case GlobalStates.Mode.EditModel:
+                    gameObject.SetActive(true);
+                    break;
+            }
         }
 
         public bool HasSelection()

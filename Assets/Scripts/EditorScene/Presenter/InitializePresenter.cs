@@ -1,6 +1,5 @@
 using UnityEngine;
 using EAR.Integration;
-using EAR.AR;
 using EAR.EARCamera;
 using EAR.View;
 using EAR.AssetManager;
@@ -27,9 +26,9 @@ namespace EAR.Editor.Presenter
             if (reactPlugin != null)
             {
                 reactPlugin.LoadModuleCalledEvent += LoadModuleCallback;
-                reactPlugin.OnSetEnableEditor += (enable) =>
+                reactPlugin.OnSetMode += (mode) =>
                 {
-                    GlobalStates.SetEnableEditor(enable);
+                    GlobalStates.SetMode(mode);
                 };
                 reactPlugin.OnSetEnableScreenshot += (enable) =>
                 {
@@ -44,15 +43,18 @@ namespace EAR.Editor.Presenter
 
         private void LoadModuleCallback(AssetInformation assetInformation)
         {
+            Debug.Log("Start loading");
             progressBar.EnableProgressBar();
             AssetContainer.Instance.LoadAssets(assetInformation.assets, () =>
             {
+                Debug.Log("End loading");
                 progressBar.DisableProgressBar();
                 LoadMetadata(assetInformation);
             }, (error) => {
                 Modal modal = Instantiate(modalPrefab, canvas.transform);
                 modal.SetModalContent("Error", error);
                 modal.DisableCancelButton();
+                progressBar.DisableProgressBar();
             }, progressBar.SetProgress);
         }
 

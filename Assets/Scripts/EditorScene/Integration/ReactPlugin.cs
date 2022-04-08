@@ -8,7 +8,7 @@ namespace EAR.Integration
     {
         public event Action<AssetInformation> LoadModuleCalledEvent;
         public event Action<string> LanguageChangeEvent;
-        public event Action<bool> OnSetEnableEditor;
+        public event Action<GlobalStates.Mode> OnSetMode;
         public event Action<bool> OnSetEnableScreenshot;
 
         [DllImport("__Internal")]
@@ -40,7 +40,7 @@ namespace EAR.Integration
                         assetObject.type = AssetObject.MODEL_TYPE;
                         assetObject.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip";
                         assetInformation.assets.Add(assetObject);*/
-/*            AssetObject assetObject2 = new AssetObject();
+            AssetObject assetObject2 = new AssetObject();
             assetObject2.assetId = "akjsdflasvkcvhxvuiy";
             assetObject2.extension = "gltf";
             assetObject2.isZipFile = true;
@@ -48,11 +48,11 @@ namespace EAR.Integration
             assetObject2.type = AssetObject.MODEL_TYPE;
             assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/3/1648694213397_enc_wolf.zip";
             assetInformation.assets.Add(assetObject2);
-            AssetObject assetObject3 = new AssetObject();
+/*            AssetObject assetObject3 = new AssetObject();
             assetObject3.assetId = "lkjfioewuffewffdsf";
             assetObject3.name = "image 1112";
             assetObject3.type = AssetObject.IMAGE_TYPE;
-            assetObject3.url = "http://localhost:4000/wolf.jpg";
+            assetObject3.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/module/ar/1/1649394059699_1646980495109_Gawr_Gura.bmp";
             assetInformation.assets.Add(assetObject3);
             AssetObject assetObject4 = new AssetObject();
             assetObject4.assetId = "lakjdfadfdsafaf";
@@ -60,9 +60,10 @@ namespace EAR.Integration
             assetObject4.type = AssetObject.SOUND_TYPE;
             assetObject4.url = "http://localhost:4000/sound.wav";
             assetObject4.extension = "wav";
-            assetInformation.assets.Add(assetObject4);*/
-            assetInformation.metadataString = LocalStorage.Load("abcd");
+            assetInformation.assets.Add(assetObject4);
+            assetInformation.metadataString = LocalStorage.Load("abcd");*/
             LoadModule(JsonUtility.ToJson(assetInformation));
+            SetMode(2);
 #endif
         }
 
@@ -84,10 +85,10 @@ namespace EAR.Integration
             LoadModuleCalledEvent?.Invoke(param);
         }
 
-        public void SetEnableEditor(int enable)
+        public void SetMode(int mode)
         {
-            Debug.Log("enable editor: " + enable);
-            OnSetEnableEditor?.Invoke(enable != 0);
+            Debug.Log("mode: " + mode);
+            OnSetMode?.Invoke((GlobalStates.Mode) mode);
         }
 
         public void SetEnableScreenshot(int enable)

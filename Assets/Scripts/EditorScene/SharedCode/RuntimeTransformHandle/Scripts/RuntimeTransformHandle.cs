@@ -60,16 +60,30 @@ namespace RuntimeHandle
 
             _previousType = type;
 
-            ApplyGlobalStates();
+            ApplyGlobalState();
         }
 
-        private void ApplyGlobalStates()
+        private void ApplyGlobalState()
         {
-            gameObject.SetActive(GlobalStates.IsEnableEditor());
-            GlobalStates.OnEnableEditorChange += (bool value) =>
+            ApplyMode(GlobalStates.GetMode());
+            GlobalStates.OnModeChange += (value) =>
             {
-                gameObject.SetActive(value);
+                ApplyMode(value);
             };
+        }
+
+        private void ApplyMode(GlobalStates.Mode mode)
+        {
+            switch (mode)
+            {
+                case GlobalStates.Mode.ViewModel:
+                    gameObject.SetActive(false);
+                    break;
+                case GlobalStates.Mode.EditModel:
+                case GlobalStates.Mode.EditARModule:
+                    gameObject.SetActive(true);
+                    break;
+            }
         }
 
         void CreateHandles()

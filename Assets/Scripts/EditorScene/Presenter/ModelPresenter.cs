@@ -45,6 +45,9 @@ namespace EAR.Editor.Presenter
             };
             selectionManager.OnObjectSelected += (Selectable selectable) =>
             {
+                if (GlobalStates.GetMode() != GlobalStates.Mode.EditARModule)
+                    return;
+
                 ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
                 if (modelEntity != null)
                 {
@@ -56,6 +59,9 @@ namespace EAR.Editor.Presenter
 
             selectionManager.OnObjectDeselected += (Selectable selectable) =>
             {
+                if (GlobalStates.GetMode() != GlobalStates.Mode.EditARModule)
+                    return;
+
                 ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
                 if (modelEntity == currentModel)
                 {

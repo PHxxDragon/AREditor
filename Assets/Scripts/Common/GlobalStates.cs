@@ -4,14 +4,19 @@ namespace EAR
 {
     public class GlobalStates
     {
-        public static Action<bool> OnEnableEditorChange;
+        public enum Mode
+        {
+            ViewModel, EditModel, EditARModule
+        }
+
+        public static Action<Mode> OnModeChange;
         public static Action<bool> OnEnableScreenshotChange;
         public static Action<bool> OnIsPlayModeChange;
 
         public delegate void MouseRaycastHandler(ref bool isBlocked);
         public static event MouseRaycastHandler CheckMouseRaycastBlocked;
 
-        private static bool enableEditor = true;
+        private static Mode mode = Mode.EditARModule;
         private static bool enableScreenshot = true;
         private static bool isPlayMode = false;
 
@@ -27,9 +32,9 @@ namespace EAR
             return isPlayMode;
         }
 
-        public static bool IsEnableEditor()
+        public static Mode GetMode()
         {
-            return enableEditor;
+            return mode;
         }
 
         public static bool IsEnableScreenshot()
@@ -46,12 +51,12 @@ namespace EAR
             }
         }
 
-        public static void SetEnableEditor(bool value)
+        public static void SetMode(Mode mode)
         {
-            if (enableEditor != value)
+            if (mode != GlobalStates.mode)
             {
-                enableEditor = value;
-                OnEnableEditorChange?.Invoke(value);
+                GlobalStates.mode = mode;
+                OnModeChange?.Invoke(mode);
             }
         }
 

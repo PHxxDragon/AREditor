@@ -19,40 +19,53 @@ namespace EAR.Editor.Presenter
         private ModelEntity model;
         private AnimPlayer animationPlayer;
 
+        private ModelEntity firstModelEntity;
         void Awake()
-        {
-            if (!GlobalStates.IsEnableEditor())
-            {
-                AttachListeners();
-            }
-
-            GlobalStates.OnEnableEditorChange += (value) =>
-            {
-                if (value)
-                {
-                    AttachListeners();
-                } else
-                {
-                    DetachListeners();
-                }
-            };
-            
-        }
-
-        private void AttachListeners()
         {
             animationBar.DropdownValueChangeEvent += DropdownValueChangeEventSubscriber;
             animationBar.PlayToggleClickEvent += PlayToggleClickEventSubscriber;
             animationBar.SliderValueChangeEvent += SliderValueChangeEventSubscriber;
+            BaseEntity.OnEntityCreated += (entity) =>
+            {
+                if (!firstModelEntity && entity is ModelEntity modelEntity)
+                {
+                    firstModelEntity = modelEntity;
+                    ApplyMode(GlobalStates.GetMode());
+                }
+            };
+
+            GlobalStates.OnModeChange += (mode) =>
+            {
+                ApplyMode(mode);
+            };
+        }
+
+        private void ApplyMode(GlobalStates.Mode mode)
+        {
+            switch(mode)
+            {
+                case GlobalStates.Mode.ViewModel:
+                case GlobalStates.Mode.EditModel:
+                    DetachListeners();
+                    if (firstModelEntity)
+                        ModelSelect(firstModelEntity.GetComponent<Selectable>());
+                    break;
+                case GlobalStates.Mode.EditARModule:
+                    if (firstModelEntity)
+                        ModelDeselect(firstModelEntity.GetComponent<Selectable>());
+                    AttachListeners();
+                    break;
+            }
+        }
+
+        private void AttachListeners()
+        {
             selectionManager.OnObjectSelected += ModelSelect;
             selectionManager.OnObjectDeselected += ModelDeselect;
         }
 
         private void DetachListeners()
         {
-            animationBar.DropdownValueChangeEvent -= DropdownValueChangeEventSubscriber;
-            animationBar.PlayToggleClickEvent -= PlayToggleClickEventSubscriber;
-            animationBar.SliderValueChangeEvent -= SliderValueChangeEventSubscriber;
             selectionManager.OnObjectSelected -= ModelSelect;
             selectionManager.OnObjectDeselected -= ModelDeselect;
         }
@@ -62,13 +75,12 @@ namespace EAR.Editor.Presenter
             ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
             if (modelEntity == model)
             {
-                model = null;
-                if (animationBar)
-                    animationBar.gameObject.SetActive(false);
+                model = null;       
                 if (animationPlayer)
                 {
                     animationPlayer.AnimationProgressChangeEvent -= AnimationProgressChangeEventSubscriber;
                     animationPlayer.AnimationStartEvent -= AnimationStartEventSubscriber;
+                    animationBar.gameObject.SetActive(false);
                 }
             }
         }
