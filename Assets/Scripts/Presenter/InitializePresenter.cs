@@ -2,7 +2,6 @@ using UnityEngine;
 using EAR.Integration;
 using EAR.EARCamera;
 using EAR.View;
-using EAR.AssetManager;
 using EAR.Container;
 
 namespace EAR.Editor.Presenter
@@ -60,7 +59,7 @@ namespace EAR.Editor.Presenter
 
         private void LoadMetadata(AssetInformation assetInformation)
         {
-            MetadataObject metadataObject = JsonUtility.FromJson<MetadataObject>(assetInformation.metadataString);
+            MetadataObject metadataObject = JsonUtility.FromJson<MetadataObject>(assetInformation.metadata);
             if (metadataObject == null)
             {
                 EntityContainer.Instance.InitMetadata(assetInformation.assets);

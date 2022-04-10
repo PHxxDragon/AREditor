@@ -6,8 +6,9 @@ namespace EAR
     [Serializable]
     public class AssetInformation
     {
-        public string metadataString;
-        public string imageUrl;
+        public string metadata;
+        public string markerImage;
+        public float markerImageWidth;
         public List<AssetObject> assets = new List<AssetObject>();
     }
 

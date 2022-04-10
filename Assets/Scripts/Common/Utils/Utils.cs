@@ -21,6 +21,22 @@ namespace EAR
                 return instance;
             }
         }
+		
+		public static string GetFileSizeString(long size)
+        {
+            if (size < 1000)
+            {
+                return size + " b";
+            }
+            else if (size < 1000000)
+            {
+                return ((float)size / 1000).ToString("#.#") + " kb";
+            }
+            else
+            {
+                return ((float)size / 1000000).ToString("#.#") + " mb";
+            }
+        }
 
         public static int Clamp(int value, int min, int max)
         {

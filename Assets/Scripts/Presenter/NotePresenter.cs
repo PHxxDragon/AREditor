@@ -155,8 +155,8 @@ namespace EAR.Editor.Presenter
                     noteData.noteTransformData = transfomData;
                     NoteEntity note = NoteEntity.InstantNewEntity(noteData);
                     toolBar.SetDefaultTool();
-                    IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
-                    undoRedoManager.AddCommand(command);
+/*                    IUndoRedoCommand command = new AddNoteCommand(note.GetComponent<NoteEntity>());
+                    undoRedoManager.AddCommand(command);*/
                 });
             } else
             {

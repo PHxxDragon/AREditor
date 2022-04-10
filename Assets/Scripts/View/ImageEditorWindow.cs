@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using EAR.AssetManager;
+using EAR.Container;
 using TMPro;
 
 namespace EAR.View

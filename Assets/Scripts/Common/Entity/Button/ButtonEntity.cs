@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using EAR.Entity.EntityAction;
-using EAR.AssetManager;
-using UnityEngine;
 using EAR.Container;
+using UnityEngine;
 
 namespace EAR.Entity
 {

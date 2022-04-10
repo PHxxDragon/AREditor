@@ -1,7 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-using EAR.AssetManager;
+using EAR.Container;
 using Nobi.UiRoundedCorners;
 
 namespace EAR.Entity

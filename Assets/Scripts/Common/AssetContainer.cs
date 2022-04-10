@@ -5,7 +5,7 @@ using System;
 using EAR.Entity;
 using EAR.AR;
 
-namespace EAR.AssetManager
+namespace EAR.Container
 {
     public class AssetContainer : MonoBehaviour
     {
@@ -182,7 +182,8 @@ namespace EAR.AssetManager
         {
             OnAssetObjectAdded?.Invoke(assetObject);
             models.Add(assetObject.assetId, (assetObject, model));
-            model.transform.parent = disabledContainer.transform;
+            TransformData.ResetTransform(model.transform);
+            TransformData.SetParent(model.transform, disabledContainer.transform);
         }
 
         public GameObject GetModel(string assetId)

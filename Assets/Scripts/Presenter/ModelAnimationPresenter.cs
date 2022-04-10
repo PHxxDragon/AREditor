@@ -80,7 +80,8 @@ namespace EAR.Editor.Presenter
                 {
                     animationPlayer.AnimationProgressChangeEvent -= AnimationProgressChangeEventSubscriber;
                     animationPlayer.AnimationStartEvent -= AnimationStartEventSubscriber;
-                    animationBar.gameObject.SetActive(false);
+                    if (animationBar)
+                        animationBar.gameObject.SetActive(false);
                 }
             }
         }

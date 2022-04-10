@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2884059570061183438}
   - component: {fileID: 2020088065922664795}
-  - component: {fileID: 8674166072933450520}
   - component: {fileID: 2151256721785789789}
   m_Layer: 0
   m_Name: ButtonPrefab
@@ -44,18 +43,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36467de869214954b87572af69c35b21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8674166072933450520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3971553758683496774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f312ce8743d5b3f40b87531283fef72c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!135 &2151256721785789789
