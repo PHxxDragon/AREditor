@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using RuntimeHandle;
 
 namespace EAR.View
 {
@@ -29,6 +30,16 @@ namespace EAR.View
         [SerializeField]
         private GraphicRaycaster raycaster;
         private EventSystem eventSystem;
+
+        [SerializeField]
+        private Vector3Input positionSnap;
+        [SerializeField]
+        private Vector3Input scaleSnap;
+        [SerializeField]
+        private InputFieldWithSlider rotationSnap;
+
+        [SerializeField]
+        private RuntimeTransformHandle transformHandle;
 
         private Color originalColor;
         private float colorExposure;
@@ -78,6 +89,24 @@ namespace EAR.View
                 directionalColor.SetColor(data.color);
                 directionalIntensity.SetValue(data.intensity);
             };
+
+            positionSnap.OnValueChanged += (Vector3 snap) =>
+            {
+                transformHandle.positionSnap = snap;
+            };
+            scaleSnap.OnValueChanged += (Vector3 snap) =>
+            {
+                transformHandle.scaleSnap = snap;
+            };
+            rotationSnap.OnValueChanged += (float snap) =>
+            {
+                transformHandle.rotationSnap = snap;
+            };
+
+            positionSnap.SetVector(transformHandle.positionSnap);
+            rotationSnap.SetValue(transformHandle.rotationSnap);
+            scaleSnap.SetVector(transformHandle.scaleSnap);
+
         }
 
         void Start()
