@@ -6,7 +6,7 @@ namespace EAR.Entity
     public class SoundEntity : InvisibleEntity
 {
         private static int count = 1;
-        private string assetId;
+        private string assetId = "";
         private bool playAtStart;
 
         protected override string GetDefaultName()
@@ -75,33 +75,48 @@ namespace EAR.Entity
             return soundData;
         }
 
-        public static SoundEntity InstantNewEntity(SoundData soundData)
+        public void PopulateData(SoundData soundData)
         {
-            SoundEntity soundPrefab = AssetContainer.Instance.GetSoundPrefab();
-            SoundEntity soundEntity = Instantiate(soundPrefab);
             if (!string.IsNullOrEmpty(soundData.id))
             {
-                soundEntity.SetId(soundData.id);
+                SetId(soundData.id);
             }
 
             if (!string.IsNullOrEmpty(soundData.name))
             {
-                soundEntity.SetEntityName(soundData.name);
+                SetEntityName(soundData.name);
             }
 
-            soundEntity.playAtStart = soundData.playAtStart;
+            if (soundData.playAtStart.HasValue)
+            {
+                playAtStart = soundData.playAtStart.Value;
+            }
 
-            AudioSource audioSource = soundEntity.GetComponentInChildren<AudioSource>();
-            audioSource.loop = soundData.loop;
+            AudioSource audioSource = GetComponentInChildren<AudioSource>();
 
-            if (!string.IsNullOrEmpty(soundData.assetId))
+            if (soundData.loop.HasValue)
+            {
+                audioSource.loop = soundData.loop.Value;
+            }
+
+            if (soundData.assetId != null)
             {
                 AudioClip audioClip = AssetContainer.Instance.GetSound(soundData.assetId);
                 audioSource.clip = audioClip;
-                soundEntity.assetId = soundData.assetId;
+                assetId = soundData.assetId;
             }
 
-            TransformData.TransformDataToTransfrom(soundData.transform, soundEntity.transform);
+            if (soundData.transform != null)
+            {
+                TransformData.TransformDataToTransfrom(soundData.transform, transform);
+            }
+        }
+
+        public static SoundEntity InstantNewEntity(SoundData soundData)
+        {
+            SoundEntity soundPrefab = AssetContainer.Instance.GetSoundPrefab();
+            SoundEntity soundEntity = Instantiate(soundPrefab);
+            soundEntity.PopulateData(soundData);
             OnEntityCreated?.Invoke(soundEntity);
             return soundEntity;
         }

@@ -15,6 +15,12 @@ namespace EAR.Entity
             return "New model " + count++; 
         }
 
+        protected override void Awake()
+        {
+            base.Awake();
+            SetModel("");
+        }
+
         public override void ResetEntityState()
         {
             base.ResetEntityState();
@@ -66,7 +72,7 @@ namespace EAR.Entity
 
         public void SetModel(string assetId)
         {
-            if (this.assetId == assetId)
+            if (this.assetId == assetId || this.assetId == null)
             {
                 return;
             }
@@ -92,50 +98,46 @@ namespace EAR.Entity
             {
                 TransformData.TransformDataToTransfrom(prev, newChild.transform);
             }
-            OnEntityChanged?.Invoke(this);
+        }
+
+        public void PopulateData(ModelData modelData)
+        {
+            if (modelData.assetId != null)
+            {
+                SetModel(modelData.assetId);
+            }
+
+            if (modelData.isVisible.HasValue)
+            {
+                isVisible = modelData.isVisible.Value;
+            }
+
+            if (!string.IsNullOrEmpty(modelData.name))
+            {
+                SetEntityName(modelData.name);
+            }
+
+            if (modelData.transform != null)
+            {
+                TransformData.TransformDataToTransfrom(modelData.transform, transform);
+            }
+
+            if (!string.IsNullOrEmpty(modelData.id))
+            {
+                SetId(modelData.id);
+            }
+
+            if (modelData.defaultAnimation.HasValue)
+            {
+                defaultAnimationIndex = modelData.defaultAnimation.Value;
+            }
+
         }
 
         public static ModelEntity InstantNewEntity(ModelData modelData)
         {
             ModelEntity modelEntity = new GameObject().AddComponent<ModelEntity>();
-            GameObject model = AssetContainer.Instance.GetModel(modelData.assetId);
-
-            modelEntity.isVisible = modelData.isVisible;
-
-            if (model)
-            {
-                GameObject child = Instantiate(model);
-                modelEntity.assetId = modelData.assetId;
-                TransformData.ResetTransform(child.transform);
-                TransformData.SetParent(child.transform, modelEntity.transform);
-            } else
-            {
-                model = AssetContainer.Instance.GetModelPrefab();
-                GameObject child = Instantiate(model);
-                TransformData.ResetTransform(child.transform);
-                TransformData.SetParent(child.transform, modelEntity.transform);
-            }
-
-            if (!string.IsNullOrEmpty(modelData.name))
-            {
-                modelEntity.SetEntityName(modelData.name);
-            }
-            
-            if (modelData.transform != null)
-            {
-                TransformData.TransformDataToTransfrom(modelData.transform, modelEntity.transform);
-            }
-            
-            if (!string.IsNullOrEmpty(modelData.id))
-            {
-                modelEntity.SetId(modelData.id);
-            }
-
-            if (modelData.defaultAnimation > 0)
-            {
-                modelEntity.defaultAnimationIndex = modelData.defaultAnimation;
-            }
-
+            modelEntity.PopulateData(modelData);
             OnEntityCreated?.Invoke(modelEntity);
             return modelEntity;
         }

@@ -6,7 +6,6 @@ namespace EAR.Entity
     public class BaseEntity : MonoBehaviour
     {
         public static Action<BaseEntity> OnEntityCreated;
-        public static Action<BaseEntity> OnEntityChanged;
         public static Action<BaseEntity> OnEntityDestroy;
 
         private string id = Guid.NewGuid().ToString();

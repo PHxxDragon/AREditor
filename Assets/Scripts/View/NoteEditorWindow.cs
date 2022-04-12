@@ -61,16 +61,56 @@ namespace EAR.View
 
         public void PopulateData(NoteData noteData)
         {
-            nameInputField.text = noteData.name;
-            isVisible.isOn = noteData.isVisible;
-            textInputField.text = noteData.noteContent;
-            backgroundColorSelector.SetColor(noteData.textBackgroundColor);
-            borderWidth.SetValue(noteData.borderWidth.x);
-            borderRadius.SetValue(noteData.textBorderRadius.x);
-            borderColorSelector.SetColor(noteData.borderColor);
-            fontSize.SetValue(noteData.fontSize);
-            fontColor.SetColor(noteData.textColor);
-            boxWidth.SetValue(noteData.boxWidth);
+            if (!string.IsNullOrEmpty(noteData.name))
+            {
+                nameInputField.text = noteData.name;
+            }
+            
+            if (noteData.isVisible.HasValue)
+            {
+                isVisible.isOn = noteData.isVisible.Value;
+            }
+
+            if (!string.IsNullOrEmpty(noteData.noteContent))
+            {
+                textInputField.text = noteData.noteContent;
+            }
+            
+            if (noteData.textBackgroundColor.HasValue)
+            {
+                backgroundColorSelector.SetColor(noteData.textBackgroundColor.Value);
+            }
+            
+            if (noteData.borderWidth.HasValue)
+            {
+                borderWidth.SetValue(noteData.borderWidth.Value.x);
+            }
+            
+            if (noteData.textBorderRadius.HasValue)
+            {
+                borderRadius.SetValue(noteData.textBorderRadius.Value.x);
+            }
+            
+            if (noteData.borderColor.HasValue)
+            {
+                borderColorSelector.SetColor(noteData.borderColor.Value);
+            }
+            
+            if (noteData.fontSize.HasValue)
+            {
+                fontSize.SetValue(noteData.fontSize.Value);
+            }
+            
+            if (noteData.textColor.HasValue)
+            {
+                fontColor.SetColor(noteData.textColor.Value);
+            }
+            
+            if (noteData.boxWidth.HasValue)
+            {
+                boxWidth.SetValue(noteData.boxWidth.Value);
+            }
+            
         }
         
 

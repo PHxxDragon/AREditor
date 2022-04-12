@@ -81,9 +81,18 @@ namespace EAR.View
         public void PopulateData(ButtonData buttonData)
         {
             UpdateEntityList();
-            listenerEntityId.SelectValue(buttonData.activatorEntityId);
-            PopulateData(buttonData.actionDatas);
-            nameInputField.text = buttonData.name;
+            if (buttonData.activatorEntityId != null)
+            {
+                listenerEntityId.SelectValue(buttonData.activatorEntityId);
+            }
+            if (buttonData.actionDatas != null)
+            {
+                PopulateData(buttonData.actionDatas);
+            }
+            if (!string.IsNullOrEmpty(buttonData.name))
+            {
+                nameInputField.text = buttonData.name;
+            }
         }
 
         private void PopulateData(List<ButtonActionData> buttonActionDatas)

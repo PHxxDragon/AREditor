@@ -24,7 +24,7 @@ namespace EAR
 
         public TransformData transform;
         public string activatorEntityId;
-        public List<ButtonActionData> actionDatas = new List<ButtonActionData>();
+        public List<ButtonActionData> actionDatas;
     }
 
     [Serializable]
@@ -48,8 +48,8 @@ namespace EAR
 
         public TransformData transform;
         public string assetId;
-        public bool playAtStart;
-        public bool loop;
+        public bool? playAtStart;
+        public bool? loop;
     }
 
     [Serializable]
@@ -60,7 +60,7 @@ namespace EAR
 
         public TransformData transform;
         public string assetId;
-        public bool isVisible = true;
+        public bool? isVisible;
     }
 
     [Serializable]
@@ -68,11 +68,11 @@ namespace EAR
     {
         public string id;
         public string name;
-        public int defaultAnimation;
+        public int? defaultAnimation;
 
         public TransformData transform;
         public string assetId;
-        public bool isVisible = true;
+        public bool? isVisible;
     }
 
     [Serializable]
@@ -81,22 +81,22 @@ namespace EAR
         public string id;
         public string name;
 
-        public bool isVisible = true;
+        public bool? isVisible;
 
         public TransformData noteTransformData;
         public RectTransformData noteContentRectTransformData;
 
         public string noteContent;
-        public Color textBackgroundColor = Color.white;
+        public Color? textBackgroundColor;
 
-        public Vector4 borderWidth = Vector4.zero;
-        public Vector4 textBorderRadius = Vector4.zero;
-        public Color borderColor = Color.white;
+        public Vector4? borderWidth;
+        public Vector4? textBorderRadius;
+        public Color? borderColor;
 
-        public int fontSize;
-        public Color textColor = Color.black;
+        public int? fontSize;
+        public Color? textColor;
 
-        public float boxWidth;
+        public float? boxWidth;
     }
 
     [Serializable]

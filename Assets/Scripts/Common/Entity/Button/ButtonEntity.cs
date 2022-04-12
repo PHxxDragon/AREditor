@@ -8,7 +8,7 @@ namespace EAR.Entity
     public class ButtonEntity : InvisibleEntity
     {
         private static int count = 1;
-        private string activatorEntityId;
+        private string activatorEntityId = "";
         public readonly List<ButtonAction> actions = new List<ButtonAction>();
 
         protected override string GetDefaultName()
@@ -50,6 +50,7 @@ namespace EAR.Entity
             buttonData.name = GetEntityName();
             buttonData.id = GetId();
             buttonData.activatorEntityId = activatorEntityId;
+            buttonData.actionDatas = new List<ButtonActionData>();
             foreach (ButtonAction buttonAction in actions)
             {
                 buttonData.actionDatas.Add(buttonAction.GetButtonActionData());
@@ -57,36 +58,43 @@ namespace EAR.Entity
             return buttonData;
         }
 
-        public static ButtonEntity InstantNewEntity(ButtonData buttonData)
+        public void PopulateData(ButtonData buttonData)
         {
-            ButtonEntity buttonPrefab = AssetContainer.Instance.GetButtonPrefab();
-            ButtonEntity buttonEntity = Instantiate(buttonPrefab);
-
             if (!string.IsNullOrEmpty(buttonData.id))
             {
-                buttonEntity.SetId(buttonData.id);
+                SetId(buttonData.id);
             }
 
             if (!string.IsNullOrEmpty(buttonData.name))
             {
-                buttonEntity.SetEntityName(buttonData.name);
+                SetEntityName(buttonData.name);
             }
 
-            if (!string.IsNullOrEmpty(buttonData.activatorEntityId))
+            if (buttonData.activatorEntityId != null)
             {
-                buttonEntity.SetActivatorEntityId(buttonData.activatorEntityId);
+                SetActivatorEntityId(buttonData.activatorEntityId);
             }
 
             if (buttonData.transform != null)
             {
-                TransformData.TransformDataToTransfrom(buttonData.transform, buttonEntity.transform);
+                TransformData.TransformDataToTransfrom(buttonData.transform, transform);
             }
 
-            foreach (ButtonActionData buttonActionData in buttonData.actionDatas)
+            if (buttonData.actionDatas != null)
             {
-                buttonEntity.actions.Add(ButtonActionFactory.CreateButtonAction(buttonActionData));
+                foreach (ButtonActionData buttonActionData in buttonData.actionDatas)
+                {
+                    actions.Add(ButtonActionFactory.CreateButtonAction(buttonActionData));
+                }
             }
+            
+        }
 
+        public static ButtonEntity InstantNewEntity(ButtonData buttonData)
+        {
+            ButtonEntity buttonPrefab = AssetContainer.Instance.GetButtonPrefab();
+            ButtonEntity buttonEntity = Instantiate(buttonPrefab);
+            buttonEntity.PopulateData(buttonData);
             OnEntityCreated?.Invoke(buttonEntity);
             return buttonEntity;
         }

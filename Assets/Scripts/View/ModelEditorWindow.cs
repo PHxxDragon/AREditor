@@ -114,11 +114,25 @@ namespace EAR.View
 
         public void PopulateData(ModelData modelData)
         {
-            assetDropdown.SelectValue(modelData.assetId);
-            UpdateAnimationDropdown(modelData.assetId);
-            animationDropdown.SelectValue(modelData.defaultAnimation);
-            nameInputField.text = modelData.name;
-            isVisible.isOn = modelData.isVisible;
+            if (modelData.assetId != null)
+            {
+                assetDropdown.SelectValue(modelData.assetId);
+                UpdateAnimationDropdown(modelData.assetId);
+            }
+
+            if (modelData.defaultAnimation.HasValue)
+            {
+                animationDropdown.SelectValue(modelData.defaultAnimation.Value);
+            }
+
+            if (!string.IsNullOrEmpty(modelData.name)) {
+                nameInputField.text = modelData.name;
+            }
+            
+            if (modelData.isVisible.HasValue)
+            {
+                isVisible.isOn = modelData.isVisible.Value;
+            }
         }
     }
 }

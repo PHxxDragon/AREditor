@@ -77,8 +77,16 @@ namespace EAR.View
         public void PopulateData(SoundData soundData)
         {
             assetDropdown.SelectValue(soundData.assetId);
-            playAtStartToggle.isOn = soundData.playAtStart;
-            loopToggle.isOn = soundData.loop;
+            if (soundData.playAtStart.HasValue)
+            {
+                playAtStartToggle.isOn = soundData.playAtStart.Value;
+            }
+            
+            if (soundData.loop.HasValue)
+            {
+                loopToggle.isOn = soundData.loop.Value;
+            }
+            
             nameInputField.text = soundData.name;
         }
     }

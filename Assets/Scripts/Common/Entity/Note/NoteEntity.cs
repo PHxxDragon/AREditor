@@ -91,14 +91,14 @@ namespace EAR.Entity
                 text.text = data.noteContent;
             }
             
-            if (data.boxWidth > 0)
+            if (data.boxWidth.HasValue)
             {
-                SetBoxWidth(data.boxWidth);
+                SetBoxWidth(data.boxWidth.Value);
             }
             
-            if (data.fontSize > 0)
+            if (data.fontSize.HasValue)
             {
-                SetFontSize(data.fontSize);
+                SetFontSize(data.fontSize.Value);
             }
 
             if (data.id != null)
@@ -106,13 +106,35 @@ namespace EAR.Entity
                 SetId(data.id);
             }
             
-            SetTextBackgroundColor(data.textBackgroundColor);
-            SetTextBorderRadius(data.textBorderRadius);
-            SetTextColor(data.textColor);
-            SetBorderColor(data.borderColor);
-            SetTextBorderWidth(data.borderWidth);
+            if (data.textBackgroundColor.HasValue)
+            {
+                SetTextBackgroundColor(data.textBackgroundColor.Value);
+            }
+            
+            if (data.textBorderRadius.HasValue)
+            {
+                SetTextBorderRadius(data.textBorderRadius.Value);
+            }
+            
+            if (data.textColor.HasValue)
+            {
+                SetTextColor(data.textColor.Value);
+            }
 
-            isVisible = data.isVisible;
+            if (data.borderColor.HasValue)
+            {
+                SetBorderColor(data.borderColor.Value);
+            }
+            
+            if (data.borderWidth.HasValue)
+            {
+                SetTextBorderWidth(data.borderWidth.Value);
+            }
+            
+            if (data.isVisible.HasValue)
+            {
+                isVisible = data.isVisible.Value;
+            }
         }
 
         public void SetHeight(float height)
