@@ -70,6 +70,7 @@ namespace EAR.View
             borderColorSelector.SetColor(noteData.borderColor);
             fontSize.SetValue(noteData.fontSize);
             fontColor.SetColor(noteData.textColor);
+            boxWidth.SetValue(noteData.boxWidth);
         }
         
 

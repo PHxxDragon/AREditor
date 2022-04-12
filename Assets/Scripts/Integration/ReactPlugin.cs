@@ -40,14 +40,22 @@ namespace EAR.Integration
                         assetObject.type = AssetObject.MODEL_TYPE;
                         assetObject.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip";
                         assetInformation.assets.Add(assetObject);*/
-            AssetObject assetObject2 = new AssetObject();
+            AssetObject assetObject1 = new AssetObject();
+            assetObject1.assetId = "adasfds";
+            assetObject1.extension = "gltf";
+            assetObject1.isZipFile = true;
+            assetObject1.name = "turtle";
+            assetObject1.type = AssetObject.MODEL_TYPE;
+            assetObject1.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1649722906105_enc_tiger_howl_v04.zip";
+            assetInformation.assets.Add(assetObject1);
+/*            AssetObject assetObject2 = new AssetObject();
             assetObject2.assetId = "akjsdflasvkcvhxvuiy";
             assetObject2.extension = "gltf";
             assetObject2.isZipFile = true;
             assetObject2.name = "Model wolf wolf";
             assetObject2.type = AssetObject.MODEL_TYPE;
             assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/3/1648694213397_enc_wolf.zip";
-            assetInformation.assets.Add(assetObject2);
+            assetInformation.assets.Add(assetObject2);*/
 /*            AssetObject assetObject3 = new AssetObject();
             assetObject3.assetId = "lkjfioewuffewffdsf";
             assetObject3.name = "image 1112";

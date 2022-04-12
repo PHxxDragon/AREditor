@@ -67,7 +67,10 @@ namespace RuntimeHandle
                 float deg = delta * 180f / Mathf.PI;
                 
                 if (_parentTransformHandle.rotationSnap != 0)
+                {
                     deg = Mathf.Round(deg / _parentTransformHandle.rotationSnap) * _parentTransformHandle.rotationSnap;
+                }
+                    
                 
                 float snappedDelta = deg * Mathf.PI / 180f;
                 _arcMesh = MeshUtils.CreateArc(transform.position, _hitPoint, rotatedAxis, 2, -snappedDelta,

@@ -142,6 +142,7 @@ namespace EAR.Editor.Presenter
         private void PopulateNoteDataToEditor()
         {
             noteEditorWindow.PopulateData(currentNote.GetNoteData());
+            NoteData noteData = currentNote.GetNoteData();
         }
 
         private void OnToolbarToolChanged(ToolEnum prev, ToolEnum current)

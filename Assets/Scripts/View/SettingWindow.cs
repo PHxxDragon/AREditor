@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace EAR.View
 {
-    public class EnvironmentEditorWindow : MonoBehaviour
+    public class SettingWindow : MonoBehaviour
     {
         [SerializeField]
         private ColorSelector ambientColor;
@@ -37,14 +37,20 @@ namespace EAR.View
         {
             ambientColor.OnColorChanged += (Color color) =>
             {
-                originalColor = color;
-                environmentController.SetAmbientLight(ComposeHdrColor(originalColor, colorExposure));
+                if (originalColor != color)
+                {
+                    originalColor = color;
+                    environmentController.SetAmbientLight(ComposeHdrColor(originalColor, colorExposure), false);
+                }
             };
 
             ambientIntensity.OnValueChanged += (float value) =>
             {
-                colorExposure = value;
-                environmentController.SetAmbientLight(ComposeHdrColor(originalColor, colorExposure));
+                if (colorExposure != value)
+                {
+                    colorExposure = value;
+                    environmentController.SetAmbientLight(ComposeHdrColor(originalColor, colorExposure), false);
+                }
             };
 
             cameraFOV.OnValueChanged += (float value) =>
@@ -58,6 +64,19 @@ namespace EAR.View
             directionalIntensity.OnValueChanged += (float value) =>
             {
                 environmentController.SetDirectionalLightIntensity(value);
+            };
+
+            environmentController.OnAmbientLightChanged += (Color color) =>
+            {
+                DecomposeHdrColor(color, out originalColor, out colorExposure);
+                ambientColor.SetColor(originalColor);
+                ambientIntensity.SetValue(colorExposure);
+            };
+
+            environmentController.OnDirectionalLightDataChanged += (LightData data) =>
+            {
+                directionalColor.SetColor(data.color);
+                directionalIntensity.SetValue(data.intensity);
             };
         }
 

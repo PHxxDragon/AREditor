@@ -23,7 +23,7 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private RuntimeTransformHandle runtimeTransformHandle;
         [SerializeField]
-        private EnvironmentEditorWindow environmentEditorWindow;
+        private SettingWindow environmentEditorWindow;
         [SerializeField]
         private EnvironmentController environmentController;
 
