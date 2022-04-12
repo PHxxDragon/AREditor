@@ -36,6 +36,28 @@ namespace EAR.Editor.Presenter
                     currentEntity = imageEntity;
                     imageEditorWindow.PopulateData(imageEntity.GetImageData());
                     imageEditorWindow.OpenEditor();
+                } else if (entity is NoteEntity noteEntity)
+                {
+                    currentEntity = noteEntity;
+                    noteEditorWindow.PopulateData(noteEntity.GetNoteData());
+                    noteEditorWindow.OpenEditor();
+                } else if (entity is ModelEntity modelEntity)
+                {
+                    currentEntity = modelEntity;
+                    modelEditorWindow.PopulateData(modelEntity.GetModelData());
+                    modelEditorWindow.OpenEditor();
+                }
+                else if (entity is ButtonEntity buttonEntity)
+                {
+                    currentEntity = buttonEntity;
+                    buttonEditorWindow.PopulateData(buttonEntity.GetButtonData());
+                    buttonEditorWindow.OpenEditor();
+                }
+                else if (entity is SoundEntity soundEntity)
+                {
+                    currentEntity = soundEntity;
+                    soundEditorWindow.PopulateData(soundEntity.GetSoundData());
+                    soundEditorWindow.OpenEditor();
                 }
             };
 
