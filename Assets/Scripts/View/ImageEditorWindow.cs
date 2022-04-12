@@ -8,9 +8,7 @@ namespace EAR.View
 {
     public class ImageEditorWindow : MonoBehaviour
     {
-        public event Action<string> OnNameChanged;
-        public event Action<bool> OnVisibilityChanged;
-        public event Action<string> OnImageAssetSelected;
+        public event Action<ImageData> OnImageChanged;
         public event Action OnImageDelete;
 
         [SerializeField]
@@ -26,7 +24,9 @@ namespace EAR.View
         {
             dropdown.OnDropdownValueChanged += (value) =>
             {
-                OnImageAssetSelected?.Invoke((string) value);
+                ImageData data = new ImageData();
+                data.assetId = (string)value;
+                OnImageChanged?.Invoke(data);
             };
             deleteButton.onClick.AddListener(() =>
             {
@@ -34,11 +34,15 @@ namespace EAR.View
             });
             nameInputField.onValueChanged.AddListener((name) =>
             {
-                OnNameChanged?.Invoke(name);
+                ImageData data = new ImageData();
+                data.name = name;
+                OnImageChanged?.Invoke(data);
             });
             isVisible.onValueChanged.AddListener((isVisible) =>
             {
-                OnVisibilityChanged?.Invoke(isVisible);
+                ImageData data = new ImageData();
+                data.isVisible = isVisible;
+                OnImageChanged?.Invoke(data);
             });
         }
 

@@ -10,10 +10,7 @@ namespace EAR.View
 {
     public class ModelEditorWindow : MonoBehaviour
     {
-        public event Action<string> OnNameChanged;
-        public event Action<bool> OnVisibilityChanged;
-        public event Action<string> OnModelAssetSelected;
-        public event Action<int> OnDefaultAnimationSelected;
+        public event Action<ModelData> OnModelChanged;
         public event Action OnModelDelete;
 
         [SerializeField]
@@ -33,12 +30,16 @@ namespace EAR.View
         {
             assetDropdown.OnDropdownValueChanged += (obj) =>
             {
-                OnModelAssetSelected?.Invoke((string)obj);
+                ModelData modelData = new ModelData();
+                modelData.assetId = (string)obj;
+                OnModelChanged?.Invoke(modelData);
                 UpdateAnimationDropdown((string)obj);
             };
             animationDropdown.OnDropdownValueChanged += (obj) =>
             {
-                OnDefaultAnimationSelected?.Invoke((int)obj);
+                ModelData modelData = new ModelData();
+                modelData.defaultAnimation = (int)obj;
+                OnModelChanged?.Invoke(modelData);
             };
             deleteButton.onClick.AddListener(() =>
             {
@@ -58,11 +59,15 @@ namespace EAR.View
 
             nameInputField.onValueChanged.AddListener((name) =>
             {
-                OnNameChanged?.Invoke(name);
+                ModelData modelData = new ModelData();
+                modelData.name = name;
+                OnModelChanged?.Invoke(modelData);
             });
             isVisible.onValueChanged.AddListener((isVisible) =>
             {
-                OnVisibilityChanged?.Invoke(isVisible);
+                ModelData modelData = new ModelData();
+                modelData.isVisible = isVisible;
+                OnModelChanged?.Invoke(modelData);
             });
             CloseEditor();
         }

@@ -31,7 +31,7 @@ namespace EAR.Entity
 
         public void SetImage(string assetId)
         {
-            if (this.assetId == assetId || this.assetId == null)
+            if (this.assetId == assetId || assetId == null)
             {
                 return;
             }

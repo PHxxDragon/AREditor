@@ -7,22 +7,7 @@ namespace EAR.View
 {
     public class NoteEditorWindow : MonoBehaviour
     {
-        public event Action<string> OnNameChanged;
-        public event Action<bool> OnVisibilityChanged;
-
-        public event Action<string> OnTextInputFieldChanged;
-
-        public event Action<Color> OnBackgroundColorChanged;
-
-        public event Action<float> OnBorderWidthChanged;
-        public event Action<int> OnBorderRadiusChanged;
-        public event Action<Color> OnBorderColorChanged;
-
-        public event Action<int> OnFontSizeChanged;
-        public event Action<Color> OnFontColorChanged;
-
-        public event Action<float> OnBoxWidthChanged;
-
+        public event Action<NoteData> OnNoteDataChanged;
         public event Action OnDeleteButtonClick;
 
         [SerializeField]
@@ -122,50 +107,70 @@ namespace EAR.View
             });
             textInputField.onValueChanged.AddListener((string value) =>
             {
-                OnTextInputFieldChanged?.Invoke(value);
+                NoteData noteData = new NoteData();
+                noteData.noteContent = value;
+                OnNoteDataChanged?.Invoke(noteData);
             });
 
             backgroundColorSelector.OnColorChanged += (Color color) =>
             {
-                OnBackgroundColorChanged?.Invoke(color);
+                NoteData noteData = new NoteData();
+                noteData.textBackgroundColor = color;
+                OnNoteDataChanged?.Invoke(noteData);
             };
 
             borderWidth.OnValueChanged += (float value) =>
             {
-                OnBorderWidthChanged?.Invoke(value);
+                NoteData noteData = new NoteData();
+                noteData.borderWidth = new Vector4(value, value, value, value);
+                OnNoteDataChanged?.Invoke(noteData);
             };
 
             borderRadius.OnValueChanged += (float value) =>
             {
-                OnBorderRadiusChanged?.Invoke((int) value);
+                NoteData noteData = new NoteData();
+                noteData.textBorderRadius = new Vector4(value, value, value, value);
+                OnNoteDataChanged?.Invoke(noteData);
             };
 
             borderColorSelector.OnColorChanged += (Color color) =>
             {
-                OnBorderColorChanged?.Invoke(color);
+                NoteData noteData = new NoteData();
+                noteData.borderColor = color;
+                OnNoteDataChanged?.Invoke(noteData);
             };
 
             fontSize.OnValueChanged += (float value) =>
             {
-                OnFontSizeChanged?.Invoke((int)value);
+                NoteData noteData = new NoteData();
+                noteData.fontSize = (int) value;
+                OnNoteDataChanged?.Invoke(noteData);
             };
 
             fontColor.OnColorChanged += (Color color) =>
             {
-                OnFontColorChanged?.Invoke(color);
+                NoteData noteData = new NoteData();
+                noteData.textColor = color;
+                OnNoteDataChanged?.Invoke(noteData);
             };
 
             boxWidth.OnValueChanged += (float value) =>
             {
-                OnBoxWidthChanged?.Invoke(value);
+                NoteData noteData = new NoteData();
+                noteData.boxWidth = value;
+                OnNoteDataChanged?.Invoke(noteData);
             };
             nameInputField.onValueChanged.AddListener((name) =>
             {
-                OnNameChanged?.Invoke(name);
+                NoteData noteData = new NoteData();
+                noteData.name = name;
+                OnNoteDataChanged?.Invoke(noteData);
             });
             isVisible.onValueChanged.AddListener((isVisible) =>
             {
-                OnVisibilityChanged?.Invoke(isVisible);
+                NoteData noteData = new NoteData();
+                noteData.isVisible = isVisible;
+                OnNoteDataChanged?.Invoke(noteData);
             });
 
             CloseEditor();

@@ -10,11 +10,7 @@ namespace EAR.View
 {
     public class ButtonEditorWindow : MonoBehaviour
     {
-        public event Action<string> OnNameChanged;
-        public event Action<string> OnListenerEntityIdChanged;
-        public event Action<int, ButtonActionData> OnButtonActionDataChanged;
-        public event Action<ButtonActionData> OnButtonActionDataAdded;
-        public event Action<int> OnButtonActionDataDelete;
+        public event Action<ButtonData> OnButtonDataChanged;
         public event Action OnButtonDelete;
 
         [SerializeField]
@@ -30,21 +26,31 @@ namespace EAR.View
         [SerializeField]
         private Button deleteButton;
 
+        private List<ButtonActionData> buttonActionDatas;
+
         private void Awake()
         {
             listenerEntityId.OnDropdownValueChanged += (value) =>
             {
-                OnListenerEntityIdChanged?.Invoke((string)value);
+                ButtonData buttonData = new ButtonData();
+                buttonData.activatorEntityId = (string)value;
+                OnButtonDataChanged?.Invoke(buttonData);
             };
             addButton.onClick.AddListener(() =>
             {
                 ButtonActionData buttonActionData = new ButtonActionData();
-                OnButtonActionDataAdded?.Invoke(buttonActionData);
+                buttonActionDatas.Add(buttonActionData);
                 BindButtonActionDataPanel(buttonActionData);
+                ButtonData buttonData = new ButtonData();
+                buttonData.actionDatas = new List<ButtonActionData>(buttonActionDatas);
+                OnButtonDataChanged?.Invoke(buttonData);
+                OnButtonDataChanged?.Invoke(buttonData);
             });
             nameInputField.onValueChanged.AddListener((name) =>
             {
-                OnNameChanged?.Invoke(name);
+                ButtonData buttonData = new ButtonData();
+                buttonData.name = name;
+                OnButtonDataChanged?.Invoke(buttonData);
             });
             deleteButton.onClick.AddListener(() =>
             {
@@ -102,10 +108,14 @@ namespace EAR.View
                 Destroy(child.gameObject);
             }
 
+            this.buttonActionDatas = new List<ButtonActionData>(buttonActionDatas);
+
             for (int i = 0; i < buttonActionDatas.Count; i++)
             {
-                BindButtonActionDataPanel(buttonActionDatas[i]);
+                BindButtonActionDataPanel(this.buttonActionDatas[i]);
             }
+
+            
         }
 
         private void BindButtonActionDataPanel(ButtonActionData buttonActionData)
@@ -114,11 +124,17 @@ namespace EAR.View
             buttonActionPanel.PopulateData(buttonActionData);
             buttonActionPanel.OnButtonActionChanged += (buttonActionData) =>
             {
-                OnButtonActionDataChanged?.Invoke(buttonActionPanel.transform.GetSiblingIndex(), buttonActionData);
+                buttonActionDatas[buttonActionPanel.transform.GetSiblingIndex()] = buttonActionData;
+                ButtonData buttonData = new ButtonData();
+                buttonData.actionDatas = new List<ButtonActionData>(buttonActionDatas);
+                OnButtonDataChanged?.Invoke(buttonData);
             };
             buttonActionPanel.OnDelete += () =>
             {
-                OnButtonActionDataDelete?.Invoke(buttonActionPanel.transform.GetSiblingIndex());
+                buttonActionDatas.RemoveAt(buttonActionPanel.transform.GetSiblingIndex());
+                ButtonData buttonData = new ButtonData();
+                buttonData.actionDatas = new List<ButtonActionData>(buttonActionDatas);
+                OnButtonDataChanged?.Invoke(buttonData);
                 Destroy(buttonActionPanel.gameObject);
             };
         }

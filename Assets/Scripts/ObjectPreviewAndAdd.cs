@@ -14,8 +14,6 @@ namespace EAR.AddObject
         private GameObject previewObject;
         private Action<TransformData> callback;
 
-        private string key;
-
         void Start()
         {
             if (mainCamera == null)
@@ -24,7 +22,7 @@ namespace EAR.AddObject
             }
         }
 
-        public void StartPreviewAndAdd(string key, GameObject previewPrefab, Action<TransformData> callback = null, Action<GameObject> previewInitCallback = null)
+        public void StartPreviewAndAdd(GameObject previewPrefab, Action<TransformData> callback = null, Action<GameObject> previewInitCallback = null)
         {
             if (isPreviewOn)
             {
@@ -32,27 +30,17 @@ namespace EAR.AddObject
             }
 
             isPreviewOn = true;
-            this.key = key;
             previewObject = Instantiate(previewPrefab);
             previewInitCallback?.Invoke(previewObject);
             previewObject.SetActive(false);
             this.callback = callback;
         }
 
-        public void StopPreview(string key)
-        {
-            if (isPreviewOn && this.key == key)
-            {
-                StopPreview();
-            }
-        }
-
-        private void StopPreview()
+        public void StopPreview()
         {
             isPreviewOn = false;
             Destroy(previewObject);
             previewObject = null;
-            key = null;
         }
 
         void Update()

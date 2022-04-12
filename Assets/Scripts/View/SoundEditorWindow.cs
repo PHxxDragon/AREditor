@@ -8,10 +8,7 @@ namespace EAR.View
 {
     public class SoundEditorWindow : MonoBehaviour
     {
-        public event Action<string> OnNameChanged;
-        public event Action<string> OnSoundAssetSelected;
-        public event Action<bool> OnPlayAtStartChanged;
-        public event Action<bool> OnLoopChanged;
+        public event Action<SoundData> OnSoundChanged;
         public event Action OnDelete;
 
         [SerializeField]
@@ -29,19 +26,27 @@ namespace EAR.View
         {
             assetDropdown.OnDropdownValueChanged += (obj) =>
             {
-                OnSoundAssetSelected?.Invoke((string)obj);
+                SoundData soundData = new SoundData();
+                soundData.assetId = (string)obj;
+                OnSoundChanged?.Invoke(soundData);
             };
             playAtStartToggle.onValueChanged.AddListener((value) =>
             {
-                OnPlayAtStartChanged?.Invoke(value);
+                SoundData soundData = new SoundData();
+                soundData.playAtStart = value;
+                OnSoundChanged?.Invoke(soundData);
             });
             loopToggle.onValueChanged.AddListener((value) =>
             {
-                OnLoopChanged?.Invoke(value);
+                SoundData soundData = new SoundData();
+                soundData.loop = value;
+                OnSoundChanged?.Invoke(soundData);
             });
             nameInputField.onValueChanged.AddListener((name) =>
             {
-                OnNameChanged?.Invoke(name);
+                SoundData soundData = new SoundData();
+                soundData.name = name;
+                OnSoundChanged?.Invoke(soundData);
             });
             deleteButton.onClick.AddListener(() =>
             {

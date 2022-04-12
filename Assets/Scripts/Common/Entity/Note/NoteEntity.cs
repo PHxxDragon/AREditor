@@ -74,7 +74,7 @@ namespace EAR.Entity
             return noteData;
         }
 
-        private void PopulateData(NoteData data)
+        public void PopulateData(NoteData data)
         {
             if (data.noteTransformData != null)
             {

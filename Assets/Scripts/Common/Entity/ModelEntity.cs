@@ -72,7 +72,7 @@ namespace EAR.Entity
 
         public void SetModel(string assetId)
         {
-            if (this.assetId == assetId || this.assetId == null)
+            if (this.assetId == assetId || assetId == null)
             {
                 return;
             }
