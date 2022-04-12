@@ -14,6 +14,8 @@ namespace EAR.View
         [SerializeField]
         private TMP_InputField nameInputField;
         [SerializeField]
+        private TransformInput transformInput;
+        [SerializeField]
         private Toggle isVisible;
         [SerializeField]
         private DropdownHelper dropdown;
@@ -44,6 +46,13 @@ namespace EAR.View
                 data.isVisible = isVisible;
                 OnImageChanged?.Invoke(data);
             });
+            transformInput.OnTransformChanged += (transformData) =>
+            {
+                ImageData data = new ImageData();
+                data.transform = transformData;
+                OnImageChanged?.Invoke(data);
+            };
+
         }
 
         void Start()
@@ -86,6 +95,11 @@ namespace EAR.View
             if (imageData.isVisible.HasValue)
             {
                 isVisible.isOn = imageData.isVisible.Value;
+            }
+
+            if (imageData.transform != null)
+            {
+                transformInput.SetValue(imageData.transform);
             }
         }
     }

@@ -79,6 +79,7 @@ namespace EAR.Entity
             if (data.noteTransformData != null)
             {
                 TransformData.TransformDataToTransfrom(data.noteTransformData, transform);
+                transform.hasChanged = false;
             }
 
             if (data.noteContentRectTransformData != null)

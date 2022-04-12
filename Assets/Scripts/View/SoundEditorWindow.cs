@@ -14,6 +14,8 @@ namespace EAR.View
         [SerializeField]
         private TMP_InputField nameInputField;
         [SerializeField]
+        private TransformInput transformInput;
+        [SerializeField]
         private DropdownHelper assetDropdown;
         [SerializeField]
         private Toggle playAtStartToggle;
@@ -48,6 +50,12 @@ namespace EAR.View
                 soundData.name = name;
                 OnSoundChanged?.Invoke(soundData);
             });
+            transformInput.OnTransformChanged += (value) =>
+            {
+                SoundData soundData = new SoundData();
+                soundData.transform = value;
+                OnSoundChanged?.Invoke(soundData);
+            };
             deleteButton.onClick.AddListener(() =>
             {
                 OnDelete?.Invoke();
@@ -91,8 +99,14 @@ namespace EAR.View
             {
                 loopToggle.isOn = soundData.loop.Value;
             }
-            
-            nameInputField.text = soundData.name;
+            if (!string.IsNullOrEmpty(soundData.name))
+            {
+                nameInputField.text = soundData.name;
+            }
+            if (soundData.transform != null)
+            {
+                transformInput.SetValue(soundData.transform);
+            }
         }
     }
 }

@@ -120,6 +120,7 @@ namespace EAR.Entity
             if (modelData.transform != null)
             {
                 TransformData.TransformDataToTransfrom(modelData.transform, transform);
+                transform.hasChanged = false;
             }
 
             if (!string.IsNullOrEmpty(modelData.id))

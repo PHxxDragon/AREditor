@@ -13,6 +13,8 @@ namespace EAR.View
         [SerializeField]
         private TMP_InputField nameInputField;
         [SerializeField]
+        private TransformInput transformInput;
+        [SerializeField]
         private Toggle isVisible;
         [SerializeField]
         private TMP_InputField textInputField;
@@ -96,6 +98,10 @@ namespace EAR.View
                 boxWidth.SetValue(noteData.boxWidth.Value);
             }
             
+            if (noteData.noteTransformData != null)
+            {
+                transformInput.SetValue(noteData.noteTransformData);
+            }
         }
         
 
@@ -172,6 +178,13 @@ namespace EAR.View
                 noteData.isVisible = isVisible;
                 OnNoteDataChanged?.Invoke(noteData);
             });
+
+            transformInput.OnTransformChanged += (TransformData data) =>
+            {
+                NoteData noteData = new NoteData();
+                noteData.noteTransformData = data;
+                OnNoteDataChanged?.Invoke(noteData);
+            };
 
             CloseEditor();
         }

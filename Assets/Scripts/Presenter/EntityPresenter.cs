@@ -147,6 +147,44 @@ namespace EAR.Editor.Presenter
             };
         }
 
+        void Update()
+        {
+            if (currentEntity && currentEntity.transform.hasChanged)
+            {
+                TransformData transformData = TransformData.TransformToTransformData(currentEntity.transform);
+                if (currentEntity is ImageEntity)
+                {
+                    ImageData imageData = new ImageData();
+                    imageData.transform = transformData;
+                    imageEditorWindow.PopulateData(imageData);
+                }
+                else if (currentEntity is NoteEntity)
+                {
+                    NoteData noteData = new NoteData();
+                    noteData.noteTransformData = transformData;
+                    noteEditorWindow.PopulateData(noteData);
+                }
+                else if (currentEntity is ModelEntity)
+                {
+                    ModelData modelData = new ModelData();
+                    modelData.transform = transformData;
+                    modelEditorWindow.PopulateData(modelData);
+                }
+                else if (currentEntity is ButtonEntity)
+                {
+                    ButtonData buttonData = new ButtonData();
+                    buttonData.transform = transformData;
+                    buttonEditorWindow.PopulateData(buttonData);
+                }
+                else if (currentEntity is SoundEntity)
+                {
+                    SoundData soundData = new SoundData();
+                    soundData.transform = transformData;
+                    soundEditorWindow.PopulateData(soundData);
+                }
+            }
+        }
+
         private void CheckAndDestroy(Type type)
         {
             if (currentEntity.GetType() == type)

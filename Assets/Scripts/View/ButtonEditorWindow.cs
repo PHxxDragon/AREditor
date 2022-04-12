@@ -16,6 +16,8 @@ namespace EAR.View
         [SerializeField]
         private TMP_InputField nameInputField;
         [SerializeField]
+        private TransformInput transformInput;
+        [SerializeField]
         private DropdownHelper listenerEntityId;
         [SerializeField]
         private GameObject actionContainer;
@@ -56,6 +58,12 @@ namespace EAR.View
             {
                 OnButtonDelete?.Invoke();
             });
+            transformInput.OnTransformChanged += (value) =>
+            {
+                ButtonData buttonData = new ButtonData();
+                buttonData.transform = value;
+                OnButtonDataChanged?.Invoke(buttonData);
+            };
             CloseEditor();
         }
 
@@ -98,6 +106,10 @@ namespace EAR.View
             if (!string.IsNullOrEmpty(buttonData.name))
             {
                 nameInputField.text = buttonData.name;
+            }
+            if (buttonData.transform != null)
+            {
+                transformInput.SetValue(buttonData.transform);
             }
         }
 

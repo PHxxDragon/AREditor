@@ -71,6 +71,7 @@ namespace EAR.Entity
             if (imageData.transform != null)
             {
                 TransformData.TransformDataToTransfrom(imageData.transform, transform);
+                transform.hasChanged = false;
             }
         }
 

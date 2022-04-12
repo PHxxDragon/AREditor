@@ -109,6 +109,7 @@ namespace EAR.Entity
             if (soundData.transform != null)
             {
                 TransformData.TransformDataToTransfrom(soundData.transform, transform);
+                transform.hasChanged = false;
             }
         }
 

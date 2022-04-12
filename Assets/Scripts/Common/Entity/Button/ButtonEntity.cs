@@ -78,6 +78,7 @@ namespace EAR.Entity
             if (buttonData.transform != null)
             {
                 TransformData.TransformDataToTransfrom(buttonData.transform, transform);
+                transform.hasChanged = false;
             }
 
             if (buttonData.actionDatas != null)

@@ -20,6 +20,14 @@ namespace EAR.View
             AddListeners();
         }
 
+        public Vector3 GetValue()
+        {
+            float x = float.Parse(xInputField.text);
+            float y = float.Parse(yInputField.text);
+            float z = float.Parse(zInputField.text);
+            return new Vector3(x, y, z);
+        }
+
         private void CallListener(string _)
         {
             float x = float.Parse(xInputField.text);
