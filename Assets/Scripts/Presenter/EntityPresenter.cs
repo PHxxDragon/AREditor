@@ -196,6 +196,7 @@ namespace EAR.Editor.Presenter
                     soundData.transform = transformData;
                     soundEditorWindow.PopulateData(soundData);
                 }
+                currentEntity.transform.hasChanged = false;
             }
         }
 
