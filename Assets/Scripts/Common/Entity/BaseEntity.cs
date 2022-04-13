@@ -31,6 +31,15 @@ namespace EAR.Entity
 
         }
 
+        public virtual EntityData GetData()
+        {
+            EntityData entityData = new EntityData();
+            entityData.id = GetId();
+            entityData.name = GetEntityName();
+            entityData.transform = TransformData.TransformToTransformData(transform);
+            return entityData;
+        }
+
         protected virtual string GetDefaultName()
         {
             return "New Entity";

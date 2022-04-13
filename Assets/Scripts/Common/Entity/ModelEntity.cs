@@ -41,7 +41,7 @@ namespace EAR.Entity
             }
         }
 
-        public ModelData GetModelData()
+        public override EntityData GetData()
         {
             ModelData modelData = new ModelData();
             modelData.id = GetId();

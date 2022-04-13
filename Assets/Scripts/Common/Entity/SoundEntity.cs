@@ -62,7 +62,7 @@ namespace EAR.Entity
             audioSource.clip = AssetContainer.Instance.GetSound(assetId);
         }
 
-        public SoundData GetSoundData()
+        public override EntityData GetData()
         {
             AudioSource audioSource = GetComponentInChildren<AudioSource>();
             SoundData soundData = new SoundData();

@@ -50,13 +50,13 @@ namespace EAR.Entity
             return noteEntity;
         }
 
-        public NoteData GetNoteData()
+        public override EntityData GetData()
         {
             NoteData noteData = new NoteData();
             noteData.id = GetId();
             noteData.name = GetEntityName();
             noteData.noteContent = text.text;
-            noteData.noteTransformData = TransformData.TransformToTransformData(transform);
+            noteData.transform = TransformData.TransformToTransformData(transform);
             noteData.noteContentRectTransformData = RectTransformData.RectTransformToRectTransformData(noteContainer);
             if (noteData.noteContentRectTransformData.localScale == Vector3.zero)
             {
@@ -76,9 +76,9 @@ namespace EAR.Entity
 
         public void PopulateData(NoteData data)
         {
-            if (data.noteTransformData != null)
+            if (data.transform != null)
             {
-                TransformData.TransformDataToTransfrom(data.noteTransformData, transform);
+                TransformData.TransformDataToTransfrom(data.transform, transform);
                 transform.hasChanged = false;
             }
 

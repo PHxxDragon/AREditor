@@ -18,7 +18,7 @@ namespace EAR.Entity
             return "New image " + count++;
         }
 
-        public ImageData GetImageData()
+        public override EntityData GetData()
         {
             ImageData imageData = new ImageData();
             imageData.assetId = assetId;

@@ -98,9 +98,9 @@ namespace EAR.View
                 boxWidth.SetValue(noteData.boxWidth.Value);
             }
             
-            if (noteData.noteTransformData != null)
+            if (noteData.transform != null)
             {
-                transformInput.SetValue(noteData.noteTransformData);
+                transformInput.SetValue(noteData.transform);
             }
         }
         
@@ -182,7 +182,7 @@ namespace EAR.View
             transformInput.OnTransformChanged += (TransformData data) =>
             {
                 NoteData noteData = new NoteData();
-                noteData.noteTransformData = data;
+                noteData.transform = data;
                 OnNoteDataChanged?.Invoke(noteData);
             };
 

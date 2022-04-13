@@ -15,7 +15,7 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private UndoRedoManager undoRedoManager;
         [SerializeField]
-        private ToolBar toolbar;
+        private Toolbar toolbar;
 
         void Awake()
         {

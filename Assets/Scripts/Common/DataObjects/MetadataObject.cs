@@ -17,12 +17,16 @@ namespace EAR
     }
 
     [Serializable]
-    public class ButtonData
+    public class EntityData
     {
         public string id;
         public string name;
-
         public TransformData transform;
+    }
+
+    [Serializable]
+    public class ButtonData : EntityData
+    {
         public string activatorEntityId;
         public List<ButtonActionData> actionDatas;
     }
@@ -41,49 +45,33 @@ namespace EAR
     }
 
     [Serializable]
-    public class SoundData
+    public class SoundData : EntityData
     {
-        public string id;
-        public string name;
-
-        public TransformData transform;
         public string assetId;
         public bool? playAtStart;
         public bool? loop;
     }
 
     [Serializable]
-    public class ImageData
+    public class ImageData : EntityData
     {
-        public string id;
-        public string name;
-
-        public TransformData transform;
         public string assetId;
         public bool? isVisible;
     }
 
     [Serializable]
-    public class ModelData
+    public class ModelData : EntityData
     {
-        public string id;
-        public string name;
         public int? defaultAnimation;
-
-        public TransformData transform;
         public string assetId;
         public bool? isVisible;
     }
 
     [Serializable]
-    public class NoteData
+    public class NoteData : EntityData
     {
-        public string id;
-        public string name;
-
         public bool? isVisible;
 
-        public TransformData noteTransformData;
         public RectTransformData noteContentRectTransformData;
 
         public string noteContent;

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace EAR.View
 {
-    public class ToolBar: MonoBehaviour
+    public class Toolbar: MonoBehaviour
     {
         [SerializeField]
         private Toggle moveToggle;
@@ -25,6 +25,9 @@ namespace EAR.View
         private Toggle buttonAddToggle;
         [SerializeField]
         private Toggle soundAddToggle;
+
+        [SerializeField]
+        private Button duplicateButton;
 
         [SerializeField]
         private Toggle playToggle;
@@ -51,6 +54,7 @@ namespace EAR.View
         public event Action SaveButtonClicked;
         public event Action UndoButtonClicked;
         public event Action RedoButtonClicked;
+        public event Action DuplicateButtonClicked;
         public event Action ScreenshotButtonClicked;
         public event Action SettingButtonClicked;
 
@@ -81,7 +85,13 @@ namespace EAR.View
             screenshotButton.onClick.AddListener(ScreenshotButtonClick);
             settingButton.onClick.AddListener(SettingButtonClick);
             playToggle.onValueChanged.AddListener(PlayToggleClick);
+            duplicateButton.onClick.AddListener(DuplicateButtonClick);
             ApplyGlobalStates();
+        }
+
+        private void DuplicateButtonClick()
+        {
+            DuplicateButtonClicked?.Invoke();
         }
 
         private void SoundToggleActive(bool isOn)

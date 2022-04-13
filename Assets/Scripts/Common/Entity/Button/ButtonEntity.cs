@@ -43,7 +43,7 @@ namespace EAR.Entity
             }
         }
 
-        public ButtonData GetButtonData()
+        public override EntityData GetData()
         {
             ButtonData buttonData = new ButtonData();
             buttonData.transform = TransformData.TransformToTransformData(transform);

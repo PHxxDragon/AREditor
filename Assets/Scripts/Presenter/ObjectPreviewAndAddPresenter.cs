@@ -9,7 +9,7 @@ namespace EAR.Editor.Presenter
     public class ObjectPreviewAndAddPresenter : MonoBehaviour
     {
         [SerializeField]
-        private ToolBar toolbar;
+        private Toolbar toolbar;
         [SerializeField]
         private ObjectPreviewAndAdd objectPreviewAndAdd;
         [SerializeField]
@@ -61,7 +61,7 @@ namespace EAR.Editor.Presenter
                         {
                             NoteData noteData = new NoteData();
                             noteData.noteContent = LocalizationManager.GetLocalizedText("NoteFirstText");
-                            noteData.noteTransformData = transfomData;
+                            noteData.transform = transfomData;
                             NoteEntity note = NoteEntity.InstantNewEntity(noteData);
                             toolbar.SetDefaultTool();
                         });

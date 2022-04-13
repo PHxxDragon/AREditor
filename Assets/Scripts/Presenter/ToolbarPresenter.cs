@@ -17,7 +17,7 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private ReactPlugin reactPlugin;
         [SerializeField]
-        private ToolBar toolBar;
+        private Toolbar toolBar;
         [SerializeField]
         private ModelLoader modelLoader;
         [SerializeField]
@@ -73,19 +73,19 @@ namespace EAR.Editor.Presenter
             {
                 if (entity is ModelEntity modelEntity)
                 {
-                    metadataObject.modelDatas.Add(modelEntity.GetModelData());
+                    metadataObject.modelDatas.Add((ModelData) modelEntity.GetData());
                 } else if (entity is ImageEntity imageEntity)
                 {
-                    metadataObject.imageDatas.Add(imageEntity.GetImageData());
+                    metadataObject.imageDatas.Add((ImageData) imageEntity.GetData());
                 } else if (entity is NoteEntity noteEntity)
                 {
-                    metadataObject.noteDatas.Add(noteEntity.GetNoteData());
+                    metadataObject.noteDatas.Add((NoteData) noteEntity.GetData());
                 } else if (entity is ButtonEntity buttonEntity)
                 {
-                    metadataObject.buttonDatas.Add(buttonEntity.GetButtonData());
+                    metadataObject.buttonDatas.Add((ButtonData) buttonEntity.GetData());
                 } else if (entity is SoundEntity soundEntity)
                 {
-                    metadataObject.soundDatas.Add(soundEntity.GetSoundData());
+                    metadataObject.soundDatas.Add((SoundData) soundEntity.GetData());
                 }
             }
 

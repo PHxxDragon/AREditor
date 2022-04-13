@@ -10,6 +10,8 @@ namespace EAR.Editor.Presenter
     public class EntityPresenter : MonoBehaviour
     {
         [SerializeField]
+        private Toolbar toolbar;
+        [SerializeField]
         private SelectionManager selectionManager;
         [SerializeField]
         private ImageEditorWindow imageEditorWindow;
@@ -34,29 +36,29 @@ namespace EAR.Editor.Presenter
                 if (entity is ImageEntity imageEntity)
                 {
                     currentEntity = imageEntity;
-                    imageEditorWindow.PopulateData(imageEntity.GetImageData());
+                    imageEditorWindow.PopulateData((ImageData) imageEntity.GetData());
                     imageEditorWindow.OpenEditor();
                 } else if (entity is NoteEntity noteEntity)
                 {
                     currentEntity = noteEntity;
-                    noteEditorWindow.PopulateData(noteEntity.GetNoteData());
+                    noteEditorWindow.PopulateData((NoteData) noteEntity.GetData());
                     noteEditorWindow.OpenEditor();
                 } else if (entity is ModelEntity modelEntity)
                 {
                     currentEntity = modelEntity;
-                    modelEditorWindow.PopulateData(modelEntity.GetModelData());
+                    modelEditorWindow.PopulateData((ModelData) modelEntity.GetData());
                     modelEditorWindow.OpenEditor();
                 }
                 else if (entity is ButtonEntity buttonEntity)
                 {
                     currentEntity = buttonEntity;
-                    buttonEditorWindow.PopulateData(buttonEntity.GetButtonData());
+                    buttonEditorWindow.PopulateData((ButtonData) buttonEntity.GetData());
                     buttonEditorWindow.OpenEditor();
                 }
                 else if (entity is SoundEntity soundEntity)
                 {
                     currentEntity = soundEntity;
-                    soundEditorWindow.PopulateData(soundEntity.GetSoundData());
+                    soundEditorWindow.PopulateData((SoundData) soundEntity.GetData());
                     soundEditorWindow.OpenEditor();
                 }
             };
@@ -145,6 +147,17 @@ namespace EAR.Editor.Presenter
                     isBlocked = true;
                 }
             };
+
+            toolbar.DuplicateButtonClicked += () =>
+            {
+                if (currentEntity)
+                {
+                    EntityData entityData = currentEntity.GetData();
+                    entityData.id = null;
+                    entityData.name = null;
+                    EntityFactory.InstantNewEntity(entityData);
+                }
+            };
         }
 
         void Update()
@@ -161,7 +174,7 @@ namespace EAR.Editor.Presenter
                 else if (currentEntity is NoteEntity)
                 {
                     NoteData noteData = new NoteData();
-                    noteData.noteTransformData = transformData;
+                    noteData.transform = transformData;
                     noteEditorWindow.PopulateData(noteData);
                 }
                 else if (currentEntity is ModelEntity)
