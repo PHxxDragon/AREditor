@@ -155,6 +155,7 @@ namespace EAR.Editor.Presenter
                     EntityData entityData = currentEntity.GetData();
                     entityData.id = null;
                     entityData.name = null;
+                    entityData.transform.position += new Vector3(0.1f, 0.1f, 0.1f);
                     EntityFactory.InstantNewEntity(entityData);
                 }
             };
