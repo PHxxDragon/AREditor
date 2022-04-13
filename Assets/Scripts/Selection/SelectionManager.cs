@@ -8,7 +8,6 @@ namespace EAR.Selection
     {
         public event Action<Selectable> OnObjectSelected;
         public event Action<Selectable> OnObjectDeselected;
-        public event Action<IUndoRedoCommand> NewCommandEvent;
 
         private Selectable _currentSelection;
         private List<Selectable> selectionHistory = new List<Selectable>();
@@ -55,7 +54,7 @@ namespace EAR.Selection
             {
                 if (isPlayMode)
                 {
-                    DeselectWithUndo();
+                    DeselectObject();
                 }
             };
         }
@@ -96,66 +95,36 @@ namespace EAR.Selection
                 {
                     selectionHistory.Add(selectableWithMinLastIndex);
                     SelectObject(selectableWithMinLastIndex);
-                    IUndoRedoCommand command = new SelectCommand(selectableWithMinLastIndex, SelectObject, DeselectObject);
-                    NewCommandEvent?.Invoke(command);
                 }
 
                 if (selectables.Count == 0)
                 {
                     selectionHistory.Clear();
-                    DeselectWithUndo();
+                    DeselectObject();
                 }
             }
         }
 
-        private void DeselectWithUndo()
+        public void SelectObject(Selectable selectable)
         {
             if (_currentSelection != null)
             {
-                IUndoRedoCommand command = new DeselectCommand(_currentSelection, DeselectObject, SelectObject);
-                NewCommandEvent?.Invoke(command);
+                OnObjectDeselected?.Invoke(_currentSelection);
             }
-            DeselectObject();
-        }
-
-        public IUndoRedoCommand DeselectAndGetCommand()
-        {
-            if (_currentSelection != null)
+            if (selectable)
             {
-                IUndoRedoCommand command = new DeselectCommand(_currentSelection, DeselectObject, SelectObject);
-                DeselectObject();
-                return command;
-            } else
-            {
-                return null;
-            }
-            
-        }
-
-        private void SelectObject(Selectable selectable)
-        {
-            if (_currentSelection != null)
-            {
-                OnObjectDeselected(_currentSelection);
-            }
-            _currentSelection = selectable;
-            OnObjectSelected(_currentSelection);
-        }
-
-        private void DeselectObject()
-        {
-            if (_currentSelection != null)
-            {
-                OnObjectDeselected(_currentSelection);
-                _currentSelection = null;
+                _currentSelection = selectable;
+                _currentSelection.DestroyEvent += DeselectObject;
+                OnObjectSelected?.Invoke(_currentSelection);
             }
         }
 
-        private void ClearSelection()
+        public void DeselectObject()
         {
             if (_currentSelection != null)
             {
-                OnObjectDeselected(_currentSelection);
+                _currentSelection.DestroyEvent -= DeselectObject;
+                OnObjectDeselected?.Invoke(_currentSelection);
                 _currentSelection = null;
             }
         }
@@ -172,12 +141,12 @@ namespace EAR.Selection
 
         void OnDisable()
         {
-            ClearSelection();   
+            DeselectObject();   
         }
 
         void OnDestroy()
         {
-            ClearSelection();
+            DeselectObject();
         }
     }
 }

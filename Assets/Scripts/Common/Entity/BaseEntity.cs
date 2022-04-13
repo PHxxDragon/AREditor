@@ -40,6 +40,23 @@ namespace EAR.Entity
             return entityData;
         }
 
+        public virtual void PopulateData(EntityData entityData)
+        {
+            if (!string.IsNullOrEmpty(entityData.id))
+            {
+                SetId(entityData.id);
+            }
+            if (!string.IsNullOrEmpty(entityData.name))
+            {
+                SetEntityName(entityData.name);
+            }
+            if (entityData.transform != null)
+            {
+                TransformData.TransformDataToTransfrom(entityData.transform, transform);
+                transform.hasChanged = false;
+            }
+        }
+
         protected virtual string GetDefaultName()
         {
             return "New Entity";

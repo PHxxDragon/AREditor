@@ -58,36 +58,29 @@ namespace EAR.Entity
             return buttonData;
         }
 
-        public void PopulateData(ButtonData buttonData)
+        public override void PopulateData(EntityData entityData)
         {
-            if (!string.IsNullOrEmpty(buttonData.id))
+            if (entityData is ButtonData buttonData)
             {
-                SetId(buttonData.id);
-            }
+                base.PopulateData(entityData);
 
-            if (!string.IsNullOrEmpty(buttonData.name))
-            {
-                SetEntityName(buttonData.name);
-            }
-
-            if (buttonData.activatorEntityId != null)
-            {
-                SetActivatorEntityId(buttonData.activatorEntityId);
-            }
-
-            if (buttonData.transform != null)
-            {
-                TransformData.TransformDataToTransfrom(buttonData.transform, transform);
-                transform.hasChanged = false;
-            }
-
-            if (buttonData.actionDatas != null)
-            {
-                foreach (ButtonActionData buttonActionData in buttonData.actionDatas)
+                if (buttonData.activatorEntityId != null)
                 {
-                    actions.Add(ButtonActionFactory.CreateButtonAction(buttonActionData));
+                    SetActivatorEntityId(buttonData.activatorEntityId);
                 }
+
+                if (buttonData.actionDatas != null)
+                {
+                    foreach (ButtonActionData buttonActionData in buttonData.actionDatas)
+                    {
+                        actions.Add(ButtonActionFactory.CreateButtonAction(buttonActionData));
+                    }
+                }
+            } else
+            {
+                Debug.LogError("Wrong data class entity id " + entityData.id);
             }
+            
             
         }
 

@@ -8,6 +8,7 @@ namespace EAR.View
     public class NoteEditorWindow : MonoBehaviour
     {
         public event Action<NoteData> OnNoteDataChanged;
+        public event Action OnInteractionEnded;
         public event Action OnDeleteButtonClick;
 
         [SerializeField]
@@ -36,6 +37,8 @@ namespace EAR.View
         [SerializeField]
         private Button deleteButton;
 
+        private bool isPopulating;
+
         public void CloseEditor()
         {
             gameObject.SetActive(false);
@@ -48,6 +51,7 @@ namespace EAR.View
 
         public void PopulateData(NoteData noteData)
         {
+            isPopulating = true;
             if (!string.IsNullOrEmpty(noteData.name))
             {
                 nameInputField.text = noteData.name;
@@ -102,6 +106,7 @@ namespace EAR.View
             {
                 transformInput.SetValue(noteData.transform);
             }
+            isPopulating = false;
         }
         
 
@@ -113,78 +118,105 @@ namespace EAR.View
             });
             textInputField.onValueChanged.AddListener((string value) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.noteContent = value;
                 OnNoteDataChanged?.Invoke(noteData);
             });
+            textInputField.onEndEdit.AddListener((value) =>
+            {
+                Debug.Log(value);
+            });
 
             backgroundColorSelector.OnColorChanged += (Color color) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.textBackgroundColor = color;
                 OnNoteDataChanged?.Invoke(noteData);
             };
+            backgroundColorSelector.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
 
             borderWidth.OnValueChanged += (float value) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.borderWidth = new Vector4(value, value, value, value);
                 OnNoteDataChanged?.Invoke(noteData);
             };
+            borderWidth.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
 
             borderRadius.OnValueChanged += (float value) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.textBorderRadius = new Vector4(value, value, value, value);
                 OnNoteDataChanged?.Invoke(noteData);
             };
+            borderRadius.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
 
             borderColorSelector.OnColorChanged += (Color color) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.borderColor = color;
                 OnNoteDataChanged?.Invoke(noteData);
             };
+            borderColorSelector.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
 
             fontSize.OnValueChanged += (float value) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.fontSize = (int) value;
                 OnNoteDataChanged?.Invoke(noteData);
             };
+            fontSize.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
 
             fontColor.OnColorChanged += (Color color) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.textColor = color;
                 OnNoteDataChanged?.Invoke(noteData);
             };
+            fontColor.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
 
             boxWidth.OnValueChanged += (float value) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.boxWidth = value;
                 OnNoteDataChanged?.Invoke(noteData);
             };
+            boxWidth.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
+
             nameInputField.onValueChanged.AddListener((name) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.name = name;
                 OnNoteDataChanged?.Invoke(noteData);
             });
+            nameInputField.onEndEdit.AddListener((text) => OnInteractionEnded?.Invoke());
+
             isVisible.onValueChanged.AddListener((isVisible) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.isVisible = isVisible;
                 OnNoteDataChanged?.Invoke(noteData);
+                OnInteractionEnded?.Invoke();
             });
 
             transformInput.OnTransformChanged += (TransformData data) =>
             {
+                if (isPopulating) return;
                 NoteData noteData = new NoteData();
                 noteData.transform = data;
                 OnNoteDataChanged?.Invoke(noteData);
             };
+            transformInput.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
 
             CloseEditor();
         }

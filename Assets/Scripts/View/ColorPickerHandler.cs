@@ -2,11 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System;
 
 namespace EAR.View
 {
     public class ColorPickerHandler : MonoBehaviour
     {
+        public event Action<ColorSelector> OnColorSelectorChanged;
+
         [SerializeField]
         private GraphicRaycaster raycaster;
         [SerializeField]
@@ -22,7 +25,12 @@ namespace EAR.View
 
         public void SetColorSelector(ColorSelector colorSelector)
         {
-            this.colorSelector = colorSelector;
+            if (this.colorSelector != colorSelector)
+            {
+                this.colorSelector = colorSelector;
+                OnColorSelectorChanged?.Invoke(colorSelector);
+            }
+            
         }
 
         void Start()
@@ -61,6 +69,8 @@ namespace EAR.View
                         return;
                     }
                 }
+                colorSelector = null;
+                OnColorSelectorChanged?.Invoke(colorSelector);
                 gameObject.SetActive(false);
             }
         }

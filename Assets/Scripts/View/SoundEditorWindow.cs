@@ -9,6 +9,7 @@ namespace EAR.View
     public class SoundEditorWindow : MonoBehaviour
     {
         public event Action<SoundData> OnSoundChanged;
+        public event Action OnInteractionEnded;
         public event Action OnDelete;
 
         [SerializeField]
@@ -24,38 +25,49 @@ namespace EAR.View
         [SerializeField]
         private Button deleteButton;
 
+        private bool isPopulating = false;
         void Awake()
         {
             assetDropdown.OnDropdownValueChanged += (obj) =>
             {
+                if (isPopulating) return;
                 SoundData soundData = new SoundData();
                 soundData.assetId = (string)obj;
                 OnSoundChanged?.Invoke(soundData);
+                OnInteractionEnded?.Invoke();
             };
             playAtStartToggle.onValueChanged.AddListener((value) =>
             {
+                if (isPopulating) return;
                 SoundData soundData = new SoundData();
                 soundData.playAtStart = value;
                 OnSoundChanged?.Invoke(soundData);
+                OnInteractionEnded?.Invoke();
             });
             loopToggle.onValueChanged.AddListener((value) =>
             {
+                if (isPopulating) return;
                 SoundData soundData = new SoundData();
                 soundData.loop = value;
                 OnSoundChanged?.Invoke(soundData);
+                OnInteractionEnded?.Invoke();
             });
             nameInputField.onValueChanged.AddListener((name) =>
             {
+                if (isPopulating) return;
                 SoundData soundData = new SoundData();
                 soundData.name = name;
                 OnSoundChanged?.Invoke(soundData);
             });
+            nameInputField.onEndEdit.AddListener((text) => OnInteractionEnded?.Invoke());
             transformInput.OnTransformChanged += (value) =>
             {
+                if (isPopulating) return;
                 SoundData soundData = new SoundData();
                 soundData.transform = value;
                 OnSoundChanged?.Invoke(soundData);
             };
+            transformInput.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
             deleteButton.onClick.AddListener(() =>
             {
                 OnDelete?.Invoke();
@@ -89,7 +101,11 @@ namespace EAR.View
 
         public void PopulateData(SoundData soundData)
         {
-            assetDropdown.SelectValue(soundData.assetId);
+            isPopulating = true;
+            if (soundData.assetId != null)
+            {
+                assetDropdown.SelectValue(soundData.assetId);
+            }
             if (soundData.playAtStart.HasValue)
             {
                 playAtStartToggle.isOn = soundData.playAtStart.Value;
@@ -107,6 +123,7 @@ namespace EAR.View
             {
                 transformInput.SetValue(soundData.transform);
             }
+            isPopulating = false;
         }
     }
 }

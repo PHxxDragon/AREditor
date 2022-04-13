@@ -1,10 +1,12 @@
 using UnityEngine;
+using System;
 
 namespace EAR.Selection
 {
     //[RequireComponent(typeof(Outline))]
     public class Selectable : MonoBehaviour
     {
+        public event Action DestroyEvent;
 /*        private readonly Color outlineColor = Color.yellow;
         private readonly float outlineWidth = 6f;*/
 
@@ -23,6 +25,11 @@ namespace EAR.Selection
         void Awake()
         {
             InitializeOutlineComponent();
+        }
+
+        void OnDestroy()
+        {
+            DestroyEvent?.Invoke();
         }
 
         private void InitializeOutlineComponent()

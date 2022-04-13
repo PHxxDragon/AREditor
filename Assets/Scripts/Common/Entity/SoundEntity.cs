@@ -75,42 +75,35 @@ namespace EAR.Entity
             return soundData;
         }
 
-        public void PopulateData(SoundData soundData)
+        public override void PopulateData(EntityData entityData)
         {
-            if (!string.IsNullOrEmpty(soundData.id))
+            if (entityData is SoundData soundData)
             {
-                SetId(soundData.id);
-            }
+                base.PopulateData(entityData);
 
-            if (!string.IsNullOrEmpty(soundData.name))
+                if (soundData.playAtStart.HasValue)
+                {
+                    playAtStart = soundData.playAtStart.Value;
+                }
+
+                AudioSource audioSource = GetComponentInChildren<AudioSource>();
+
+                if (soundData.loop.HasValue)
+                {
+                    audioSource.loop = soundData.loop.Value;
+                }
+
+                if (soundData.assetId != null)
+                {
+                    AudioClip audioClip = AssetContainer.Instance.GetSound(soundData.assetId);
+                    audioSource.clip = audioClip;
+                    assetId = soundData.assetId;
+                }
+            } else
             {
-                SetEntityName(soundData.name);
+                Debug.LogError("Wrong data class entity id: " + entityData.id);
             }
-
-            if (soundData.playAtStart.HasValue)
-            {
-                playAtStart = soundData.playAtStart.Value;
-            }
-
-            AudioSource audioSource = GetComponentInChildren<AudioSource>();
-
-            if (soundData.loop.HasValue)
-            {
-                audioSource.loop = soundData.loop.Value;
-            }
-
-            if (soundData.assetId != null)
-            {
-                AudioClip audioClip = AssetContainer.Instance.GetSound(soundData.assetId);
-                audioSource.clip = audioClip;
-                assetId = soundData.assetId;
-            }
-
-            if (soundData.transform != null)
-            {
-                TransformData.TransformDataToTransfrom(soundData.transform, transform);
-                transform.hasChanged = false;
-            }
+            
         }
 
         public static SoundEntity InstantNewEntity(SoundData soundData)

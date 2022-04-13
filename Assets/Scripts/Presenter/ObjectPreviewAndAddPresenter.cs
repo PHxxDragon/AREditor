@@ -3,6 +3,8 @@ using EAR.View;
 using EAR.AddObject;
 using EAR.Entity;
 using EAR.Localization;
+using EAR.UndoRedo;
+using EAR.Selection;
 
 namespace EAR.Editor.Presenter
 {
@@ -10,6 +12,10 @@ namespace EAR.Editor.Presenter
     {
         [SerializeField]
         private Toolbar toolbar;
+        [SerializeField]
+        private SelectionManager selectionManager;
+        [SerializeField]
+        private UndoRedoManager undoRedoManager;
         [SerializeField]
         private ObjectPreviewAndAdd objectPreviewAndAdd;
         [SerializeField]
@@ -34,8 +40,10 @@ namespace EAR.Editor.Presenter
                         {
                             ImageData imageData = new ImageData();
                             imageData.transform = transform;
-                            ImageEntity.InstantNewEntity(imageData);
+                            BaseEntity addedEntity = ImageEntity.InstantNewEntity(imageData);
                             toolbar.SetDefaultTool();
+                            AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
+                            undoRedoManager.AddCommand(add);
                         });
                         break;
                     case ToolEnum.AddButton:
@@ -43,8 +51,10 @@ namespace EAR.Editor.Presenter
                         {
                             ButtonData buttonData = new ButtonData();
                             buttonData.transform = transformData;
-                            ButtonEntity buttonEntity = ButtonEntity.InstantNewEntity(buttonData);
+                            BaseEntity addedEntity = ButtonEntity.InstantNewEntity(buttonData);
                             toolbar.SetDefaultTool();
+                            AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
+                            undoRedoManager.AddCommand(add);
                         });
                         break;
                     case ToolEnum.AddModel:
@@ -52,8 +62,10 @@ namespace EAR.Editor.Presenter
                         {
                             ModelData modelData = new ModelData();
                             modelData.transform = transformData;
-                            ModelEntity.InstantNewEntity(modelData);
+                            BaseEntity addedEntity = ModelEntity.InstantNewEntity(modelData);
                             toolbar.SetDefaultTool();
+                            AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
+                            undoRedoManager.AddCommand(add);
                         });
                         break;
                     case ToolEnum.AddNote:
@@ -62,21 +74,22 @@ namespace EAR.Editor.Presenter
                             NoteData noteData = new NoteData();
                             noteData.noteContent = LocalizationManager.GetLocalizedText("NoteFirstText");
                             noteData.transform = transfomData;
-                            NoteEntity note = NoteEntity.InstantNewEntity(noteData);
+                            BaseEntity addedEntity = NoteEntity.InstantNewEntity(noteData);
                             toolbar.SetDefaultTool();
+                            AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
+                            undoRedoManager.AddCommand(add);
                         });
                         break;
                     case ToolEnum.AddSound:
-                        if (current == ToolEnum.AddSound)
+                        objectPreviewAndAdd.StartPreviewAndAdd(soundPreviewPrefab, (TransformData transformData) =>
                         {
-                            objectPreviewAndAdd.StartPreviewAndAdd(soundPreviewPrefab, (TransformData transformData) =>
-                            {
-                                SoundData soundData = new SoundData();
-                                soundData.transform = transformData;
-                                SoundEntity.InstantNewEntity(soundData);
-                                toolbar.SetDefaultTool();
-                            });
-                        }
+                            SoundData soundData = new SoundData();
+                            soundData.transform = transformData;
+                            BaseEntity addedEntity = SoundEntity.InstantNewEntity(soundData);
+                            toolbar.SetDefaultTool();
+                            AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
+                            undoRedoManager.AddCommand(add);
+                        });
                         break;
                     default:
                         objectPreviewAndAdd.StopPreview();

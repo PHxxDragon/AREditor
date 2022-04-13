@@ -7,6 +7,7 @@ namespace EAR.View
     public class ColorSelector : MonoBehaviour
     {
         public event Action<Color> OnColorChanged;
+        public event Action OnInteractionEnded;
 
         [SerializeField]
         private Image image;
@@ -30,6 +31,16 @@ namespace EAR.View
             colorPicker.gameObject.SetActive(true);
             colorPicker.SetColorSelector(this);
             colorPicker.SetColor(image.color);
+            colorPicker.OnColorSelectorChanged += ColorSelectorChangedHandler;
+        }
+
+        private void ColorSelectorChangedHandler(ColorSelector colorSelector)
+        {
+            if (colorSelector != this)
+            {
+                colorPicker.OnColorSelectorChanged -= ColorSelectorChangedHandler;
+                OnInteractionEnded?.Invoke();
+            }
         }
 
         public void SetColor(Color color)

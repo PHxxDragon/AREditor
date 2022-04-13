@@ -100,39 +100,30 @@ namespace EAR.Entity
             }
         }
 
-        public void PopulateData(ModelData modelData)
+        public override void PopulateData(EntityData entityData)
         {
-            if (modelData.assetId != null)
+            if (entityData is ModelData modelData)
             {
-                SetModel(modelData.assetId);
-            }
+                base.PopulateData(entityData);
 
-            if (modelData.isVisible.HasValue)
+                if (modelData.assetId != null)
+                {
+                    SetModel(modelData.assetId);
+                }
+
+                if (modelData.isVisible.HasValue)
+                {
+                    isVisible = modelData.isVisible.Value;
+                }
+
+                if (modelData.defaultAnimation.HasValue)
+                {
+                    defaultAnimationIndex = modelData.defaultAnimation.Value;
+                }
+            } else
             {
-                isVisible = modelData.isVisible.Value;
+                Debug.LogError("Wrong data class entity id: " + entityData.id);
             }
-
-            if (!string.IsNullOrEmpty(modelData.name))
-            {
-                SetEntityName(modelData.name);
-            }
-
-            if (modelData.transform != null)
-            {
-                TransformData.TransformDataToTransfrom(modelData.transform, transform);
-                transform.hasChanged = false;
-            }
-
-            if (!string.IsNullOrEmpty(modelData.id))
-            {
-                SetId(modelData.id);
-            }
-
-            if (modelData.defaultAnimation.HasValue)
-            {
-                defaultAnimationIndex = modelData.defaultAnimation.Value;
-            }
-
         }
 
         public static ModelEntity InstantNewEntity(ModelData modelData)

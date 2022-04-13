@@ -8,6 +8,7 @@ namespace EAR.View
     public class InputFieldWithSlider : MonoBehaviour
     {
         public event Action<float> OnValueChanged;
+        public event Action OnInteractionEnded;
 
         [SerializeField]
         private Slider slider;
@@ -34,6 +35,11 @@ namespace EAR.View
         {
             slider.maxValue = max;
             this.max = max;
+        }
+
+        public void EndInteract()
+        {
+            OnInteractionEnded?.Invoke();
         }
 
         void Awake()
@@ -69,6 +75,8 @@ namespace EAR.View
             });
 
             inputField.text = slider.value.ToString();
+
+            inputField.onEndEdit.AddListener((text) => OnInteractionEnded?.Invoke());
         }
     }
 }

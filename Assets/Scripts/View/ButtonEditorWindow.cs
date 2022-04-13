@@ -11,6 +11,7 @@ namespace EAR.View
     public class ButtonEditorWindow : MonoBehaviour
     {
         public event Action<ButtonData> OnButtonDataChanged;
+        public event Action OnInteractionEnded;
         public event Action OnButtonDelete;
 
         [SerializeField]
@@ -29,14 +30,16 @@ namespace EAR.View
         private Button deleteButton;
 
         private List<ButtonActionData> buttonActionDatas;
-
+        private bool isPopulating;
         private void Awake()
         {
             listenerEntityId.OnDropdownValueChanged += (value) =>
             {
+                if (isPopulating) return;
                 ButtonData buttonData = new ButtonData();
                 buttonData.activatorEntityId = (string)value;
                 OnButtonDataChanged?.Invoke(buttonData);
+                OnInteractionEnded?.Invoke();
             };
             addButton.onClick.AddListener(() =>
             {
@@ -46,24 +49,28 @@ namespace EAR.View
                 ButtonData buttonData = new ButtonData();
                 buttonData.actionDatas = new List<ButtonActionData>(buttonActionDatas);
                 OnButtonDataChanged?.Invoke(buttonData);
-                OnButtonDataChanged?.Invoke(buttonData);
+                OnInteractionEnded?.Invoke();
             });
             nameInputField.onValueChanged.AddListener((name) =>
             {
+                if (isPopulating) return;
                 ButtonData buttonData = new ButtonData();
                 buttonData.name = name;
                 OnButtonDataChanged?.Invoke(buttonData);
             });
+            nameInputField.onEndEdit.AddListener((text) => OnInteractionEnded?.Invoke());
             deleteButton.onClick.AddListener(() =>
             {
                 OnButtonDelete?.Invoke();
             });
             transformInput.OnTransformChanged += (value) =>
             {
+                if (isPopulating) return;
                 ButtonData buttonData = new ButtonData();
                 buttonData.transform = value;
                 OnButtonDataChanged?.Invoke(buttonData);
             };
+            transformInput.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
             CloseEditor();
         }
 
@@ -94,6 +101,7 @@ namespace EAR.View
 
         public void PopulateData(ButtonData buttonData)
         {
+            isPopulating = true;
             UpdateEntityList();
             if (buttonData.activatorEntityId != null)
             {
@@ -111,6 +119,7 @@ namespace EAR.View
             {
                 transformInput.SetValue(buttonData.transform);
             }
+            isPopulating = false;
         }
 
         private void PopulateData(List<ButtonActionData> buttonActionDatas)
@@ -140,6 +149,7 @@ namespace EAR.View
                 ButtonData buttonData = new ButtonData();
                 buttonData.actionDatas = new List<ButtonActionData>(buttonActionDatas);
                 OnButtonDataChanged?.Invoke(buttonData);
+                OnInteractionEnded?.Invoke();
             };
             buttonActionPanel.OnDelete += () =>
             {
@@ -148,6 +158,7 @@ namespace EAR.View
                 buttonData.actionDatas = new List<ButtonActionData>(buttonActionDatas);
                 OnButtonDataChanged?.Invoke(buttonData);
                 Destroy(buttonActionPanel.gameObject);
+                OnInteractionEnded?.Invoke();
             };
         }
 

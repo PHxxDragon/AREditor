@@ -7,6 +7,7 @@ using EAR.Entity;
 using System.Collections.Generic;
 using RuntimeHandle;
 using EAR.Container;
+using EAR.UndoRedo;
 
 namespace EAR.Editor.Presenter 
 {
@@ -17,7 +18,7 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private ReactPlugin reactPlugin;
         [SerializeField]
-        private Toolbar toolBar;
+        private Toolbar toolbar;
         [SerializeField]
         private ModelLoader modelLoader;
         [SerializeField]
@@ -26,12 +27,14 @@ namespace EAR.Editor.Presenter
         private SettingWindow environmentEditorWindow;
         [SerializeField]
         private EnvironmentController environmentController;
+        [SerializeField]
+        private UndoRedoManager undoRedoManager;
 
         void Start()
         {
-            if (screenshot != null && reactPlugin != null && toolBar != null)
+            if (screenshot != null && reactPlugin != null && toolbar != null)
             {
-                toolBar.ScreenshotButtonClicked += () =>
+                toolbar.ScreenshotButtonClicked += () =>
                 {
                     screenshot.TakeScreenshot();
                 };
@@ -44,19 +47,22 @@ namespace EAR.Editor.Presenter
                 Debug.Log("Unassigned references");
             }
 
-            toolBar.SaveButtonClicked += SaveButtonClicked;
+            toolbar.SaveButtonClicked += SaveButtonClicked;
 
-            if (toolBar != null && runtimeTransformHandle != null)
+            toolbar.RedoButtonClicked += undoRedoManager.PerformRedo;
+            toolbar.UndoButtonClicked += undoRedoManager.PerformUndo;
+
+            if (toolbar != null && runtimeTransformHandle != null)
             {
-                SetHandle(ToolEnum.Move, toolBar.GetActiveTool());
-                toolBar.OnToolChanged += SetHandle;
+                SetHandle(ToolEnum.Move, toolbar.GetActiveTool());
+                toolbar.OnToolChanged += SetHandle;
             } else
             {
                 Debug.Log("Unassigned references");
             }
-            if (toolBar != null && runtimeTransformHandle != null)
+            if (toolbar != null && runtimeTransformHandle != null)
             {
-                toolBar.SettingButtonClicked += () =>
+                toolbar.SettingButtonClicked += () =>
                 {
                     environmentEditorWindow.gameObject.SetActive(true);
                 };

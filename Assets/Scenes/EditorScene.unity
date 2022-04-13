@@ -329,6 +329,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4361020698310562701, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.5999756
+      objectReference: {fileID: 0}
     - target: {fileID: 4361020698604301185, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_Name
       value: FontSize
@@ -423,7 +427,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4361020698858030368, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.49996948
+      value: -0.49993896
       objectReference: {fileID: 0}
     - target: {fileID: 4361020699596228913, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -3739,6 +3743,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4361020698310562701, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.5999756
+      objectReference: {fileID: 0}
     - target: {fileID: 4361020698604301185, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_Name
       value: BoxWidth
@@ -3829,7 +3837,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4361020698858030368, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.49996948
+      value: -0.49993896
       objectReference: {fileID: 0}
     - target: {fileID: 4361020699596228913, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -7807,7 +7815,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 781915154}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &555483167
 MonoBehaviour:
@@ -7822,6 +7830,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toolbar: {fileID: 1622898299}
+  selectionManager: {fileID: 1608426110}
+  undoRedoManager: {fileID: 1531939897}
   objectPreviewAndAdd: {fileID: 1298660160}
   imagePreviewPrefab: {fileID: 264715914939091998, guid: 4b55b5556b946c447a4830ba223ea5c5, type: 3}
   modelPreviewPrefab: {fileID: 4106945951540867609, guid: ba1bb430beb08174ca37a164e09e4d26, type: 3}
@@ -8821,6 +8831,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4361020698310562701, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.5999756
+      objectReference: {fileID: 0}
     - target: {fileID: 4361020698604301185, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_Name
       value: Height
@@ -8911,7 +8925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4361020698858030368, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.49996948
+      value: -0.49993896
       objectReference: {fileID: 0}
     - target: {fileID: 4361020699596228913, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -9404,6 +9418,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4361020698310562701, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.5999756
+      objectReference: {fileID: 0}
     - target: {fileID: 4361020698604301185, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_Name
       value: BorderWidth
@@ -9494,7 +9512,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4361020698858030368, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.49996948
+      value: -0.49993896
       objectReference: {fileID: 0}
     - target: {fileID: 4361020699596228913, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -11189,7 +11207,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 781915154}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &771308376
 MonoBehaviour:
@@ -11237,7 +11255,6 @@ Transform:
   - {fileID: 959846488}
   - {fileID: 865263912}
   - {fileID: 1059282193}
-  - {fileID: 2047606200}
   - {fileID: 771308375}
   - {fileID: 555483166}
   - {fileID: 1963827084}
@@ -11762,6 +11779,10 @@ PrefabInstance:
     - target: {fileID: 4361020698310562698, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_CharacterValidation
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4361020698330803709, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
+      propertyPath: m_text
+      value: "0\u200B"
       objectReference: {fileID: 0}
     - target: {fileID: 4361020698604301185, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_Name
@@ -22495,11 +22516,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screenshot: {fileID: 1757731234}
   reactPlugin: {fileID: 291130859}
-  toolBar: {fileID: 1622898299}
+  toolbar: {fileID: 1622898299}
   modelLoader: {fileID: 559619178}
   runtimeTransformHandle: {fileID: 705176986}
   environmentEditorWindow: {fileID: 6283404679270321386}
   environmentController: {fileID: 1311712160}
+  undoRedoManager: {fileID: 1531939897}
 --- !u!1 &1637142751
 GameObject:
   m_ObjectHideFlags: 0
@@ -28702,7 +28724,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 781915154}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1963827085
 MonoBehaviour:
@@ -28717,6 +28739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toolbar: {fileID: 1622898299}
+  undoRedoManager: {fileID: 1531939897}
   selectionManager: {fileID: 1608426110}
   imageEditorWindow: {fileID: 1706304940}
   modelEditorWindow: {fileID: 443068906}
@@ -29946,53 +29969,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2037877932}
   m_CullTransparentMesh: 1
---- !u!1 &2047606199
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2047606200}
-  - component: {fileID: 2047606201}
-  m_Layer: 0
-  m_Name: UndoRedo
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2047606200
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2047606199}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 781915154}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2047606201
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2047606199}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5470917bd5dba7d4fa741469f7c41652, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  runtimeTransformHandle: {fileID: 705176986}
-  selectionManager: {fileID: 1608426110}
-  undoRedoManager: {fileID: 1531939897}
-  toolbar: {fileID: 1622898299}
 --- !u!1 &2050022631
 GameObject:
   m_ObjectHideFlags: 0
@@ -33896,6 +33872,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4361020698310562701, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.5999756
+      objectReference: {fileID: 0}
     - target: {fileID: 4361020698604301185, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_Name
       value: BorderRadius
@@ -33990,7 +33970,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4361020698858030368, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.49996948
+      value: -0.49993896
       objectReference: {fileID: 0}
     - target: {fileID: 4361020699596228913, guid: 9d648d958cf4e2b449d07275fd8f35d8, type: 3}
       propertyPath: m_AnchoredPosition.x

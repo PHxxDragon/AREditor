@@ -7,6 +7,7 @@ namespace EAR.View
     public class Vector3Input : MonoBehaviour
     {
         public event Action<Vector3> OnValueChanged;
+        public event Action OnInteractionEnded;
 
         [SerializeField]
         private TMP_InputField xInputField;
@@ -18,6 +19,9 @@ namespace EAR.View
         void Awake()
         {
             AddListeners();
+            xInputField.onEndEdit.AddListener((text) => OnInteractionEnded?.Invoke());
+            yInputField.onEndEdit.AddListener((text) => OnInteractionEnded?.Invoke());
+            zInputField.onEndEdit.AddListener((text) => OnInteractionEnded?.Invoke());
         }
 
         public Vector3 GetValue()

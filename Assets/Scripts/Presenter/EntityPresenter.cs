@@ -2,6 +2,7 @@ using EAR.Selection;
 using EAR.View;
 using EAR.Entity;
 using EAR.EARCamera;
+using EAR.UndoRedo;
 using UnityEngine;
 using System;
 
@@ -11,6 +12,8 @@ namespace EAR.Editor.Presenter
     {
         [SerializeField]
         private Toolbar toolbar;
+        [SerializeField]
+        private UndoRedoManager undoRedoManager;
         [SerializeField]
         private SelectionManager selectionManager;
         [SerializeField]
@@ -27,6 +30,8 @@ namespace EAR.Editor.Presenter
         private CameraController cameraController;
 
         private BaseEntity currentEntity;
+        private bool entityModified = false;
+        private EntityData entityData;
 
         void Start()
         {
@@ -65,6 +70,7 @@ namespace EAR.Editor.Presenter
 
             selectionManager.OnObjectDeselected += (Selectable selectable) =>
             {
+                EndModify();
                 currentEntity = null;
                 BaseEntity entity = selectable.GetComponent<BaseEntity>();
                 if (imageEditorWindow) imageEditorWindow.CloseEditor();
@@ -83,9 +89,11 @@ namespace EAR.Editor.Presenter
             {
                 if (currentEntity is ImageEntity imageEntity)
                 {
+                    StartModify();
                     imageEntity.PopulateData(imageData);
                 }
             };
+            imageEditorWindow.OnInteractionEnded += EndModify;
 
             buttonEditorWindow.OnButtonDelete += () =>
             {
@@ -95,10 +103,11 @@ namespace EAR.Editor.Presenter
             {
                 if (currentEntity is ButtonEntity buttonEntity)
                 {
+                    StartModify();
                     buttonEntity.PopulateData(buttonData);
                 }
             };
-
+            buttonEditorWindow.OnInteractionEnded += EndModify;
 
             modelEditorWindow.OnModelDelete += () =>
             {
@@ -108,9 +117,11 @@ namespace EAR.Editor.Presenter
             {
                 if (currentEntity is ModelEntity modelEntity)
                 {
+                    StartModify();
                     modelEntity.PopulateData(modelData);
                 }
             };
+            modelEditorWindow.OnInteractionEnded += EndModify;
 
             noteEditorWindow.OnDeleteButtonClick += () =>
             {
@@ -120,9 +131,11 @@ namespace EAR.Editor.Presenter
             {
                 if (currentEntity is NoteEntity noteEntity)
                 {
+                    StartModify();
                     noteEntity.PopulateData(noteData);
                 }
             };
+            noteEditorWindow.OnInteractionEnded += EndModify;
 
             soundEditorWindow.OnDelete += () =>
             {
@@ -132,9 +145,11 @@ namespace EAR.Editor.Presenter
             {
                 if (currentEntity is SoundEntity soundEntity)
                 {
+                    StartModify();
                     soundEntity.PopulateData(soundData);
                 }
             };
+            soundEditorWindow.OnInteractionEnded += EndModify;
 
             cameraController.CheckKeyboardBlocked += (ref bool isBlocked) =>
             {
@@ -156,9 +171,14 @@ namespace EAR.Editor.Presenter
                     entityData.id = null;
                     entityData.name = null;
                     entityData.transform.position += new Vector3(0.1f, 0.1f, 0.1f);
-                    EntityFactory.InstantNewEntity(entityData);
+                    BaseEntity addedEntity = EntityFactory.InstantNewEntity(entityData);
+                    AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
+                    undoRedoManager.AddCommand(add);
                 }
             };
+
+            undoRedoManager.OnBeforeRedo += EndModify;
+            undoRedoManager.OnBeforeUndo += EndModify;
         }
 
         void Update()
@@ -196,15 +216,40 @@ namespace EAR.Editor.Presenter
                     soundData.transform = transformData;
                     soundEditorWindow.PopulateData(soundData);
                 }
+                StartModify();
                 currentEntity.transform.hasChanged = false;
+            } else if (Input.GetMouseButtonUp(0))
+            {
+                EndModify();
+            }
+        }
+
+        private void StartModify()
+        {
+            if (!entityModified)
+            {
+                entityModified = true;
+                entityData = currentEntity.GetData();
+            }
+        }
+
+        private void EndModify()
+        {
+            if (entityModified)
+            {
+                ChangeEntityCommand change = new ChangeEntityCommand(selectionManager, entityData, currentEntity.GetData());
+                undoRedoManager.AddCommand(change);
+                entityModified = false;
             }
         }
 
         private void CheckAndDestroy(Type type)
         {
-            if (currentEntity.GetType() == type)
+            if (currentEntity && currentEntity.GetType() == type)
             {
-                Destroy(currentEntity);
+                RemoveEntityCommand remove = new RemoveEntityCommand(selectionManager, currentEntity.GetData());
+                undoRedoManager.AddCommand(remove);
+                Destroy(currentEntity.gameObject);
             }
         }
     }

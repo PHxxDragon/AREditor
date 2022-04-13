@@ -46,33 +46,26 @@ namespace EAR.Entity
             this.image.sprite = Utils.Instance.Texture2DToSprite(image);
         }
 
-        public void PopulateData(ImageData imageData)
+        public override void PopulateData(EntityData entityData)
         {
-            if (imageData.isVisible.HasValue)
+            if (entityData is ImageData imageData)
             {
-                isVisible = imageData.isVisible.Value;
-            }
+                base.PopulateData(entityData);
 
-            if (!string.IsNullOrEmpty(imageData.id))
-            {
-                SetId(imageData.id);
-            }
+                if (imageData.isVisible.HasValue)
+                {
+                    isVisible = imageData.isVisible.Value;
+                }
 
-            if (imageData.assetId != null)
+                if (imageData.assetId != null)
+                {
+                    SetImage(imageData.assetId);
+                }
+            } else
             {
-                SetImage(imageData.assetId);
+                Debug.LogError("Wrong data class entity id " + entityData.id);
             }
-
-            if (!string.IsNullOrEmpty(imageData.name))
-            {
-                SetEntityName(imageData.name);
-            }
-
-            if (imageData.transform != null)
-            {
-                TransformData.TransformDataToTransfrom(imageData.transform, transform);
-                transform.hasChanged = false;
-            }
+            
         }
 
         public static ImageEntity InstantNewEntity(ImageData imageData)

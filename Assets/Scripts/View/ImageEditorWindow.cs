@@ -9,6 +9,7 @@ namespace EAR.View
     public class ImageEditorWindow : MonoBehaviour
     {
         public event Action<ImageData> OnImageChanged;
+        public event Action OnInteractionEnded;
         public event Action OnImageDelete;
 
         [SerializeField]
@@ -22,13 +23,17 @@ namespace EAR.View
         [SerializeField]
         private Button deleteButton;
 
+        private bool isPopulating = false;
+
         void Awake()
         {
             dropdown.OnDropdownValueChanged += (value) =>
             {
+                if (isPopulating) return;
                 ImageData data = new ImageData();
                 data.assetId = (string)value;
                 OnImageChanged?.Invoke(data);
+                OnInteractionEnded?.Invoke();
             };
             deleteButton.onClick.AddListener(() =>
             {
@@ -36,23 +41,28 @@ namespace EAR.View
             });
             nameInputField.onValueChanged.AddListener((name) =>
             {
+                if (isPopulating) return;
                 ImageData data = new ImageData();
                 data.name = name;
                 OnImageChanged?.Invoke(data);
             });
+            nameInputField.onEndEdit.AddListener((text) => OnInteractionEnded?.Invoke());
             isVisible.onValueChanged.AddListener((isVisible) =>
             {
+                if (isPopulating) return;
                 ImageData data = new ImageData();
                 data.isVisible = isVisible;
                 OnImageChanged?.Invoke(data);
+                OnInteractionEnded?.Invoke();
             });
             transformInput.OnTransformChanged += (transformData) =>
             {
+                if (isPopulating) return;
                 ImageData data = new ImageData();
                 data.transform = transformData;
                 OnImageChanged?.Invoke(data);
             };
-
+            transformInput.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
         }
 
         void Start()
@@ -82,6 +92,7 @@ namespace EAR.View
 
         public void PopulateData(ImageData imageData)
         {
+            isPopulating = true;
             if (imageData.assetId != null)
             {
                 dropdown.SelectValue(imageData.assetId);
@@ -101,6 +112,7 @@ namespace EAR.View
             {
                 transformInput.SetValue(imageData.transform);
             }
+            isPopulating = false;
         }
     }
 }

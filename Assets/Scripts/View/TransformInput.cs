@@ -6,6 +6,7 @@ namespace EAR.View
     public class TransformInput : MonoBehaviour
     {
         public event Action<TransformData> OnTransformChanged;
+        public event Action OnInteractionEnded;
 
         [SerializeField]
         private Vector3Input position;
@@ -17,6 +18,9 @@ namespace EAR.View
         void Awake()
         {
             AddCallback();
+            position.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
+            rotation.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
+            scale.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
         }
 
         private void AddCallback()

@@ -11,6 +11,7 @@ namespace EAR.View
     public class ModelEditorWindow : MonoBehaviour
     {
         public event Action<ModelData> OnModelChanged;
+        public event Action OnInteractionEnded;
         public event Action OnModelDelete;
 
         [SerializeField]
@@ -28,20 +29,26 @@ namespace EAR.View
         [SerializeField]
         private Button deleteButton;
 
+        private bool isPopulating;
+
         void Awake()
         {
             assetDropdown.OnDropdownValueChanged += (obj) =>
             {
+                UpdateAnimationDropdown((string)obj);
+                if (isPopulating) return;
                 ModelData modelData = new ModelData();
                 modelData.assetId = (string)obj;
                 OnModelChanged?.Invoke(modelData);
-                UpdateAnimationDropdown((string)obj);
+                OnInteractionEnded?.Invoke();
             };
             animationDropdown.OnDropdownValueChanged += (obj) =>
             {
+                if (isPopulating) return;
                 ModelData modelData = new ModelData();
                 modelData.defaultAnimation = (int)obj;
                 OnModelChanged?.Invoke(modelData);
+                OnInteractionEnded?.Invoke();
             };
             deleteButton.onClick.AddListener(() =>
             {
@@ -61,23 +68,30 @@ namespace EAR.View
 
             nameInputField.onValueChanged.AddListener((name) =>
             {
+                if (isPopulating) return;
                 ModelData modelData = new ModelData();
                 modelData.name = name;
                 OnModelChanged?.Invoke(modelData);
             });
+            nameInputField.onEndEdit.AddListener((text) => OnInteractionEnded?.Invoke());
+
             isVisible.onValueChanged.AddListener((isVisible) =>
             {
+                if (isPopulating) return;
                 ModelData modelData = new ModelData();
                 modelData.isVisible = isVisible;
                 OnModelChanged?.Invoke(modelData);
+                OnInteractionEnded?.Invoke();
             });
 
             transformInput.OnTransformChanged += (TransformData data) =>
             {
+                if (isPopulating) return;
                 ModelData modelData = new ModelData();
                 modelData.transform = data;
                 OnModelChanged?.Invoke(modelData);
             };
+            transformInput.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
 
             CloseEditor();
         }
@@ -129,6 +143,7 @@ namespace EAR.View
 
         public void PopulateData(ModelData modelData)
         {
+            isPopulating = true;
             if (modelData.assetId != null)
             {
                 assetDropdown.SelectValue(modelData.assetId);
@@ -153,6 +168,7 @@ namespace EAR.View
             {
                 transformInput.SetValue(modelData.transform);
             }
+            isPopulating = false;
         }
     }
 }

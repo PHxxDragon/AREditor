@@ -42,11 +42,9 @@ namespace EAR.Editor.Presenter
 
         private void LoadModuleCallback(AssetInformation assetInformation)
         {
-            Debug.Log("Start loading");
             progressBar.EnableProgressBar();
             AssetContainer.Instance.LoadAssets(assetInformation.assets, () =>
             {
-                Debug.Log("End loading");
                 progressBar.DisableProgressBar();
                 LoadMetadata(assetInformation);
             }, (error) => {

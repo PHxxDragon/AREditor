@@ -74,67 +74,64 @@ namespace EAR.Entity
             return noteData;
         }
 
-        public void PopulateData(NoteData data)
+        public override void PopulateData(EntityData entityData)
         {
-            if (data.transform != null)
+            if (entityData is NoteData noteData)
             {
-                TransformData.TransformDataToTransfrom(data.transform, transform);
-                transform.hasChanged = false;
-            }
+                base.PopulateData(entityData);
 
-            if (data.noteContentRectTransformData != null)
-            {
-                RectTransformData.RectTransformDataToRectTransform(data.noteContentRectTransformData, noteContainer);
-            }
-            
-            if (data.noteContent != null)
-            {
-                text.text = data.noteContent;
-            }
-            
-            if (data.boxWidth.HasValue)
-            {
-                SetBoxWidth(data.boxWidth.Value);
-            }
-            
-            if (data.fontSize.HasValue)
-            {
-                SetFontSize(data.fontSize.Value);
-            }
+                if (noteData.noteContentRectTransformData != null)
+                {
+                    RectTransformData.RectTransformDataToRectTransform(noteData.noteContentRectTransformData, noteContainer);
+                }
 
-            if (data.id != null)
-            {
-                SetId(data.id);
-            }
-            
-            if (data.textBackgroundColor.HasValue)
-            {
-                SetTextBackgroundColor(data.textBackgroundColor.Value);
-            }
-            
-            if (data.textBorderRadius.HasValue)
-            {
-                SetTextBorderRadius(data.textBorderRadius.Value);
-            }
-            
-            if (data.textColor.HasValue)
-            {
-                SetTextColor(data.textColor.Value);
-            }
+                if (noteData.noteContent != null)
+                {
+                    text.text = noteData.noteContent;
+                }
 
-            if (data.borderColor.HasValue)
+                if (noteData.boxWidth.HasValue)
+                {
+                    SetBoxWidth(noteData.boxWidth.Value);
+                }
+
+                if (noteData.fontSize.HasValue)
+                {
+                    SetFontSize(noteData.fontSize.Value);
+                }
+
+                if (noteData.textBackgroundColor.HasValue)
+                {
+                    SetTextBackgroundColor(noteData.textBackgroundColor.Value);
+                }
+
+                if (noteData.textBorderRadius.HasValue)
+                {
+                    SetTextBorderRadius(noteData.textBorderRadius.Value);
+                }
+
+                if (noteData.textColor.HasValue)
+                {
+                    SetTextColor(noteData.textColor.Value);
+                }
+
+                if (noteData.borderColor.HasValue)
+                {
+                    SetBorderColor(noteData.borderColor.Value);
+                }
+
+                if (noteData.borderWidth.HasValue)
+                {
+                    SetTextBorderWidth(noteData.borderWidth.Value);
+                }
+
+                if (noteData.isVisible.HasValue)
+                {
+                    isVisible = noteData.isVisible.Value;
+                }
+            } else
             {
-                SetBorderColor(data.borderColor.Value);
-            }
-            
-            if (data.borderWidth.HasValue)
-            {
-                SetTextBorderWidth(data.borderWidth.Value);
-            }
-            
-            if (data.isVisible.HasValue)
-            {
-                isVisible = data.isVisible.Value;
+                Debug.LogError("Wrong data class entity id: " + entityData.id);
             }
         }
 

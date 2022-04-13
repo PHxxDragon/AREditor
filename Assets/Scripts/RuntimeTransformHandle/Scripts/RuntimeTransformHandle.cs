@@ -27,7 +27,6 @@ namespace RuntimeHandle
         public bool toolEnabled = false;
 
         public Transform target;
-        public event Action<IUndoRedoCommand> NewCommandEvent;
 
         private Vector3 _previousMousePosition;
         private HandleBase _previousAxis;
@@ -162,10 +161,6 @@ namespace RuntimeHandle
             {
                 _draggingHandle.EndInteraction();
                 _draggingHandle = null;
-
-                TransformData current = TransformData.TransformToTransformData(target.transform);
-                IUndoRedoCommand command = new TransformChangeCommand(target, _previousTransformData, current);
-                NewCommandEvent?.Invoke(command);
             }
 
             _previousMousePosition = Input.mousePosition;
