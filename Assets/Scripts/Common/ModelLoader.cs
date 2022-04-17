@@ -183,12 +183,6 @@ namespace EAR.AR
 
         private IEnumerator AddCollider(GameObject model)
         {
-            BoxCollider boxCollider = model.GetComponent<BoxCollider>();
-            if (boxCollider)
-            {
-                Destroy(boxCollider);
-            }
-
             TransformData transformData = TransformData.TransformToTransformData(model.transform);
             TransformData.ResetTransform(model.transform);
             Bounds bound = Utils.GetModelBounds(model);
@@ -197,27 +191,6 @@ namespace EAR.AR
             collider.size = bound.size;
             TransformData.TransformDataToTransfrom(transformData, model.transform);
             yield return null;
-            /*            MeshFilter[] meshFilters = modelLoader.GetModel().gameObject.GetComponentsInChildren<MeshFilter>();
-                        foreach (MeshFilter meshFilter in meshFilters)
-                        {
-                            if (meshFilter.GetComponent<Collider>() == null)
-                            {
-                                meshFilter.gameObject.AddComponent<BoxCollider>();
-                                //Debug.Log("added");
-                                yield return null;
-                            }
-                        }
-
-                        SkinnedMeshRenderer[] skinnedMeshRenderers = modelLoader.GetModel().gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
-                        foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
-                        {
-                            if (skinnedMeshRenderer.GetComponent<MeshCollider>() == null)
-                            {
-                                BoxCollider collider = skinnedMeshRenderer.gameObject.AddComponent<BoxCollider>();
-                                //Debug.Log("added");
-                                yield return null;
-                            }
-                        }*/
         }
     }
 }

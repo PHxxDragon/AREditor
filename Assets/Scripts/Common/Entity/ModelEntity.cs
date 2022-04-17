@@ -1,6 +1,7 @@
 using UnityEngine;
 using EAR.Container;
 using EAR.AnimationPlayer;
+using System.Collections;
 
 namespace EAR.Entity
 {
@@ -19,6 +20,16 @@ namespace EAR.Entity
         {
             base.Awake();
             SetModel("");
+            StartCoroutine(Test());
+        }
+
+        private IEnumerator Test()
+        {
+            while(true)
+            {
+                yield return new WaitForSeconds(2f);
+                Utils.GetModelBounds(gameObject);
+            }
         }
 
         public override void ResetEntityState()

@@ -94,7 +94,7 @@ namespace EAR
         public string name;
 
         public LightType lightType = LightType.Directional;
-        public Color color = Color.black;
+        public Color color = Color.white;
         public float intensity = 1f;
         public Vector3 direction = new Vector3(0, -1, 0);
 
