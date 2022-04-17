@@ -67,7 +67,7 @@ namespace EAR.Editor.Presenter
                 EntityContainer.Instance.ApplyMetadata(metadataObject);
             }
 
-            cameraController.SetDefaultCameraPosition(Utils.GetModelBounds(EntityContainer.Instance.gameObject));
+            cameraController.SetDefaultCameraPosition(Utils.GetEntityBounds(EntityContainer.Instance.gameObject));
         }
     }
 }

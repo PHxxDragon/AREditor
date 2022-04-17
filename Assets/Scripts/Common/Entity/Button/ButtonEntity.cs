@@ -71,6 +71,7 @@ namespace EAR.Entity
 
                 if (buttonData.actionDatas != null)
                 {
+                    actions.Clear();
                     foreach (ButtonActionData buttonActionData in buttonData.actionDatas)
                     {
                         actions.Add(ButtonActionFactory.CreateButtonAction(buttonActionData));
@@ -100,6 +101,7 @@ namespace EAR.Entity
 
         public void ActivateButton()
         {
+            Debug.Log("Action count: " + actions.Count);
             foreach(ButtonAction action in actions)
             {
                 action.ExecuteAction();

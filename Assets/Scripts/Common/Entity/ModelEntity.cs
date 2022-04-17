@@ -20,16 +20,6 @@ namespace EAR.Entity
         {
             base.Awake();
             SetModel("");
-            StartCoroutine(Test());
-        }
-
-        private IEnumerator Test()
-        {
-            while(true)
-            {
-                yield return new WaitForSeconds(2f);
-                Utils.GetModelBounds(gameObject);
-            }
         }
 
         public override void ResetEntityState()
@@ -94,6 +84,7 @@ namespace EAR.Entity
             {
                 prev = TransformData.TransformToTransformData(child);
                 Destroy(child.gameObject);
+                child.parent = null;
             }
 
             GameObject model = AssetContainer.Instance.GetModel(assetId);

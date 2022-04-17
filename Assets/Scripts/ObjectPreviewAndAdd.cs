@@ -64,7 +64,7 @@ namespace EAR.AddObject
                     Bounds emptyBound = new Bounds();
                     if (bounds == emptyBound)
                     {
-                        bounds = Utils.GetModelBounds(previewObject);
+                        bounds = Utils.GetModelBounds(previewObject, false);
                     }
 
                     Vector3 pos = previewObject.transform.position;

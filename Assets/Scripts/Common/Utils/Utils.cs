@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using EAR.Entity;
 using System.Collections;
 using System;
 
@@ -201,6 +202,28 @@ namespace EAR
             global.center = cache.transform.TransformPoint(local.center);
             global.size = cache.transform.TransformVector(local.size);
             return global;
+        }
+
+        public static Bounds GetEntityBounds(GameObject container)
+        {
+            BaseEntity[] entities = container.GetComponentsInChildren<BaseEntity>();
+            Bounds bounds = new Bounds();
+            foreach (BaseEntity baseEntity in entities)
+            {
+                Bounds bounds1 = GetUIBounds(baseEntity.gameObject);
+                if (bounds1 == new Bounds())
+                {
+                    bounds1 = GetModelBounds(baseEntity.gameObject); 
+                }
+                if (bounds == new Bounds())
+                {
+                    bounds = bounds1;
+                } else
+                {
+                    bounds.Encapsulate(bounds1);
+                }
+            }
+            return bounds;
         }
 
         public static Bounds GetModelBounds(GameObject model, bool exact = true)

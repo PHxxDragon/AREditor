@@ -71,7 +71,7 @@ namespace EAR.EARCamera
 
         public void SetDefaultCameraPosition(Bounds bounds)
         {
-            float radius = bounds.extents.magnitude;
+            float radius = bounds.extents.magnitude != 0 ? bounds.extents.magnitude : 1;
             float distance = radius / (Mathf.Sin(_camera.fieldOfView * Mathf.Deg2Rad / 2f));
             Vector3 position = bounds.center;
             Quaternion rotation = Quaternion.Euler(30, 0, 0);
