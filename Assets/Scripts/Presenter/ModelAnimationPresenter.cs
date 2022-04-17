@@ -51,6 +51,7 @@ namespace EAR.Editor.Presenter
                         ModelSelect(firstModelEntity.GetComponent<Selectable>());
                     break;
                 case GlobalStates.Mode.EditARModule:
+                case GlobalStates.Mode.ViewARModule:
                     if (firstModelEntity)
                         ModelDeselect(firstModelEntity.GetComponent<Selectable>());
                     AttachListeners();

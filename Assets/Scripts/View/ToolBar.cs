@@ -44,7 +44,9 @@ namespace EAR.View
         private Button settingButton;
 
         [SerializeField]
-        private List<GameObject> hideForModelDetail;
+        private List<GameObject> editForARModule;
+        [SerializeField]
+        private List<GameObject> editForARModuleAndModelDetail;
         [SerializeField]
         private GameObject showInPlayMode;
 
@@ -166,15 +168,23 @@ namespace EAR.View
             {
                 case GlobalStates.Mode.ViewModel:
                     gameObject.SetActive(false);
-                    hideForModelDetail.ForEach(gameObject => gameObject.SetActive(false));
+                    editForARModule.ForEach(gameObject => gameObject.SetActive(false));
+                    editForARModuleAndModelDetail.ForEach(gameObject => gameObject.SetActive(false));
                     break;
                 case GlobalStates.Mode.EditModel:
-                    hideForModelDetail.ForEach(gameObject => gameObject.SetActive(false));
+                    editForARModule.ForEach(gameObject => gameObject.SetActive(false));
                     gameObject.SetActive(true);
+                    editForARModuleAndModelDetail.ForEach(gameObject => gameObject.SetActive(true));
                     break;
                 case GlobalStates.Mode.EditARModule:
                     gameObject.SetActive(true);
-                    hideForModelDetail.ForEach(gameObject => gameObject.SetActive(true));
+                    editForARModule.ForEach(gameObject => gameObject.SetActive(true));
+                    editForARModuleAndModelDetail.ForEach(gameObject => gameObject.SetActive(true));
+                    break;
+                case GlobalStates.Mode.ViewARModule:
+                    gameObject.SetActive(true);
+                    editForARModule.ForEach(gameObject => gameObject.SetActive(false));
+                    editForARModuleAndModelDetail.ForEach(gameObject => gameObject.SetActive(false));
                     break;
             }
         }

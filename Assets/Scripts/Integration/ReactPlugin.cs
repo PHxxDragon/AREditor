@@ -72,6 +72,7 @@ namespace EAR.Integration
             assetInformation.metadataString = LocalStorage.Load("abcd");*/
             LoadModule(JsonUtility.ToJson(assetInformation));
             SetMode(2);
+            SetEnableScreenshot(0);
 #endif
         }
 

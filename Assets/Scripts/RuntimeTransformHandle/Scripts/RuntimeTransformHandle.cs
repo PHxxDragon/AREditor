@@ -76,6 +76,7 @@ namespace RuntimeHandle
             switch (mode)
             {
                 case GlobalStates.Mode.ViewModel:
+                case GlobalStates.Mode.ViewARModule:
                     gameObject.SetActive(false);
                     break;
                 case GlobalStates.Mode.EditModel:
