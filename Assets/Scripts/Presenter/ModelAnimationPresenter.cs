@@ -18,6 +18,7 @@ namespace EAR.Editor.Presenter
 
         private ModelEntity model;
         private AnimPlayer animationPlayer;
+        private string assetId;
 
         private ModelEntity firstModelEntity;
         private bool isPopulating = false;
@@ -61,6 +62,14 @@ namespace EAR.Editor.Presenter
             }
         }
 
+        void Update()
+        {
+            if (model && assetId != model.GetAssetId())
+            {
+                AttachAnimationPlayer();
+            }
+        }
+
         private void AttachListeners()
         {
             selectionManager.OnObjectSelected += ModelSelect;
@@ -73,54 +82,71 @@ namespace EAR.Editor.Presenter
             selectionManager.OnObjectDeselected -= ModelDeselect;
         }
 
-        private void ModelDeselect(Selectable selectable)
-        {
-            ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
-            if (modelEntity == model)
-            {
-                model = null;
-                DetachListener(animationPlayer);
-                if (animationPlayer && animationBar)
-                {
-                    animationBar.gameObject.SetActive(false);
-                }
-            }
-        }
-
-        private void DetachListener(AnimPlayer animPlayer)
-        {
-            if (animPlayer)
-            {
-                animPlayer.AnimationProgressChangeEvent -= AnimationProgressChangeEventSubscriber;
-                animPlayer.AnimationStartEvent -= AnimationStartEventSubscriber;
-            }
-        }
-
-        private void AttachListener(AnimPlayer animPlayer)
-        {
-            if (animPlayer)
-            {
-                animPlayer.AnimationProgressChangeEvent += AnimationProgressChangeEventSubscriber;
-                animPlayer.AnimationStartEvent += AnimationStartEventSubscriber;
-            }
-        }
-
         private void ModelSelect(Selectable selectable)
         {
             ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
             if (modelEntity)
             {
                 model = modelEntity;
-                DetachListener(animationPlayer);
-                animationPlayer = modelEntity.GetComponentInChildren<AnimPlayer>();
-                AttachListener(animationPlayer);
-                if (animationPlayer && animationBar)
+                AttachAnimationPlayer();
+            }
+        }
+
+        private void ModelDeselect(Selectable selectable)
+        {
+            ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
+            if (modelEntity == model)
+            {
+                model = null;
+                DetachAnimationPlayer();
+            }
+        }
+
+        private void AttachAnimationPlayer()
+        {
+            DetachAnimationPlayer();
+            if (model)
+            {
+                assetId = model.GetAssetId();
+
+                animationPlayer = model.GetComponentInChildren<AnimPlayer>();
+
+                if (animationPlayer)
                 {
-                    animationBar.gameObject.SetActive(true);
-                    animationBar.SetDropdownOption(animationPlayer.GetAnimationList(), animationPlayer.GetCurrentIndex());
+                    AttachListener(animationPlayer);
+                    if (animationBar)
+                    {
+                        animationBar.gameObject.SetActive(true);
+                        animationBar.SetDropdownOption(animationPlayer.GetAnimationList(), animationPlayer.GetCurrentIndex());
+                    }
                 }
             }
-                
+        }
+
+        private void DetachAnimationPlayer()
+        {
+            assetId = null;
+            if (animationPlayer)
+            {
+                DetachListener(animationPlayer);
+                animationPlayer = null;
+            }
+            if (animationBar)
+            {
+                animationBar.gameObject.SetActive(false);
+            }
+        }
+
+        private void DetachListener(AnimPlayer animPlayer)
+        {
+            animPlayer.AnimationProgressChangeEvent -= AnimationProgressChangeEventSubscriber;
+            animPlayer.AnimationStartEvent -= AnimationStartEventSubscriber;
+        }
+
+        private void AttachListener(AnimPlayer animPlayer)
+        {
+            animPlayer.AnimationProgressChangeEvent += AnimationProgressChangeEventSubscriber;
+            animPlayer.AnimationStartEvent += AnimationStartEventSubscriber;
         }
 
         private void SliderValueChangeEventSubscriber(float obj)
