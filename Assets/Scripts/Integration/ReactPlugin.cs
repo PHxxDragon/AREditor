@@ -40,22 +40,38 @@ namespace EAR.Integration
                         assetObject.type = AssetObject.MODEL_TYPE;
                         assetObject.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip";
                         assetInformation.assets.Add(assetObject);*/
-                       /* AssetObject assetObject1 = new AssetObject();
-                        assetObject1.assetId = "adasfds";
-                        assetObject1.extension = "gltf";
-                        assetObject1.isZipFile = true;
-                        assetObject1.name = "turtle";
-                        assetObject1.type = AssetObject.MODEL_TYPE;
-                        assetObject1.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1649722906105_enc_tiger_howl_v04.zip";
-                        assetInformation.assets.Add(assetObject1);*/
-/*                        AssetObject assetObject2 = new AssetObject();
-                        assetObject2.assetId = "akjsdflasvkcvhxvuiy";
-                        assetObject2.extension = "gltf";
-                        assetObject2.isZipFile = true;
-                        assetObject2.name = "Model wolf wolf";
-                        assetObject2.type = AssetObject.MODEL_TYPE;
-                        assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/4/1650117184361_enc_japanese_toad_bufo_japonicus_japonicus.zip";
-                        assetInformation.assets.Add(assetObject2);*/
+            AssetObject assetObject1 = new AssetObject();
+            assetObject1.assetId = "adasfds";
+            assetObject1.extension = "gltf";
+            assetObject1.isZipFile = true;
+            assetObject1.name = "wolf";
+            assetObject1.type = AssetObject.MODEL_TYPE;
+            assetObject1.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/1/1650260484469_enc_wolf_with_animations.zip";
+            assetInformation.assets.Add(assetObject1);
+            AssetObject assetObject3 = new AssetObject();
+            assetObject3.assetId = "adasfdsaaaa";
+            assetObject3.extension = "gltf";
+            assetObject3.isZipFile = true;
+            assetObject3.name = "tiger";
+            assetObject3.type = AssetObject.MODEL_TYPE;
+            assetObject3.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/1/1650257404059_enc_tiger_howl_v04.zip";
+            assetInformation.assets.Add(assetObject3);
+            AssetObject assetObject2 = new AssetObject();
+            assetObject2.assetId = "adasfdsbbbbb";
+            assetObject2.extension = "gltf";
+            assetObject2.isZipFile = true;
+            assetObject2.name = "turtle";
+            assetObject2.type = AssetObject.MODEL_TYPE;
+            assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/1/1650257537777_enc_model_50a_-_hatchling_hawksbill_sea_turtle.zip";
+            assetInformation.assets.Add(assetObject2);
+            /*                        AssetObject assetObject2 = new AssetObject();
+                                    assetObject2.assetId = "akjsdflasvkcvhxvuiy";
+                                    assetObject2.extension = "gltf";
+                                    assetObject2.isZipFile = true;
+                                    assetObject2.name = "Model wolf wolf";
+                                    assetObject2.type = AssetObject.MODEL_TYPE;
+                                    assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/4/1650117184361_enc_japanese_toad_bufo_japonicus_japonicus.zip";
+                                    assetInformation.assets.Add(assetObject2);*/
             /*            AssetObject assetObject3 = new AssetObject();
                         assetObject3.assetId = "lkjfioewuffewffdsf";
                         assetObject3.name = "image 1112";

@@ -20,6 +20,8 @@ namespace EAR.Editor.Presenter
         private AnimPlayer animationPlayer;
 
         private ModelEntity firstModelEntity;
+        private bool isPopulating = false;
+
         void Awake()
         {
             animationBar.DropdownValueChangeEvent += DropdownValueChangeEventSubscriber;
@@ -42,11 +44,11 @@ namespace EAR.Editor.Presenter
 
         private void ApplyMode(GlobalStates.Mode mode)
         {
-            switch(mode)
-            {
+            DetachListeners();
+            switch (mode)
+            { 
                 case GlobalStates.Mode.ViewModel:
                 case GlobalStates.Mode.EditModel:
-                    DetachListeners();
                     if (firstModelEntity)
                         ModelSelect(firstModelEntity.GetComponent<Selectable>());
                     break;
@@ -76,14 +78,30 @@ namespace EAR.Editor.Presenter
             ModelEntity modelEntity = selectable.GetComponent<ModelEntity>();
             if (modelEntity == model)
             {
-                model = null;       
-                if (animationPlayer)
+                model = null;
+                DetachListener(animationPlayer);
+                if (animationPlayer && animationBar)
                 {
-                    animationPlayer.AnimationProgressChangeEvent -= AnimationProgressChangeEventSubscriber;
-                    animationPlayer.AnimationStartEvent -= AnimationStartEventSubscriber;
-                    if (animationBar)
-                        animationBar.gameObject.SetActive(false);
+                    animationBar.gameObject.SetActive(false);
                 }
+            }
+        }
+
+        private void DetachListener(AnimPlayer animPlayer)
+        {
+            if (animPlayer)
+            {
+                animPlayer.AnimationProgressChangeEvent -= AnimationProgressChangeEventSubscriber;
+                animPlayer.AnimationStartEvent -= AnimationStartEventSubscriber;
+            }
+        }
+
+        private void AttachListener(AnimPlayer animPlayer)
+        {
+            if (animPlayer)
+            {
+                animPlayer.AnimationProgressChangeEvent += AnimationProgressChangeEventSubscriber;
+                animPlayer.AnimationStartEvent += AnimationStartEventSubscriber;
             }
         }
 
@@ -93,11 +111,11 @@ namespace EAR.Editor.Presenter
             if (modelEntity)
             {
                 model = modelEntity;
+                DetachListener(animationPlayer);
                 animationPlayer = modelEntity.GetComponentInChildren<AnimPlayer>();
-                if (animationPlayer)
+                AttachListener(animationPlayer);
+                if (animationPlayer && animationBar)
                 {
-                    animationPlayer.AnimationProgressChangeEvent += AnimationProgressChangeEventSubscriber;
-                    animationPlayer.AnimationStartEvent += AnimationStartEventSubscriber;
                     animationBar.gameObject.SetActive(true);
                     animationBar.SetDropdownOption(animationPlayer.GetAnimationList(), animationPlayer.GetCurrentIndex());
                 }
@@ -107,24 +125,28 @@ namespace EAR.Editor.Presenter
 
         private void SliderValueChangeEventSubscriber(float obj)
         {
-            if (animationPlayer)
+            if (animationPlayer && !isPopulating)
                 animationPlayer.SetAnimationState(obj);
         }
 
         private void AnimationStartEventSubscriber(bool obj)
         {
+            isPopulating = true;
             animationBar.SetPlayToggle(obj);
+            isPopulating = false;
         }
 
         private void PlayToggleClickEventSubscriber(bool obj)
         {
-            if (animationPlayer)
+            if (animationPlayer && !isPopulating)
                 animationPlayer.ToggleAnimationPlay(obj);
         }
 
         private void AnimationProgressChangeEventSubscriber(float obj)
         {
+            isPopulating = true;
             animationBar.SetSliderValue(obj - Mathf.FloorToInt(obj));
+            isPopulating = false;
         }
 
         private void DropdownValueChangeEventSubscriber(int obj)
