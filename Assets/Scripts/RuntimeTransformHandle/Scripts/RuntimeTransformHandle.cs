@@ -9,6 +9,9 @@ namespace RuntimeHandle
      */
     public class RuntimeTransformHandle : MonoBehaviour
     {
+        public event Action<GameObject> OnStartInteraction;
+        public event Action<GameObject> OnEndInteraction;
+
         public static float MOUSE_SENSITIVITY = 0.5f;
         
         public HandleAxes axes = HandleAxes.XYZ;
@@ -40,8 +43,6 @@ namespace RuntimeHandle
         private PositionHandle _positionHandle;
         private RotationHandle _rotationHandle;
         private ScaleHandle _scaleHandle;
-
-        private TransformData _previousTransformData;
 
         public bool CheckIfMouseDraggingHandle()
         {
@@ -148,20 +149,20 @@ namespace RuntimeHandle
             if (Input.GetMouseButton(0) && _draggingHandle != null)
             {
                _draggingHandle.Interact(_previousMousePosition);
-               
+                OnStartInteraction?.Invoke(target.gameObject);
             }
 
             if (Input.GetMouseButtonDown(0) && handle != null)
             {
                 _draggingHandle = handle;
                 _draggingHandle.StartInteraction(hitPoint);
-                _previousTransformData = TransformData.TransformToTransformData(target.transform);
             }
 
             if (Input.GetMouseButtonUp(0) && _draggingHandle != null)
             {
                 _draggingHandle.EndInteraction();
                 _draggingHandle = null;
+                OnEndInteraction?.Invoke(target.gameObject);
             }
 
             _previousMousePosition = Input.mousePosition;
