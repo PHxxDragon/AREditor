@@ -3,6 +3,7 @@ using EAR.View;
 using EAR.Entity;
 using EAR.EARCamera;
 using EAR.UndoRedo;
+using RuntimeHandle;
 using UnityEngine;
 using System;
 
@@ -28,6 +29,8 @@ namespace EAR.Editor.Presenter
         private NoteEditorWindow noteEditorWindow;
         [SerializeField]
         private CameraController cameraController;
+        [SerializeField]
+        private RuntimeTransformHandle runtimeTransformHandle;
 
         private BaseEntity currentEntity;
         private bool entityModified = false;
@@ -179,48 +182,59 @@ namespace EAR.Editor.Presenter
 
             undoRedoManager.OnBeforeRedo += EndModify;
             undoRedoManager.OnBeforeUndo += EndModify;
+
+            runtimeTransformHandle.OnStartInteraction += (GameObject gameObject) =>
+            {
+                BaseEntity baseEntity = gameObject.GetComponent<BaseEntity>();
+                if (baseEntity && baseEntity == currentEntity)
+                {
+                    StartModify();
+                }
+            };
+
+            runtimeTransformHandle.OnEndInteraction += (GameObject gameObject) =>
+            {
+                BaseEntity baseEntity = gameObject.GetComponent<BaseEntity>();
+                if (baseEntity && baseEntity == currentEntity)
+                {
+                    UpdateEntityTransformToEditor();
+                    EndModify();
+                }
+            };
         }
 
-        void Update()
+        private void UpdateEntityTransformToEditor()
         {
-            if (currentEntity && currentEntity.transform.hasChanged)
+            TransformData transformData = TransformData.TransformToTransformData(currentEntity.transform);
+            if (currentEntity is ImageEntity)
             {
-                TransformData transformData = TransformData.TransformToTransformData(currentEntity.transform);
-                if (currentEntity is ImageEntity)
-                {
-                    ImageData imageData = new ImageData();
-                    imageData.transform = transformData;
-                    imageEditorWindow.PopulateData(imageData);
-                }
-                else if (currentEntity is NoteEntity)
-                {
-                    NoteData noteData = new NoteData();
-                    noteData.transform = transformData;
-                    noteEditorWindow.PopulateData(noteData);
-                }
-                else if (currentEntity is ModelEntity)
-                {
-                    ModelData modelData = new ModelData();
-                    modelData.transform = transformData;
-                    modelEditorWindow.PopulateData(modelData);
-                }
-                else if (currentEntity is ButtonEntity)
-                {
-                    ButtonData buttonData = new ButtonData();
-                    buttonData.transform = transformData;
-                    buttonEditorWindow.PopulateData(buttonData);
-                }
-                else if (currentEntity is SoundEntity)
-                {
-                    SoundData soundData = new SoundData();
-                    soundData.transform = transformData;
-                    soundEditorWindow.PopulateData(soundData);
-                }
-                StartModify();
-                currentEntity.transform.hasChanged = false;
-            } else if (Input.GetMouseButtonUp(0))
+                ImageData imageData = new ImageData();
+                imageData.transform = transformData;
+                imageEditorWindow.PopulateData(imageData);
+            }
+            else if (currentEntity is NoteEntity)
             {
-                EndModify();
+                NoteData noteData = new NoteData();
+                noteData.transform = transformData;
+                noteEditorWindow.PopulateData(noteData);
+            }
+            else if (currentEntity is ModelEntity)
+            {
+                ModelData modelData = new ModelData();
+                modelData.transform = transformData;
+                modelEditorWindow.PopulateData(modelData);
+            }
+            else if (currentEntity is ButtonEntity)
+            {
+                ButtonData buttonData = new ButtonData();
+                buttonData.transform = transformData;
+                buttonEditorWindow.PopulateData(buttonData);
+            }
+            else if (currentEntity is SoundEntity)
+            {
+                SoundData soundData = new SoundData();
+                soundData.transform = transformData;
+                soundEditorWindow.PopulateData(soundData);
             }
         }
 
