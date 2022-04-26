@@ -18,7 +18,7 @@ namespace EAR.Localization
         private static string currentLocale;
 
         private bool loaded = false;
-        void Start()
+        void Awake()
         {
             string[] lines = localizationDatabase.text.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             string[] tokens = SplitCSVLine(lines[0]);
@@ -53,7 +53,7 @@ namespace EAR.Localization
                 return database[codeToIndex[currentLocale]][key];
             } else
             {
-                //Debug.LogError("Cannot find key in database");
+                Debug.LogError("Cannot find key in database");
                 return "";
             }
             
@@ -71,10 +71,10 @@ namespace EAR.Localization
             while (i < 10)
             {
                 if (loaded) {
-                    LocalizationTextEvent[] localizationTextEvents = canvas.GetComponentsInChildren<LocalizationTextEvent>(true);
-                    foreach (LocalizationTextEvent localizationTextEvent in localizationTextEvents)
+                    LocalizationEvent[] localizationEvents = canvas.GetComponentsInChildren<LocalizationEvent>(true);
+                    foreach (LocalizationEvent localizationEvent in localizationEvents)
                     {
-                        localizationTextEvent.ApplyLocalization(database[codeToIndex[locale]][localizationTextEvent.GetKey()]);
+                        localizationEvent.ApplyLocalization();
                     }
                     break;
                 } else

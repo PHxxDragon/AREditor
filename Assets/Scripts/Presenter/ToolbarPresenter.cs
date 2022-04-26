@@ -51,6 +51,7 @@ namespace EAR.Editor.Presenter
 
             toolbar.RedoButtonClicked += undoRedoManager.PerformRedo;
             toolbar.UndoButtonClicked += undoRedoManager.PerformUndo;
+            toolbar.FullScreenButtonClicked += reactPlugin.SetFullScreen;
 
             if (toolbar != null && runtimeTransformHandle != null)
             {

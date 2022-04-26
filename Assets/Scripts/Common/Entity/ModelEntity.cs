@@ -11,6 +11,11 @@ namespace EAR.Entity
         private string assetId;
         private int defaultAnimationIndex = 0;
 
+        public static int GetNextId()
+        {
+            return count++;
+        }
+
         protected override string GetDefaultName()
         {
             return "New model " + count++; 

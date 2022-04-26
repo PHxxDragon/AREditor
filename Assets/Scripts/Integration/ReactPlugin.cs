@@ -12,6 +12,9 @@ namespace EAR.Integration
         public event Action<bool> OnSetEnableScreenshot;
 
         [DllImport("__Internal")]
+        private static extern void SetFullScreen(int isOn);
+
+        [DllImport("__Internal")]
         private static extern void SceneLoaded();
 
         [DllImport("__Internal")]
@@ -84,6 +87,16 @@ namespace EAR.Integration
 #endif
 #if UNITY_EDITOR == true
             LocalStorage.Save("abcde", metadata);
+#endif
+        }
+
+        public void SetFullScreen(bool isOn)
+        {
+#if UNITY_WEBGL == true && UNITY_EDITOR == false
+            SetFullScreen(isOn ? 1 : 0);
+#endif
+#if UNITY_EDITOR == true
+            Debug.Log(isOn);
 #endif
         }
 

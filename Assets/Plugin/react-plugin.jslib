@@ -13,4 +13,7 @@ mergeInto(LibraryManager.library, {
 	}
 	dispatchReactUnityEvent("SaveScreenshot", newByteArray);
   }
+  SetFullScreen: function(isOn) {
+    dispatchReactUnityEvent("SetFullScreen", isOn)
+  }
 });

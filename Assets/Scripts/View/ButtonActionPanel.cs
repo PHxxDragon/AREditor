@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using EAR.Entity;
 using EAR.Container;
+using EAR.Localization;
 
 namespace EAR.View
 {
@@ -62,7 +63,7 @@ namespace EAR.View
         {
             ButtonActionData.ActionType actionType = (ButtonActionData.ActionType) actionTypeDropdown.GetSelectedValue();
             entityIdDropdown.ClearData();
-            entityIdDropdown.AddData(string.Empty, "Select an entity");
+            entityIdDropdown.AddData(string.Empty, LocalizationManager.GetLocalizedText("ChooseEntity"));
             BaseEntity[] entities = EntityContainer.Instance.GetEntities();
             foreach (BaseEntity baseEntity in entities)
             {

@@ -72,21 +72,28 @@ namespace EAR.View
             {
                 OnDelete?.Invoke();
             });
+
+            if (AssetContainer.Instance)
+            {
+                SetAssetListener(AssetContainer.Instance);
+            }
+            else
+            {
+                AssetContainer.OnInstanceCreated += SetAssetListener;
+            }
+
+            CloseEditor();
         }
 
-        void Start()
+        private void SetAssetListener(AssetContainer instance)
         {
-            //TODO
-            assetDropdown.ClearData();
-            assetDropdown.AddData(string.Empty, "Choose sound asset");
-            AssetContainer.Instance.OnAssetObjectAdded += (AssetObject assetObject) =>
+            instance.OnAssetObjectAdded += (AssetObject assetObject) =>
             {
                 if (assetObject.type == AssetObject.SOUND_TYPE)
                 {
                     assetDropdown.AddData(assetObject.assetId, assetObject.name);
                 }
             };
-            CloseEditor();
         }
 
         public void OpenEditor()

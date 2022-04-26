@@ -5,6 +5,7 @@ using TMPro;
 using EAR.Container;
 using System;
 using System.Collections.Generic;
+using EAR.Localization;
 
 namespace EAR.View
 {
@@ -88,7 +89,7 @@ namespace EAR.View
         {
             //TODO
             listenerEntityId.ClearData();
-            listenerEntityId.AddData(string.Empty, "Choose an entity");
+            listenerEntityId.AddData(string.Empty, LocalizationManager.GetLocalizedText("ChooseEntity"));
             BaseEntity[] baseEntities = EntityContainer.Instance.GetEntities();
             foreach (BaseEntity baseEntity in baseEntities)
             {

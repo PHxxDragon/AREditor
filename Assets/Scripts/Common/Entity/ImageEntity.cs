@@ -13,6 +13,11 @@ namespace EAR.Entity
 
         private string assetId = "";
 
+        public static int GetNextId()
+        {
+            return count++;
+        }
+
         protected override string GetDefaultName()
         {
             return "New image " + count++;

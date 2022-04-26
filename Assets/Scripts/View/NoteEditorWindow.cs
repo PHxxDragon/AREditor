@@ -125,7 +125,7 @@ namespace EAR.View
             });
             textInputField.onEndEdit.AddListener((value) =>
             {
-                Debug.Log(value);
+                OnInteractionEnded?.Invoke();
             });
 
             backgroundColorSelector.OnColorChanged += (Color color) =>

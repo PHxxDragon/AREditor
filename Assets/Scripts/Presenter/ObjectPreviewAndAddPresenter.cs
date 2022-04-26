@@ -40,6 +40,7 @@ namespace EAR.Editor.Presenter
                         {
                             ImageData imageData = new ImageData();
                             imageData.transform = transform;
+                            imageData.name = LocalizationManager.GetLocalizedText("NewImage") + " " + ImageEntity.GetNextId();
                             BaseEntity addedEntity = ImageEntity.InstantNewEntity(imageData);
                             toolbar.SetDefaultTool();
                             AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
@@ -51,6 +52,7 @@ namespace EAR.Editor.Presenter
                         {
                             ButtonData buttonData = new ButtonData();
                             buttonData.transform = transformData;
+                            buttonData.name = LocalizationManager.GetLocalizedText("NewButton") + " " + ButtonEntity.GetNextId();
                             BaseEntity addedEntity = ButtonEntity.InstantNewEntity(buttonData);
                             toolbar.SetDefaultTool();
                             AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
@@ -62,6 +64,7 @@ namespace EAR.Editor.Presenter
                         {
                             ModelData modelData = new ModelData();
                             modelData.transform = transformData;
+                            modelData.name = LocalizationManager.GetLocalizedText("NewModel") + " " + ModelEntity.GetNextId();
                             BaseEntity addedEntity = ModelEntity.InstantNewEntity(modelData);
                             toolbar.SetDefaultTool();
                             AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
@@ -74,6 +77,7 @@ namespace EAR.Editor.Presenter
                             NoteData noteData = new NoteData();
                             noteData.noteContent = LocalizationManager.GetLocalizedText("NoteFirstText");
                             noteData.transform = transfomData;
+                            noteData.name = LocalizationManager.GetLocalizedText("NewNote") + " " + NoteEntity.GetNextId();
                             BaseEntity addedEntity = NoteEntity.InstantNewEntity(noteData);
                             toolbar.SetDefaultTool();
                             AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
@@ -85,6 +89,7 @@ namespace EAR.Editor.Presenter
                         {
                             SoundData soundData = new SoundData();
                             soundData.transform = transformData;
+                            soundData.name = LocalizationManager.GetLocalizedText("NewAudio") + " " + SoundEntity.GetNextId();
                             BaseEntity addedEntity = SoundEntity.InstantNewEntity(soundData);
                             toolbar.SetDefaultTool();
                             AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());

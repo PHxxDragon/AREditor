@@ -71,3 +71,13 @@ Position,Position,Vị trí
 Scale,Scale,Tỉ lệ
 Rotation,Rotation,Xoay
 Duplicate,Duplicate,Nhân bản
+ChooseModel,Choose model,Chọn mô hình
+ChooseEntity,Choose entity,Chọn thực thể
+ChooseImage,Choose image,Chọn hình ảnh
+ChooseAudio,Choose audio,Chọn âm thanh
+NewModel,New model,Mô hình mới
+NewImage,New image,Hình ảnh mới
+NewNote,New note,Ghi chú mới
+NewAudio,New audio,Âm thanh mới
+NewButton,New button,Nút bấm mới
+FullScreen,Full screen,Toàn màn hình

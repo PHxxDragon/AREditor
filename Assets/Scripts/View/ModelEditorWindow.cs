@@ -55,17 +55,6 @@ namespace EAR.View
                 OnModelDelete?.Invoke();
             });
 
-            assetDropdown.ClearData();
-            assetDropdown.AddData(string.Empty, "Choose model asset");
-
-            if (AssetContainer.Instance)
-            {
-                SetAssetListener(AssetContainer.Instance);
-            } else
-            {
-                AssetContainer.OnInstanceCreated += SetAssetListener;
-            }
-
             nameInputField.onValueChanged.AddListener((name) =>
             {
                 if (isPopulating) return;
@@ -92,6 +81,15 @@ namespace EAR.View
                 OnModelChanged?.Invoke(modelData);
             };
             transformInput.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
+
+            if (AssetContainer.Instance)
+            {
+                SetAssetListener(AssetContainer.Instance);
+            }
+            else
+            {
+                AssetContainer.OnInstanceCreated += SetAssetListener;
+            }
 
             CloseEditor();
         }

@@ -36,6 +36,11 @@ namespace EAR.Entity
 
         private Vector3 originalScale;
 
+        public static int GetNextId()
+        {
+            return count++;
+        }
+
         protected override string GetDefaultName()
         {
             return "New note " + count++;

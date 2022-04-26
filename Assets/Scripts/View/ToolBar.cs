@@ -27,6 +27,9 @@ namespace EAR.View
         private Toggle soundAddToggle;
 
         [SerializeField]
+        private Toggle fullScreenToggle;
+
+        [SerializeField]
         private Button duplicateButton;
 
         [SerializeField]
@@ -53,6 +56,7 @@ namespace EAR.View
         private ToolEnum activeTool;
 
         public event Action<ToolEnum, ToolEnum> OnToolChanged;
+        public event Action<bool> FullScreenButtonClicked;
         public event Action SaveButtonClicked;
         public event Action UndoButtonClicked;
         public event Action RedoButtonClicked;
@@ -88,7 +92,13 @@ namespace EAR.View
             settingButton.onClick.AddListener(SettingButtonClick);
             playToggle.onValueChanged.AddListener(PlayToggleClick);
             duplicateButton.onClick.AddListener(DuplicateButtonClick);
+            fullScreenToggle.onValueChanged.AddListener(FullScreenToggleClick);
             ApplyGlobalStates();
+        }
+
+        private void FullScreenToggleClick(bool arg0)
+        {
+            FullScreenButtonClicked?.Invoke(arg0);
         }
 
         private void DuplicateButtonClick()

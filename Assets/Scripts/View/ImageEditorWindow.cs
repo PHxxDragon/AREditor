@@ -63,21 +63,28 @@ namespace EAR.View
                 OnImageChanged?.Invoke(data);
             };
             transformInput.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
+
+            if (AssetContainer.Instance)
+            {
+                SetAssetListener(AssetContainer.Instance);
+            }
+            else
+            {
+                AssetContainer.OnInstanceCreated += SetAssetListener;
+            }
+
+            CloseEditor();
         }
 
-        void Start()
+        private void SetAssetListener(AssetContainer instance)
         {
-            //TODO
-            dropdown.ClearData();
-            dropdown.AddData(string.Empty, "Choose image asset");
-            AssetContainer.Instance.OnAssetObjectAdded += (AssetObject assetObject) =>
+            instance.OnAssetObjectAdded += (AssetObject assetObject) =>
             {
                 if (assetObject.type == AssetObject.IMAGE_TYPE)
                 {
                     dropdown.AddData(assetObject.assetId, assetObject.name);
                 }
             };
-            CloseEditor();
         }
 
         public void OpenEditor()
