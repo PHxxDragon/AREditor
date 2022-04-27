@@ -49,7 +49,7 @@ Asset,Asset,Asset
 ChooseModelAsset,Choose model asset,Chọn mô hình
 EditImage,Edit image,Sửa hình ảnh
 Image,Image,Hình ảnh
-Play,Play,Play
+Play,Play,Phát
 EditButton,Edit button,Sửa nút bấm
 Listener,Listener,Đối tượng
 Actions,Actions,Hành động
@@ -81,3 +81,17 @@ NewNote,New note,Ghi chú mới
 NewAudio,New audio,Âm thanh mới
 NewButton,New button,Nút bấm mới
 FullScreen,Full screen,Toàn màn hình
+Hide,Hide,Ẩn
+PlayAnimation,Play animation,Phát chuyển động
+PlaySound,Play audio,Phát âm thanh
+StopSound,Stop audio,Dừng âm thanh
+EditVideo,Edit video,Sửa video
+Video,Video,Video
+ChooseVideo,Choose video,Chọn video
+AddVideo,Add video,Thêm video
+NewVideo,New video,Video mới
+PlayVideo,Play video,Phát video
+StopVideo,Stop video,Dừng video
+Search,Search,Tìm kiếm
+EntityList,EntityList,Danh sách thực thể
+List,List,Danh sách

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using EAR.Entity;
 using System.Collections;
 using System;
+using System.IO;
 
 namespace EAR 
 {
@@ -102,6 +103,11 @@ namespace EAR
         public void GetImageAsTexture2D(string imageUrl, Action<Texture2D> callback, Action<string> errorCallback = null, Action<float> progressCallback = null)
         {
             StartCoroutine(GetImageCoroutine(imageUrl, callback, errorCallback, progressCallback));
+        }
+
+        public void GetVideo(string videoUrl, string name, Action<string> callback, Action<string> errorCallback = null, Action<float> progressCallback = null)
+        {
+            StartCoroutine(GetVideoCoroutine(videoUrl, name, callback, errorCallback, progressCallback));
         }
 
         public static Bounds GetUIBounds(GameObject UIObject)
@@ -274,6 +280,34 @@ namespace EAR
                 boundsCache.bounds = bounds;
             }
             return bounds;
+        }
+
+        private IEnumerator GetVideoCoroutine(string videoUrl, string name, Action<string> callback, Action<string> errorCallback, Action<float> progressCallback)
+        {
+            using (UnityWebRequest uwr = UnityWebRequest.Get(videoUrl))
+            {
+                UnityWebRequestAsyncOperation operation = uwr.SendWebRequest();
+                while (!operation.isDone)
+                {
+                    progressCallback?.Invoke(operation.progress);
+                    yield return null;
+                }
+                if (uwr.result != UnityWebRequest.Result.Success)
+                {
+                    errorCallback?.Invoke(uwr.error);
+                }
+                else
+                {
+                    string directory = Application.persistentDataPath + "/videos/";
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+                    string localUrl = directory + name;
+                    File.WriteAllBytes(localUrl, uwr.downloadHandler.data);
+                    callback?.Invoke(new Uri(localUrl).AbsoluteUri);
+                }
+            }
         }
 
         private IEnumerator GetSoundCoroutine(string soundUrl, string extension, Action<AudioClip> callback, Action<string> errorCallback, Action<float> progressCallback)

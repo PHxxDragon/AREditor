@@ -93,6 +93,9 @@ namespace EAR.Editor.Presenter
                 } else if (entity is SoundEntity soundEntity)
                 {
                     metadataObject.soundDatas.Add((SoundData) soundEntity.GetData());
+                } else if (entity is VideoEntity videoEntity)
+                {
+                    metadataObject.videoDatas.Add((VideoData)videoEntity.GetData());
                 }
             }
 

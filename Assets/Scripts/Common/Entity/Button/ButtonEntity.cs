@@ -16,10 +16,10 @@ namespace EAR.Entity
             return count++;
         }
 
-        protected override string GetDefaultName()
+/*        protected override string GetDefaultName()
         {
             return "New button " + count++;
-        }
+        }*/
 
         protected override void Awake()
         {

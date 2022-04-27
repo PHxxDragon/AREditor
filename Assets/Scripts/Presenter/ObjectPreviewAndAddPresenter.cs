@@ -27,6 +27,8 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private GameObject buttonPreviewPrefab;
         [SerializeField]
+        private GameObject videoPreviewPrefab;
+        [SerializeField]
         private GameObject notePreviewPrefab;
 
         void Start()
@@ -91,6 +93,18 @@ namespace EAR.Editor.Presenter
                             soundData.transform = transformData;
                             soundData.name = LocalizationManager.GetLocalizedText("NewAudio") + " " + SoundEntity.GetNextId();
                             BaseEntity addedEntity = SoundEntity.InstantNewEntity(soundData);
+                            toolbar.SetDefaultTool();
+                            AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
+                            undoRedoManager.AddCommand(add);
+                        });
+                        break;
+                    case ToolEnum.AddVideo:
+                        objectPreviewAndAdd.StartPreviewAndAdd(videoPreviewPrefab, (TransformData transformData) =>
+                        {
+                            VideoData videoData = new VideoData();
+                            videoData.transform = transformData;
+                            videoData.name = LocalizationManager.GetLocalizedText("NewVideo") + " " + VideoEntity.GetNextId();
+                            BaseEntity addedEntity = VideoEntity.InstantNewEntity(videoData);
                             toolbar.SetDefaultTool();
                             AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
                             undoRedoManager.AddCommand(add);

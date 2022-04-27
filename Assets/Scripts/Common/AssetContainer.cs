@@ -38,6 +38,7 @@ namespace EAR.Container
         private readonly Dictionary<string, (AssetObject, GameObject)> models = new Dictionary<string, (AssetObject, GameObject)>();
         private readonly Dictionary<string, (AssetObject, Texture2D)> images = new Dictionary<string, (AssetObject, Texture2D)>();
         private readonly Dictionary<string, (AssetObject, AudioClip)> sounds = new Dictionary<string, (AssetObject, AudioClip)>();
+        private readonly Dictionary<string, (AssetObject, string)> videos = new Dictionary<string, (AssetObject, string)>();
 
         [SerializeField]
         private ModelLoader modelLoader;
@@ -50,6 +51,9 @@ namespace EAR.Container
 
         [SerializeField]
         private NoteEntity notePrefab;
+
+        [SerializeField]
+        private VideoEntity videoPrefab;
 
         [SerializeField]
         private Texture2D defaultTexture;
@@ -75,13 +79,16 @@ namespace EAR.Container
                 switch (assetObject.type)
                 {
                     case AssetObject.MODEL_TYPE:
-                        LoadModel(assetObject, assetObject.url, assetObject.extension, assetObject.isZipFile, errorCallback, progressCallback);
+                        LoadModel(assetObject, errorCallback, progressCallback);
                         break;
                     case AssetObject.IMAGE_TYPE:
-                        LoadImage(assetObject, assetObject.url, errorCallback, progressCallback);
+                        LoadImage(assetObject, errorCallback, progressCallback);
                         break;
                     case AssetObject.SOUND_TYPE:
-                        LoadSound(assetObject, assetObject.url, assetObject.extension, errorCallback, progressCallback);
+                        LoadSound(assetObject, errorCallback, progressCallback);
+                        break;
+                    case AssetObject.VIDEO_TYPE:
+                        LoadVideo(assetObject, errorCallback, progressCallback);
                         break;
                     default:
                         assetCount -= 1;
@@ -109,9 +116,9 @@ namespace EAR.Container
             }
         }
 
-        private void LoadModel(AssetObject assetObject, string url, string extension, bool isZipFile, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
+        private void LoadModel(AssetObject assetObject, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
         {
-            modelLoader.LoadModel(url, extension, isZipFile,
+            modelLoader.LoadModel(assetObject.url, assetObject.extension, assetObject.isZipFile,
             (model) =>
             {
                 AddModel(assetObject, model);
@@ -132,9 +139,9 @@ namespace EAR.Container
             });
         }
 
-        private void LoadSound(AssetObject assetObject, string url, string extension, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
+        private void LoadSound(AssetObject assetObject, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
         {
-            Utils.Instance.GetSound(url, extension,
+            Utils.Instance.GetSound(assetObject.url, assetObject.extension,
             (audioClip) =>
             {
                 AddSound(assetObject, audioClip);
@@ -155,9 +162,9 @@ namespace EAR.Container
             });
         }
 
-        private void LoadImage(AssetObject assetObject, string url, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
+        private void LoadImage(AssetObject assetObject, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
         {
-            Utils.Instance.GetImageAsTexture2D(url,
+            Utils.Instance.GetImageAsTexture2D(assetObject.url,
             (image) =>
             {
                 AddImage(assetObject, image);
@@ -170,12 +177,67 @@ namespace EAR.Container
                     errorCallback?.Invoke(error + " asset name: " + assetObject.name);
                 }
             }
-            , (value) => {
+            , (value) => 
+            {
                 if (!hasError)
                 {
                     progressCallback?.Invoke(value, "Loading image");
                 }
             });
+        }
+
+        private void LoadVideo(AssetObject assetObject, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
+        {
+            if (!assetObject.predownload)
+            {
+                AddVideo(assetObject, assetObject.url);
+                assetCount -= 1;
+            }
+            else
+            {
+                Utils.Instance.GetVideo(assetObject.url, assetObject.assetId + "." + assetObject.extension, (url) =>
+                {
+                    AddVideo(assetObject, url);
+                    assetCount -= 1;
+                }, 
+                (error) => 
+                {
+                    if (!hasError)
+                    {
+                        hasError = true;
+                        errorCallback?.Invoke(error + " asset name: " + assetObject.name);
+                    }
+                }, 
+                (value) =>
+                {
+                    if (!hasError)
+                    {
+                        progressCallback?.Invoke(value, "Loading video");
+                    }
+                });
+            }
+        }
+
+        public string GetVideo(string assetId)
+        {
+            try
+            {
+                return videos[assetId].Item2;
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
+            catch (ArgumentNullException)
+            {
+                return null;
+            }
+        }
+
+        private void AddVideo(AssetObject assetObject, string url)
+        {
+            OnAssetObjectAdded?.Invoke(assetObject);
+            videos.Add(assetObject.assetId, (assetObject, url));
         }
 
         private void AddModel(AssetObject assetObject, GameObject model)
@@ -242,6 +304,11 @@ namespace EAR.Container
             {
                 return null;
             }
+        }
+
+        public VideoEntity GetVideoPrefab()
+        {
+            return videoPrefab;
         }
 
         public GameObject GetModelPrefab()

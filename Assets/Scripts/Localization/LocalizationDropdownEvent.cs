@@ -1,27 +1,19 @@
 using System.Collections.Generic;
-using TMPro;
+using EAR.View;
 
 namespace EAR.Localization
 {
     public class LocalizationDropdownEvent : LocalizationEvent
     {
-        public TMP_Dropdown dropdown;
+        public DropdownHelper dropdown;
         public List<string> keys;
+        public List<string> objects;
 
         public override void ApplyLocalization()
         {
             for (int i = 0; i < keys.Count; i++)
             {
-                TMP_Dropdown.OptionData optionData = new TMP_Dropdown.OptionData();
-                optionData.text = LocalizationManager.GetLocalizedText(keys[i]);
-                if (i < dropdown.options.Count)
-                {
-                    dropdown.options[i] = optionData;
-                }
-                else
-                {
-                    dropdown.options.Add(optionData);
-                }
+                dropdown.SetData(objects[i], LocalizationManager.GetLocalizedText(keys[i]), i);
             }
         }
     }

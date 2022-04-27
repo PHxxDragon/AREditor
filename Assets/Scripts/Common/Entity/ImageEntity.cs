@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using EAR.Container;
@@ -18,10 +17,10 @@ namespace EAR.Entity
             return count++;
         }
 
-        protected override string GetDefaultName()
+/*        protected override string GetDefaultName()
         {
             return "New image " + count++;
-        }
+        }*/
 
         public override EntityData GetData()
         {

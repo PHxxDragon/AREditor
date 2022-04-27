@@ -55,13 +55,18 @@ namespace EAR.View
             actionTypeDropdown.ClearData();
             foreach (ButtonActionData.ActionType type in Enum.GetValues(typeof(ButtonActionData.ActionType)))
             {
-                actionTypeDropdown.AddData(type, type.ToString());
+                actionTypeDropdown.AddData(type.ToString(), ActionTypeToString(type));
             }
+        }
+
+        private string ActionTypeToString(ButtonActionData.ActionType actionType)
+        {
+            return LocalizationManager.GetLocalizedText(actionType.ToString());
         }
 
         private void UpdateEntityList()
         {
-            ButtonActionData.ActionType actionType = (ButtonActionData.ActionType) actionTypeDropdown.GetSelectedValue();
+            ButtonActionData.ActionType actionType = (ButtonActionData.ActionType) Enum.Parse(typeof(ButtonActionData.ActionType), actionTypeDropdown.GetSelectedValue());
             entityIdDropdown.ClearData();
             entityIdDropdown.AddData(string.Empty, LocalizationManager.GetLocalizedText("ChooseEntity"));
             BaseEntity[] entities = EntityContainer.Instance.GetEntities();
@@ -76,7 +81,7 @@ namespace EAR.View
 
         private void UpdateAnimationList()
         {
-            ButtonActionData.ActionType actionType = (ButtonActionData.ActionType)actionTypeDropdown.GetSelectedValue();
+            ButtonActionData.ActionType actionType = (ButtonActionData.ActionType)Enum.Parse(typeof(ButtonActionData.ActionType), actionTypeDropdown.GetSelectedValue());
             if (actionType != ButtonActionData.ActionType.PlayAnimation)
             {
                 animationIndexContainer.gameObject.SetActive(false);
@@ -94,7 +99,7 @@ namespace EAR.View
                             animationIndexDropdown.ClearData();
                             for (int i = 0; i < animPlayer.GetAnimationCount(); i++)
                             {
-                                animationIndexDropdown.AddData(i, animPlayer.GetAnimationList()[i]);
+                                animationIndexDropdown.AddData(i.ToString(), animPlayer.GetAnimationList()[i]);
                             }
                         }
                         else
@@ -131,6 +136,10 @@ namespace EAR.View
                 case ButtonActionData.ActionType.StopSound:
                     SoundEntity soundEntity = baseEntity as SoundEntity;
                     return soundEntity;
+                case ButtonActionData.ActionType.StopVideo:
+                case ButtonActionData.ActionType.PlayVideo:
+                    VideoEntity videoEntity = baseEntity as VideoEntity;
+                    return videoEntity;
                 default:
                     return false;
             }
@@ -139,17 +148,17 @@ namespace EAR.View
         private ButtonActionData GetData()
         {
             ButtonActionData buttonActionData = new ButtonActionData();
-            buttonActionData.actionType = (ButtonActionData.ActionType) actionTypeDropdown.GetSelectedValue();
-            buttonActionData.targetEntityId = (string) entityIdDropdown.GetSelectedValue();
+            buttonActionData.actionType = (ButtonActionData.ActionType)Enum.Parse(typeof(ButtonActionData.ActionType), actionTypeDropdown.GetSelectedValue());
+            buttonActionData.targetEntityId = entityIdDropdown.GetSelectedValue();
             if (animationIndexContainer.activeSelf)
-                buttonActionData.animationIndex = (int)animationIndexDropdown.GetSelectedValue();
+                buttonActionData.animationIndex = int.Parse(animationIndexDropdown.GetSelectedValue());
             return buttonActionData;
         }
 
         public void PopulateData(ButtonActionData buttonActionData)
         {
             UpdateActionList();
-            actionTypeDropdown.SelectValue(buttonActionData.actionType);
+            actionTypeDropdown.SelectValue(buttonActionData.actionType.ToString());
 
             UpdateEntityList();
             if (!string.IsNullOrEmpty(buttonActionData.targetEntityId))
@@ -161,7 +170,7 @@ namespace EAR.View
             }
 
             UpdateAnimationList();
-            animationIndexDropdown.SelectValue(buttonActionData.animationIndex);
+            animationIndexDropdown.SelectValue(buttonActionData.animationIndex.ToString());
         }
     }
 }

@@ -53,7 +53,7 @@ namespace EAR.Localization
                 return database[codeToIndex[currentLocale]][key];
             } else
             {
-                Debug.LogError("Cannot find key in database");
+                //Debug.LogError("Cannot find key in database");
                 return "";
             }
             

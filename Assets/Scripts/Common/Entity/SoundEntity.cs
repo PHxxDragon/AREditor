@@ -14,10 +14,10 @@ namespace EAR.Entity
             return count++;
         }
 
-        protected override string GetDefaultName()
+/*        protected override string GetDefaultName()
         {
             return "New sound " + count++;
-        }
+        }*/
 
         public override void StartDefaultState()
         {

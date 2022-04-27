@@ -12,8 +12,8 @@ mergeInto(LibraryManager.library, {
 		newByteArray[i] = HEAPU8[byteArray + i];
 	}
 	dispatchReactUnityEvent("SaveScreenshot", newByteArray);
-  }
+  },
   SetFullScreen: function(isOn) {
-    dispatchReactUnityEvent("SetFullScreen", isOn)
+    dispatchReactUnityEvent("SetFullScreen", isOn);
   }
 });

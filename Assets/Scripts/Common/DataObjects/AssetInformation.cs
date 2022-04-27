@@ -29,6 +29,9 @@ namespace EAR
 
         //type == "model"
         public bool isZipFile;
+
+        //type == "video"
+        public bool predownload;
     }
 }
 

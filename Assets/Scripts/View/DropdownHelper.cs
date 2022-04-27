@@ -7,17 +7,16 @@ namespace EAR.View
 {
     public class DropdownHelper : MonoBehaviour
     {
-        public event Action<object> OnDropdownValueChanged;
+        public event Action<string> OnDropdownValueChanged;
 
         [SerializeField]
         private TMP_Dropdown dropdown;
 
-        private readonly List<object> objectList = new List<object>();
-        private readonly Dictionary<object, int> objectToIndex = new Dictionary<object, int>();
+        private readonly List<string> objectList = new List<string>();
+        private readonly Dictionary<string, int> objectToIndex = new Dictionary<string, int>();
 
         void Awake()
         {
-            
             dropdown.onValueChanged.AddListener((value) =>
             {
                 OnDropdownValueChanged?.Invoke(objectList[value]);
@@ -31,30 +30,24 @@ namespace EAR.View
             dropdown.ClearOptions();
         }
 
-        public void PopulateData(List<object> objectCollection, List<string> nameCollection)
+        public void SetData(string obj, string name, int index)
         {
-            if (objectCollection.Count != nameCollection.Count)
+            if (index >= objectList.Count)
             {
-                Debug.LogError("Collection size does not match");
-                return;
-            }
-            objectList.Clear();
-            objectToIndex.Clear();
-            dropdown.ClearOptions();
-
-            objectList.AddRange(objectCollection);
-            List<TMP_Dropdown.OptionData> optionDatas = new List<TMP_Dropdown.OptionData>();
-            for (int i = 0; i < objectCollection.Count; i++)
+                AddData(obj, name);
+            } else
             {
+                string oldObj = objectList[index];
+                objectList[index] = obj;
+                objectToIndex.Remove(oldObj);
+                objectToIndex[obj] = index;
                 TMP_Dropdown.OptionData optionData = new TMP_Dropdown.OptionData();
-                optionData.text = nameCollection[i];
-                optionDatas.Add(optionData);
-                objectToIndex.Add(objectList[i], i);
+                optionData.text = name;
+                dropdown.options[index] = optionData;
             }
-            dropdown.AddOptions(optionDatas);
         }
 
-        public void AddData(object obj, string name)
+        public void AddData(string obj, string name)
         {
             objectList.Add(obj);
             objectToIndex[obj] = objectList.Count - 1;
@@ -65,35 +58,12 @@ namespace EAR.View
             dropdown.AddOptions(optionDatas);
         }
 
-        public void RemoveData(object obj)
-        {
-            if (!objectToIndex.ContainsKey(obj))
-            {
-                return;
-            }
-
-            object selected = GetSelectedValue();
-
-            int index = objectToIndex[obj];
-            objectList.RemoveAt(index);
-            objectToIndex.Remove(obj);
-
-            dropdown.options.RemoveAt(index);
-            if (obj != selected)
-            {
-                SelectValue(selected);
-            } else
-            {
-                dropdown.value = 0;
-            }
-        }
-
-        public object GetSelectedValue()
+        public string GetSelectedValue()
         {
             return objectList[dropdown.value];
         }
 
-        public void SelectValue(object value)
+        public void SelectValue(string value)
         {
             try
             {

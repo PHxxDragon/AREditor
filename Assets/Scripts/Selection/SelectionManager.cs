@@ -108,10 +108,14 @@ namespace EAR.Selection
 
         public void SelectObject(Selectable selectable)
         {
+            if (selectable == _currentSelection)
+                return;
+
             if (_currentSelection != null)
             {
                 OnObjectDeselected?.Invoke(_currentSelection);
             }
+
             if (selectable)
             {
                 _currentSelection = selectable;

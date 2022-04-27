@@ -3,6 +3,7 @@ using EAR.View;
 using EAR.Entity;
 using EAR.EARCamera;
 using EAR.UndoRedo;
+using System.Text.RegularExpressions;
 using RuntimeHandle;
 using UnityEngine;
 using System;
@@ -29,6 +30,8 @@ namespace EAR.Editor.Presenter
         private NoteEditorWindow noteEditorWindow;
         [SerializeField]
         private CameraController cameraController;
+        [SerializeField]
+        private VideoEditorWindow videoEditorWindow;
         [SerializeField]
         private RuntimeTransformHandle runtimeTransformHandle;
 
@@ -69,6 +72,12 @@ namespace EAR.Editor.Presenter
                     soundEditorWindow.PopulateData((SoundData) soundEntity.GetData());
                     soundEditorWindow.OpenEditor();
                 }
+                else if (entity is VideoEntity videoEntity)
+                {
+                    currentEntity = videoEntity;
+                    videoEditorWindow.PopulateData((VideoData)videoEntity.GetData());
+                    videoEditorWindow.OpenEditor();
+                }
             };
 
             selectionManager.OnObjectDeselected += (Selectable selectable) =>
@@ -81,6 +90,7 @@ namespace EAR.Editor.Presenter
                 if (modelEditorWindow) modelEditorWindow.CloseEditor();
                 if (soundEditorWindow) soundEditorWindow.CloseEditor();
                 if (buttonEditorWindow) buttonEditorWindow.CloseEditor();
+                if (videoEditorWindow) videoEditorWindow.CloseEditor();
             };
 
             imageEditorWindow.OnImageDelete += () =>
@@ -154,13 +164,28 @@ namespace EAR.Editor.Presenter
             };
             soundEditorWindow.OnInteractionEnded += EndModify;
 
+            videoEditorWindow.OnDelete += () =>
+            {
+                CheckAndDestroy(typeof(VideoEntity));
+            };
+            videoEditorWindow.OnVideoChanged += (VideoData videoData) =>
+            {
+                if (currentEntity is VideoEntity videoEntity)
+                {
+                    StartModify();
+                    videoEntity.PopulateData(videoData);
+                }
+            };
+            videoEditorWindow.OnInteractionEnded += EndModify;
+
             cameraController.CheckKeyboardBlocked += (ref bool isBlocked) =>
             {
                 if (noteEditorWindow.isActiveAndEnabled 
                 || buttonEditorWindow.isActiveAndEnabled 
                 || soundEditorWindow.isActiveAndEnabled 
                 || modelEditorWindow.isActiveAndEnabled
-                || imageEditorWindow.isActiveAndEnabled)
+                || imageEditorWindow.isActiveAndEnabled
+                || videoEditorWindow.isActiveAndEnabled)
                 {
                     isBlocked = true;
                 }
@@ -172,11 +197,12 @@ namespace EAR.Editor.Presenter
                 {
                     EntityData entityData = currentEntity.GetData();
                     entityData.id = null;
-                    entityData.name = null;
+                    entityData.name = GetNextDuplicatedName(entityData.name);
                     entityData.transform.position += new Vector3(0.1f, 0.1f, 0.1f);
                     BaseEntity addedEntity = EntityFactory.InstantNewEntity(entityData);
                     AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
                     undoRedoManager.AddCommand(add);
+                    selectionManager.SelectObject(addedEntity.GetComponent<Selectable>());
                 }
             };
 
@@ -201,6 +227,23 @@ namespace EAR.Editor.Presenter
                     EndModify();
                 }
             };
+        }
+
+        private string GetNextDuplicatedName(string name)
+        {
+            Regex regex = new Regex(@"\([0-9]*\)$");
+            Match match = regex.Match(name);
+            if (match.Success)
+            {
+                string newName = regex.Replace(name, "");
+                string matchedString = match.Value;
+                int currentNumber = int.Parse(matchedString.Substring(1, matchedString.Length - 2));
+                newName = newName + "(" + (currentNumber + 1) + ")";
+                return newName;
+            } else
+            {
+                return name + " (" + 1 + ")";
+            }
         }
 
         private void UpdateEntityTransformToEditor()
@@ -235,6 +278,12 @@ namespace EAR.Editor.Presenter
                 SoundData soundData = new SoundData();
                 soundData.transform = transformData;
                 soundEditorWindow.PopulateData(soundData);
+            }
+            else if (currentEntity is VideoEntity)
+            {
+                VideoData videoData = new VideoData();
+                videoData.transform = transformData;
+                videoEditorWindow.PopulateData(videoData);
             }
         }
 

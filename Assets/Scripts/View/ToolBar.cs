@@ -25,6 +25,8 @@ namespace EAR.View
         private Toggle buttonAddToggle;
         [SerializeField]
         private Toggle soundAddToggle;
+        [SerializeField]
+        private Toggle videoAddToggle;
 
         [SerializeField]
         private Toggle fullScreenToggle;
@@ -85,6 +87,7 @@ namespace EAR.View
             imageAddToggle.onValueChanged.AddListener(ImageToggleActive);
             buttonAddToggle.onValueChanged.AddListener(ButtonToggleActive);
             soundAddToggle.onValueChanged.AddListener(SoundToggleActive);
+            videoAddToggle.onValueChanged.AddListener(VideoToggleActive);
             saveButton.onClick.AddListener(SaveButtonClick);
             undoButton.onClick.AddListener(UndoButtonClick);
             redoButton.onClick.AddListener(RedoButtonClick);
@@ -94,6 +97,24 @@ namespace EAR.View
             duplicateButton.onClick.AddListener(DuplicateButtonClick);
             fullScreenToggle.onValueChanged.AddListener(FullScreenToggleClick);
             ApplyGlobalStates();
+        }
+
+        private void VideoToggleActive(bool isOn)
+        {
+            if (isOn)
+            {
+                OnToolChanged?.Invoke(activeTool, ToolEnum.AddVideo);
+                activeTool = ToolEnum.AddVideo;
+            }
+        }
+
+        // Press ESC to exit fullscreen
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                fullScreenToggle.isOn = false;
+            }
         }
 
         private void FullScreenToggleClick(bool arg0)

@@ -46,7 +46,7 @@ namespace EAR.View
             {
                 if (isPopulating) return;
                 ModelData modelData = new ModelData();
-                modelData.defaultAnimation = (int)obj;
+                modelData.defaultAnimation = int.Parse(obj);
                 OnModelChanged?.Invoke(modelData);
                 OnInteractionEnded?.Invoke();
             };
@@ -123,7 +123,7 @@ namespace EAR.View
                     List<string> animationList = anim.GetAnimationList();
                     for (int i = 0; i < animationList.Count; i++)
                     {
-                        animationDropdown.AddData(i, animationList[i]);
+                        animationDropdown.AddData(i.ToString(), animationList[i]);
                     }
                 }
             }
@@ -150,7 +150,7 @@ namespace EAR.View
 
             if (modelData.defaultAnimation.HasValue)
             {
-                animationDropdown.SelectValue(modelData.defaultAnimation.Value);
+                animationDropdown.SelectValue(modelData.defaultAnimation.Value.ToString());
             }
 
             if (!string.IsNullOrEmpty(modelData.name)) {

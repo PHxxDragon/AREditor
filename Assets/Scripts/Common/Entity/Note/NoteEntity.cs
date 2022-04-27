@@ -41,10 +41,10 @@ namespace EAR.Entity
             return count++;
         }
 
-        protected override string GetDefaultName()
+/*        protected override string GetDefaultName()
         {
             return "New note " + count++;
-        }
+        }*/
 
         public static NoteEntity InstantNewEntity(NoteData noteData)
         {
