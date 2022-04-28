@@ -105,9 +105,9 @@ namespace EAR
             StartCoroutine(GetImageCoroutine(imageUrl, callback, errorCallback, progressCallback));
         }
 
-        public void GetVideo(string videoUrl, string name, Action<string> callback, Action<string> errorCallback = null, Action<float> progressCallback = null)
+        public void GetFile(string videoUrl, string name, string folder, Action<string> callback, Action<string> errorCallback = null, Action<float> progressCallback = null)
         {
-            StartCoroutine(GetVideoCoroutine(videoUrl, name, callback, errorCallback, progressCallback));
+            StartCoroutine(GetFileCoroutine(videoUrl, name, folder, callback, errorCallback, progressCallback));
         }
 
         public static Bounds GetUIBounds(GameObject UIObject)
@@ -282,7 +282,7 @@ namespace EAR
             return bounds;
         }
 
-        private IEnumerator GetVideoCoroutine(string videoUrl, string name, Action<string> callback, Action<string> errorCallback, Action<float> progressCallback)
+        private IEnumerator GetFileCoroutine(string videoUrl, string name, string folder, Action<string> callback, Action<string> errorCallback, Action<float> progressCallback)
         {
             using (UnityWebRequest uwr = UnityWebRequest.Get(videoUrl))
             {
@@ -298,14 +298,14 @@ namespace EAR
                 }
                 else
                 {
-                    string directory = Application.persistentDataPath + "/videos/";
+                    string directory = Application.persistentDataPath + "/" + folder + "/";
                     if (!Directory.Exists(directory))
                     {
                         Directory.CreateDirectory(directory);
                     }
                     string localUrl = directory + name;
                     File.WriteAllBytes(localUrl, uwr.downloadHandler.data);
-                    callback?.Invoke(new Uri(localUrl).AbsoluteUri);
+                    callback?.Invoke(localUrl);
                 }
             }
         }

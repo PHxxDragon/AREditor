@@ -176,6 +176,7 @@ namespace EAR
         public RectTransformData noteContentRectTransformData;
 
         public string noteContent;
+        public string fontAssetId;
         public NullableColor textBackgroundColor;
 
         public NullableVector4 borderWidth;

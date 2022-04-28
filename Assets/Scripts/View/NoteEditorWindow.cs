@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using EAR.Container;
 
 namespace EAR.View
 {
@@ -15,6 +16,8 @@ namespace EAR.View
         private TMP_InputField nameInputField;
         [SerializeField]
         private TransformInput transformInput;
+        [SerializeField]
+        private DropdownHelper fontAssetDropdown;
         [SerializeField]
         private Toggle isVisible;
         [SerializeField]
@@ -218,7 +221,36 @@ namespace EAR.View
             };
             transformInput.OnInteractionEnded += () => OnInteractionEnded?.Invoke();
 
+            fontAssetDropdown.OnDropdownValueChanged += (obj) =>
+            {
+                if (isPopulating) return;
+                NoteData noteData = new NoteData();
+                noteData.fontAssetId = obj;
+                OnNoteDataChanged?.Invoke(noteData);
+                OnInteractionEnded?.Invoke();
+            };
+
+            if (AssetContainer.Instance)
+            {
+                SetAssetListener(AssetContainer.Instance);
+            }
+            else
+            {
+                AssetContainer.OnInstanceCreated += SetAssetListener;
+            }
+
             CloseEditor();
+        }
+
+        private void SetAssetListener(AssetContainer instance)
+        {
+            instance.OnAssetObjectAdded += (AssetObject assetObject) =>
+            {
+                if (assetObject.type == AssetObject.FONT_TYPE)
+                {
+                    fontAssetDropdown.AddData(assetObject.assetId, assetObject.name);
+                }
+            };
         }
     }
 }

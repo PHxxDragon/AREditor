@@ -2,8 +2,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using System.IO;
 using EAR.Entity;
 using EAR.AR;
+using TMPro;
 
 namespace EAR.Container
 {
@@ -39,6 +41,7 @@ namespace EAR.Container
         private readonly Dictionary<string, (AssetObject, Texture2D)> images = new Dictionary<string, (AssetObject, Texture2D)>();
         private readonly Dictionary<string, (AssetObject, AudioClip)> sounds = new Dictionary<string, (AssetObject, AudioClip)>();
         private readonly Dictionary<string, (AssetObject, string)> videos = new Dictionary<string, (AssetObject, string)>();
+        private readonly Dictionary<string, (AssetObject, TMP_FontAsset)> fonts = new Dictionary<string, (AssetObject, TMP_FontAsset)>();
 
         [SerializeField]
         private ModelLoader modelLoader;
@@ -89,6 +92,9 @@ namespace EAR.Container
                         break;
                     case AssetObject.VIDEO_TYPE:
                         LoadVideo(assetObject, errorCallback, progressCallback);
+                        break;
+                    case AssetObject.FONT_TYPE:
+                        LoadFont(assetObject, errorCallback, progressCallback);
                         break;
                     default:
                         assetCount -= 1;
@@ -195,9 +201,9 @@ namespace EAR.Container
             }
             else
             {
-                Utils.Instance.GetVideo(assetObject.url, assetObject.assetId + "." + assetObject.extension, (url) =>
+                Utils.Instance.GetFile(assetObject.url, assetObject.assetId + "." + assetObject.extension, "videos", (url) =>
                 {
-                    AddVideo(assetObject, url);
+                    AddVideo(assetObject, new Uri(url).AbsoluteUri);
                     assetCount -= 1;
                 }, 
                 (error) => 
@@ -215,6 +221,46 @@ namespace EAR.Container
                         progressCallback?.Invoke(value, "Loading video");
                     }
                 });
+            }
+        }
+
+        private void LoadFont(AssetObject assetObject, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
+        {
+            Utils.Instance.GetFile(assetObject.url, assetObject.assetId + "." + assetObject.extension, "fonts", (url) =>
+            {
+                AddFont(assetObject, url);
+                assetCount -= 1;
+            },
+               (error) =>
+               {
+                   if (!hasError)
+                   {
+                       hasError = true;
+                       errorCallback?.Invoke(error + " asset name: " + assetObject.name);
+                   }
+               },
+               (value) =>
+               {
+                   if (!hasError)
+                   {
+                       progressCallback?.Invoke(value, "Loading video");
+                   }
+               });
+        }
+
+        public TMP_FontAsset GetFont(string assetId)
+        {
+            try
+            {
+                return fonts[assetId].Item2;
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
+            catch (ArgumentNullException)
+            {
+                return null;
             }
         }
 
@@ -236,8 +282,24 @@ namespace EAR.Container
 
         private void AddVideo(AssetObject assetObject, string url)
         {
-            OnAssetObjectAdded?.Invoke(assetObject);
             videos.Add(assetObject.assetId, (assetObject, url));
+            OnAssetObjectAdded?.Invoke(assetObject);
+        }
+
+        private void AddFont(AssetObject assetObject, string url)
+        {
+           
+            if (File.Exists(url))
+            {
+                Font font = new Font(url);
+                TMP_FontAsset tMP_FontAsset = TMP_FontAsset.CreateFontAsset(font);
+                fonts.Add(assetObject.assetId, (assetObject, tMP_FontAsset));
+                OnAssetObjectAdded?.Invoke(assetObject);
+            } else
+            {
+                Debug.LogError("Cannot read file " + url);
+            }
+            
         }
 
         private void AddModel(AssetObject assetObject, GameObject model)
