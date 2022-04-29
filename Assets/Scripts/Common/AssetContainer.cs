@@ -73,6 +73,19 @@ namespace EAR.Container
         private int assetCount;
         private bool hasError;
 
+        private string GetTempSaveFolder(string folderName)
+        {
+            return Path.Combine(Application.persistentDataPath, "tempAssets", folderName);
+        }
+
+        void OnDestroy()
+        {
+            if (Directory.Exists(GetTempSaveFolder("")))
+            {
+                Directory.Delete(GetTempSaveFolder(""), true);
+            }
+        }
+
         public void LoadAssets(List<AssetObject> assetObjects, Action callback = null, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
         {
             assetCount = assetObjects.Count;
@@ -201,7 +214,7 @@ namespace EAR.Container
             }
             else
             {
-                Utils.Instance.GetFile(assetObject.url, assetObject.assetId + "." + assetObject.extension, "videos", (url) =>
+                Utils.Instance.GetFile(assetObject.url, assetObject.assetId + "." + assetObject.extension, GetTempSaveFolder("videos"), (url) =>
                 {
                     AddVideo(assetObject, new Uri(url).AbsoluteUri);
                     assetCount -= 1;
@@ -226,7 +239,7 @@ namespace EAR.Container
 
         private void LoadFont(AssetObject assetObject, Action<string> errorCallback = null, Action<float, string> progressCallback = null)
         {
-            Utils.Instance.GetFile(assetObject.url, assetObject.assetId + "." + assetObject.extension, "fonts", (url) =>
+            Utils.Instance.GetFile(assetObject.url, assetObject.assetId + "." + assetObject.extension, GetTempSaveFolder("fonts"), (url) =>
             {
                 AddFont(assetObject, url);
                 assetCount -= 1;

@@ -74,20 +74,24 @@ namespace EAR.Entity
             this.assetId = assetId;
 
             string url = AssetContainer.Instance.GetVideo(assetId);
-            videoPlayer.url = url;
-            videoPlayer.Prepare();
-            videoPlayer.prepareCompleted += (VideoPlayer source) =>
+            videoPlayer.Stop();
+            if (url != null)
             {
-                Vector3 newScale = plane.transform.localScale;
-                newScale.z = ((float)videoPlayer.texture.height / videoPlayer.texture.width) * 0.1f;
-                plane.transform.localScale = newScale;
-                videoPlayer.Play();
-                if (!GlobalStates.IsPlayMode())
+                videoPlayer.url = url;
+                videoPlayer.Prepare();
+                videoPlayer.prepareCompleted += (VideoPlayer source) =>
                 {
-                    videoPlayer.time = 0;
-                    videoPlayer.Pause();
-                }
-            };
+                    Vector3 newScale = plane.transform.localScale;
+                    newScale.z = ((float)videoPlayer.texture.height / videoPlayer.texture.width) * 0.1f;
+                    plane.transform.localScale = newScale;
+                    videoPlayer.Play();
+                    if (!GlobalStates.IsPlayMode())
+                    {
+                        videoPlayer.time = 0;
+                        videoPlayer.Pause();
+                    }
+                };
+            }
         }
 
         public override void PopulateData(EntityData entityData)

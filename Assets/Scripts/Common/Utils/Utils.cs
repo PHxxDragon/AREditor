@@ -298,12 +298,11 @@ namespace EAR
                 }
                 else
                 {
-                    string directory = Application.persistentDataPath + "/" + folder + "/";
-                    if (!Directory.Exists(directory))
+                    if (!Directory.Exists(folder))
                     {
-                        Directory.CreateDirectory(directory);
+                        Directory.CreateDirectory(folder);
                     }
-                    string localUrl = directory + name;
+                    string localUrl = folder + "/" + name;
                     File.WriteAllBytes(localUrl, uwr.downloadHandler.data);
                     callback?.Invoke(localUrl);
                 }

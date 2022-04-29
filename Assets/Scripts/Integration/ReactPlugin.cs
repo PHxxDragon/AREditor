@@ -43,7 +43,7 @@ namespace EAR.Integration
             assetObject.name = "Video 1";
             assetObject.type = AssetObject.VIDEO_TYPE;
             assetObject.url = "https://www.w3schools.com/html/mov_bbb.mp4";
-            assetObject.predownload = true;
+            assetObject.predownload = false;
             assetInformation.assets.Add(assetObject);
             /*AssetObject assetObject = new AssetObject();
             assetObject.assetId = "alksdjfals;df";
@@ -53,14 +53,14 @@ namespace EAR.Integration
             assetObject.type = AssetObject.MODEL_TYPE;
             assetObject.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip";
             assetInformation.assets.Add(assetObject);*/
-            AssetObject assetObject5 = new AssetObject();
+/*            AssetObject assetObject5 = new AssetObject();
             assetObject5.assetId = "adasfds5555";
             assetObject5.extension = "ttf";
             assetObject5.isZipFile = false;
             assetObject5.name = "font 1";
             assetObject5.type = AssetObject.FONT_TYPE;
             assetObject5.url = "http://localhost:4000/BeVietnamPro-Light.ttf";
-            assetInformation.assets.Add(assetObject5);
+            assetInformation.assets.Add(assetObject5);*/
             AssetObject assetObject2 = new AssetObject();
             assetObject2.assetId = "akjsdflasvkcvhxvuiy";
             assetObject2.extension = "gltf";
@@ -73,7 +73,7 @@ namespace EAR.Integration
             assetObject3.assetId = "lkjfioewuffewffdsf";
             assetObject3.name = "image 1112";
             assetObject3.type = AssetObject.IMAGE_TYPE;
-            assetObject3.url = "https://library.vuforia.com/sites/default/files/vuforia-library/articles/solution/Magic%20Leap%20Related%20Content/Astronaut-scaled.jpg";
+            assetObject3.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/users/1/files/1650808671357_Pricing-Background.png";
             assetInformation.assets.Add(assetObject3);
             AssetObject assetObject4 = new AssetObject();
             assetObject4.assetId = "lakjdfadfdsafaf";
