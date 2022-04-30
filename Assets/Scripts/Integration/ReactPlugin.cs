@@ -84,7 +84,7 @@ namespace EAR.Integration
             assetInformation.assets.Add(assetObject4);
             assetInformation.metadata = LocalStorage.Load("abcdef");
             LoadModule(JsonUtility.ToJson(assetInformation));
-            SetMode(2);
+            SetMode(1);
             SetEnableScreenshot(0);
 #endif
         }
@@ -106,7 +106,7 @@ namespace EAR.Integration
             SetFullScreen(isOn ? 1 : 0);
 #endif
 #if UNITY_EDITOR == true
-            Debug.Log(isOn);
+            //Debug.Log(isOn);
 #endif
         }
 

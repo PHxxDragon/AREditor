@@ -4,7 +4,9 @@ using UnityEngine.UI;
 using EAR.Entity;
 using System.Collections;
 using System;
+using System.Security.Cryptography;
 using System.IO;
+using System.Text;
 
 namespace EAR 
 {
@@ -105,9 +107,9 @@ namespace EAR
             StartCoroutine(GetImageCoroutine(imageUrl, callback, errorCallback, progressCallback));
         }
 
-        public void GetFile(string videoUrl, string name, string folder, Action<string> callback, Action<string> errorCallback = null, Action<float> progressCallback = null)
+        public void GetFile(string url, string extension, string folder, Action<string> callback, Action<string> errorCallback = null, Action<float> progressCallback = null)
         {
-            StartCoroutine(GetFileCoroutine(videoUrl, name, folder, callback, errorCallback, progressCallback));
+            StartCoroutine(GetFileCoroutine(url, extension, folder, callback, errorCallback, progressCallback));
         }
 
         public static Bounds GetUIBounds(GameObject UIObject)
@@ -282,9 +284,21 @@ namespace EAR
             return bounds;
         }
 
-        private IEnumerator GetFileCoroutine(string videoUrl, string name, string folder, Action<string> callback, Action<string> errorCallback, Action<float> progressCallback)
+        public string GetHashString(string inputString)
         {
-            using (UnityWebRequest uwr = UnityWebRequest.Get(videoUrl))
+            using HashAlgorithm algorithm = SHA256.Create();
+            byte[] hash = algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (byte b in hash)
+            {
+                stringBuilder.Append(b.ToString("x2"));
+            }
+            return stringBuilder.ToString();
+        }
+
+        private IEnumerator GetFileCoroutine(string url, string extension, string folder, Action<string> callback, Action<string> errorCallback, Action<float> progressCallback)
+        {
+            using (UnityWebRequest uwr = UnityWebRequest.Get(url))
             {
                 UnityWebRequestAsyncOperation operation = uwr.SendWebRequest();
                 while (!operation.isDone)
@@ -302,7 +316,7 @@ namespace EAR
                     {
                         Directory.CreateDirectory(folder);
                     }
-                    string localUrl = folder + "/" + name;
+                    string localUrl = Path.Combine(folder, GetHashString(url) + "." + extension);
                     File.WriteAllBytes(localUrl, uwr.downloadHandler.data);
                     callback?.Invoke(localUrl);
                 }
