@@ -11,12 +11,22 @@ namespace EAR.View
 
         [SerializeField]
         private TMP_Dropdown dropdown;
+        [SerializeField]
+        private List<string> initObjectList;
+        [SerializeField]
+        private List<string> initNameList;
 
         private readonly List<string> objectList = new List<string>();
         private readonly Dictionary<string, int> objectToIndex = new Dictionary<string, int>();
 
         void Awake()
         {
+            dropdown.ClearOptions();
+            for (int i = 0; i < initNameList.Count; i++)
+            {
+                AddData(initObjectList[i], initNameList[i]);
+            }
+
             dropdown.onValueChanged.AddListener((value) =>
             {
                 OnDropdownValueChanged?.Invoke(objectList[value]);
@@ -32,19 +42,13 @@ namespace EAR.View
 
         public void SetData(string obj, string name, int index)
         {
-            if (index >= objectList.Count)
-            {
-                AddData(obj, name);
-            } else
-            {
-                string oldObj = objectList[index];
-                objectList[index] = obj;
-                objectToIndex.Remove(oldObj);
-                objectToIndex[obj] = index;
-                TMP_Dropdown.OptionData optionData = new TMP_Dropdown.OptionData();
-                optionData.text = name;
-                dropdown.options[index] = optionData;
-            }
+            string oldObj = objectList[index];
+            objectList[index] = obj;
+            objectToIndex.Remove(oldObj);
+            objectToIndex[obj] = index;
+            TMP_Dropdown.OptionData optionData = new TMP_Dropdown.OptionData();
+            optionData.text = name;
+            dropdown.options[index] = optionData;
         }
 
         public void AddData(string obj, string name)

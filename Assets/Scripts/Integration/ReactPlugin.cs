@@ -83,8 +83,9 @@ namespace EAR.Integration
             assetObject4.extension = "mp3";
             assetInformation.assets.Add(assetObject4);
             assetInformation.metadata = LocalStorage.Load("abcdef");
+            
             LoadModule(JsonUtility.ToJson(assetInformation));
-            SetMode(1);
+            SetMode(3);
             SetEnableScreenshot(0);
 #endif
         }

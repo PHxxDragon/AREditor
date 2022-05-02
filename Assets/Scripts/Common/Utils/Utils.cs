@@ -28,17 +28,20 @@ namespace EAR
 		
 		public static string GetFileSizeString(long size)
         {
-            if (size < 1000)
+            if (size < 1024)
             {
                 return size + " b";
             }
-            else if (size < 1000000)
+            else if (size < 1024 * 1024)
             {
-                return ((float)size / 1000).ToString("#.#") + " kb";
+                return ((float)size / 1024).ToString("#.#") + " KB";
             }
-            else
+            else if (size < 1024 * 1024 * 1024)
             {
-                return ((float)size / 1000000).ToString("#.#") + " mb";
+                return ((float)size / 1024 * 1024).ToString("#.#") + " MB";
+            } else
+            {
+                return ((float)size / 1024 * 1024 * 1024).ToString("#.#") + " GB";
             }
         }
 
