@@ -61,6 +61,11 @@ namespace EAR.View
             return entityId;
         }
 
+        public void SetName(string text)
+        {
+            nameText.text = text;
+        }
+
         public void PopulateData(BaseEntity baseEntity)
         {
             entityId = baseEntity.GetId();

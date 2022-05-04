@@ -1,16 +1,21 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 using System;
-using TMPro;
 
 namespace EAR.Integration
 {
     public class ReactPlugin : MonoBehaviour
     {
+        public const string SAVE_SUCCESS = "success";
+        public const string SAVE_FAILED = "failed";
+
         public event Action<AssetInformation> LoadModuleCalledEvent;
         public event Action<string> LanguageChangeEvent;
         public event Action<GlobalStates.Mode> OnSetMode;
         public event Action<bool> OnSetEnableScreenshot;
+
+/*        [SerializeField]
+        private TMP_Text saveStatus;*/
 
         [DllImport("__Internal")]
         private static extern void SetFullScreen(int isOn);
@@ -23,6 +28,9 @@ namespace EAR.Integration
 
         [DllImport("__Internal")]
         private static extern void SaveScreenshot(byte[] array, int size);
+
+        [DllImport("__Internal")]
+        private static extern void SetUnsaved(int isUnsaved);
 
         void Start()
         {
@@ -90,14 +98,30 @@ namespace EAR.Integration
 #endif
         }
 
+        void Awake()
+        {
+
+            GlobalStates.OnSavableChange += (isSavable) =>
+            {
+#if UNITY_WEBGL == true && UNITY_EDITOR == false
+                SetUnsaved(isSavable != GlobalStates.SaveStatus.Saved ? 1 : 0);
+#endif
+#if UNITY_EDITOR == true
+                Debug.Log("set savable: " + isSavable);
+#endif
+            };
+            }
+
         public void Save(string metadata)
         {
             Debug.Log(metadata);
+            GlobalStates.SetSavable(GlobalStates.SaveStatus.Saving);
 #if UNITY_WEBGL == true && UNITY_EDITOR == false
             SaveMetadata(metadata);
 #endif
 #if UNITY_EDITOR == true
             LocalStorage.Save("abcdef", metadata);
+            SetSaveStatus(SAVE_SUCCESS);
 #endif
         }
 
@@ -116,6 +140,17 @@ namespace EAR.Integration
             Debug.Log("Load module called: " + paramJson);
             AssetInformation param = JsonUtility.FromJson<AssetInformation>(paramJson);
             LoadModuleCalledEvent?.Invoke(param);
+        }
+
+        public void SetSaveStatus(string status)
+        {
+            if (status == SAVE_SUCCESS)
+            {
+                GlobalStates.SetSavable(GlobalStates.SaveStatus.Saved);
+            } else
+            {
+                GlobalStates.SetSavable(GlobalStates.SaveStatus.Savable);
+            }
         }
 
         public void SetMode(int mode)

@@ -71,6 +71,11 @@ namespace EAR.Editor.Presenter
             {
                 Debug.Log("Unassigned references");
             }
+
+            undoRedoManager.OnCommandAdded += (command) =>
+            {
+                GlobalStates.SetSavable(GlobalStates.SaveStatus.Savable);
+            };
         }
 
         private void SaveButtonClicked()

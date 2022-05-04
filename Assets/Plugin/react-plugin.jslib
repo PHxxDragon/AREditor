@@ -15,5 +15,8 @@ mergeInto(LibraryManager.library, {
   },
   SetFullScreen: function(isOn) {
     dispatchReactUnityEvent("SetFullScreen", isOn);
+  },
+  SetUnsaved: function(isUnsaved) {
+	dispatchReactUnityEvent("SetUnsaved", isUnsaved);
   }
 });

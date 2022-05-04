@@ -39,6 +39,8 @@ namespace EAR.View
         [SerializeField]
         private Button saveButton;
         [SerializeField]
+        private LoadingCircle loadingCircle;
+        [SerializeField]
         private Button undoButton;
         [SerializeField]
         private Button redoButton;
@@ -191,6 +193,13 @@ namespace EAR.View
             GlobalStates.OnEnableScreenshotChange += (bool value) =>
             {
                 screenshotButton.gameObject.SetActive(value);
+            };
+            saveButton.interactable = GlobalStates.GetSaveStatus() == GlobalStates.SaveStatus.Savable;
+            loadingCircle.gameObject.SetActive(GlobalStates.GetSaveStatus() == GlobalStates.SaveStatus.Saving);
+            GlobalStates.OnSavableChange += (GlobalStates.SaveStatus value) =>
+            {
+                saveButton.interactable = value == GlobalStates.SaveStatus.Savable;
+                loadingCircle.gameObject.SetActive(value == GlobalStates.SaveStatus.Saving);
             };
         }
 

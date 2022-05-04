@@ -8,6 +8,7 @@ namespace EAR.UndoRedo
     {
         public event Action OnBeforeUndo;
         public event Action OnBeforeRedo;
+        public event Action<IUndoRedoCommand> OnCommandAdded;
 
         private Stack<IUndoRedoCommand> commandStack = new Stack<IUndoRedoCommand>();
         private Stack<IUndoRedoCommand> redoStack = new Stack<IUndoRedoCommand>();
@@ -16,6 +17,7 @@ namespace EAR.UndoRedo
         {
             commandStack.Push(command);
             redoStack.Clear();
+            OnCommandAdded?.Invoke(command);
         }
 
         public void PerformUndo()

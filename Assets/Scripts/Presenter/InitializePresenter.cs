@@ -19,6 +19,8 @@ namespace EAR.Editor.Presenter
         private Modal modalPrefab;
         [SerializeField]
         private GameObject canvas;
+        [SerializeField]
+        private GameObject loadingPanel;
 
         void Awake()
         {
@@ -68,6 +70,7 @@ namespace EAR.Editor.Presenter
             }
 
             cameraController.SetDefaultCameraPosition(Utils.GetEntityBounds(EntityContainer.Instance.gameObject));
+            loadingPanel.SetActive(false);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EAR.Selection;
 using EAR.Container;
 using TMPro;
+using System;
 
 namespace EAR.View
 {
@@ -24,10 +25,19 @@ namespace EAR.View
         {
             BaseEntity.OnEntityCreated += AddEntity;
             BaseEntity.OnEntityDestroy += RemoveEntity;
+            BaseEntity.OnEntityNameChanged += EntityNameChanged;
             selectionManager.OnObjectSelected += SelectEntity;
             selectionManager.OnObjectDeselected += DeselectEntity;
             searchField.onValueChanged.AddListener(OnSearch);
             gameObject.SetActive(false);
+        }
+
+        private void EntityNameChanged(BaseEntity entity)
+        {
+            if (entityList.TryGetValue(entity.GetId(), out EntityRowView entityRowView))
+            {
+                entityRowView.SetName(entity.GetEntityName());
+            }
         }
 
         private void OnSearch(string keyword)
@@ -95,6 +105,7 @@ namespace EAR.View
         {
             BaseEntity.OnEntityCreated -= AddEntity;
             BaseEntity.OnEntityDestroy -= RemoveEntity;
+            BaseEntity.OnEntityNameChanged -= EntityNameChanged;
         }
     }
 
