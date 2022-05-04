@@ -8,7 +8,7 @@ namespace EAR.View
 {
     public class EntityRowView : MonoBehaviour
     {
-        public event Action RowSelected;
+        public event Action<bool> RowSelected;
         [SerializeField]
         private Image icon;
         [SerializeField]
@@ -34,10 +34,7 @@ namespace EAR.View
         {
             toggle.onValueChanged.AddListener((isOn) =>
             {
-                if (isOn)
-                {
-                    RowSelected?.Invoke();
-                }
+                RowSelected?.Invoke(isOn);
             });
         }
 

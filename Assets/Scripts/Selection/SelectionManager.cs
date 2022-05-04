@@ -111,10 +111,7 @@ namespace EAR.Selection
             if (selectable == _currentSelection)
                 return;
 
-            if (_currentSelection != null)
-            {
-                OnObjectDeselected?.Invoke(_currentSelection);
-            }
+            DeselectObject();
 
             if (selectable)
             {
@@ -123,6 +120,15 @@ namespace EAR.Selection
                 OnObjectSelected?.Invoke(_currentSelection);
             }
         }
+
+        public void DeselectObject(Selectable selectable)
+        {
+            if (selectable == _currentSelection)
+            {
+                DeselectObject();
+            }
+        }
+
 
         public void DeselectObject()
         {

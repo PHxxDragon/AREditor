@@ -44,7 +44,7 @@ namespace EAR.View
         {
             foreach (EntityRowView entityRowView in entityList.Values)
             {
-                if (entityRowView.GetName().Contains(keyword))
+                if (entityRowView.GetName().ToLower().Contains(keyword.ToLower()))
                 {
                     entityRowView.gameObject.SetActive(true);
                 } else
@@ -84,10 +84,17 @@ namespace EAR.View
         {
             EntityRowView entityRowView = Instantiate(entityRowPrefab, container.transform);
             entityRowView.PopulateData(baseEntity);
-            entityRowView.RowSelected += () =>
+            entityRowView.RowSelected += (isOn) =>
             {
                 BaseEntity entity = EntityContainer.Instance.GetEntity(entityRowView.GetEntityId());
-                selectionManager.SelectObject(entity.GetComponent<Selectable>());
+                if (isOn)
+                {
+                    selectionManager.SelectObject(entity.GetComponent<Selectable>());
+                } else
+                {
+                    selectionManager.DeselectObject(entity.GetComponent<Selectable>());
+                }
+                
             };
             entityList.Add(baseEntity.GetId(), entityRowView);
         }
