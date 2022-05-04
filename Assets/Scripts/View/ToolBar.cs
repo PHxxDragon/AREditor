@@ -52,6 +52,8 @@ namespace EAR.View
         [SerializeField]
         private List<GameObject> editForARModuleAndModelDetail;
         [SerializeField]
+        private List<GameObject> arModuleOnly;
+        [SerializeField]
         private GameObject showInPlayMode;
 
         private ToolEnum activeTool;
@@ -200,21 +202,25 @@ namespace EAR.View
                     gameObject.SetActive(false);
                     editForARModule.ForEach(gameObject => gameObject.SetActive(false));
                     editForARModuleAndModelDetail.ForEach(gameObject => gameObject.SetActive(false));
+                    arModuleOnly.ForEach(gameObject => gameObject.SetActive(false));
                     break;
                 case GlobalStates.Mode.EditModel:
                     editForARModule.ForEach(gameObject => gameObject.SetActive(false));
                     gameObject.SetActive(true);
                     editForARModuleAndModelDetail.ForEach(gameObject => gameObject.SetActive(true));
+                    arModuleOnly.ForEach(gameObject => gameObject.SetActive(false));
                     break;
                 case GlobalStates.Mode.EditARModule:
                     gameObject.SetActive(true);
                     editForARModule.ForEach(gameObject => gameObject.SetActive(true));
                     editForARModuleAndModelDetail.ForEach(gameObject => gameObject.SetActive(true));
+                    arModuleOnly.ForEach(gameObject => gameObject.SetActive(true));
                     break;
                 case GlobalStates.Mode.ViewARModule:
                     gameObject.SetActive(true);
                     editForARModule.ForEach(gameObject => gameObject.SetActive(false));
                     editForARModuleAndModelDetail.ForEach(gameObject => gameObject.SetActive(false));
+                    arModuleOnly.ForEach(gameObject => gameObject.SetActive(true));
                     break;
             }
         }

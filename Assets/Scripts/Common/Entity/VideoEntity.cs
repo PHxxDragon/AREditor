@@ -82,7 +82,7 @@ namespace EAR.Entity
                 videoPlayer.prepareCompleted += (VideoPlayer source) =>
                 {
                     Vector3 newScale = plane.transform.localScale;
-                    newScale.z = ((float)videoPlayer.texture.height / videoPlayer.texture.width) * 0.1f;
+                    newScale.x = ((float)videoPlayer.texture.width / videoPlayer.texture.height) * 1f;
                     plane.transform.localScale = newScale;
                     videoPlayer.Play();
                     if (!GlobalStates.IsPlayMode())

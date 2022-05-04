@@ -21,16 +21,19 @@ namespace EAR.View
 
         void Awake()
         {
-            dropdown.ClearOptions();
-            for (int i = 0; i < initNameList.Count; i++)
+            if (objectList.Count == 0 && objectToIndex.Count == 0)
             {
-                AddData(initObjectList[i], initNameList[i]);
-            }
+                dropdown.ClearOptions();
+                for (int i = 0; i < initNameList.Count; i++)
+                {
+                    AddData(initObjectList[i], initNameList[i]);
+                }
 
-            dropdown.onValueChanged.AddListener((value) =>
-            {
-                OnDropdownValueChanged?.Invoke(objectList[value]);
-            });
+                dropdown.onValueChanged.AddListener((value) =>
+                {
+                    OnDropdownValueChanged?.Invoke(objectList[value]);
+                });
+            }
         }
 
         public void ClearData()
