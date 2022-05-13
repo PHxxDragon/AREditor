@@ -14,6 +14,10 @@ namespace EAR
     {
         private static Utils instance;
 
+        public const long KILOBYTE = 1024;
+        public const long MEGABYTE = 1024 * KILOBYTE;
+        public const long GIGABYTE = 1024 * MEGABYTE;
+
         public static Utils Instance
         {
             get
@@ -28,20 +32,20 @@ namespace EAR
 		
 		public static string GetFileSizeString(long size)
         {
-            if (size < 1024)
+            if (size < KILOBYTE)
             {
-                return size + " b";
+                return size + " B";
             }
-            else if (size < 1024 * 1024)
+            else if (size < MEGABYTE)
             {
-                return ((float)size / 1024).ToString("#.#") + " KB";
+                return ((float)size / KILOBYTE).ToString("#.#") + " KB";
             }
-            else if (size < 1024 * 1024 * 1024)
+            else if (size < GIGABYTE)
             {
-                return ((float)size / 1024 * 1024).ToString("#.#") + " MB";
+                return ((float)size / MEGABYTE).ToString("#.#") + " MB";
             } else
             {
-                return ((float)size / 1024 * 1024 * 1024).ToString("#.#") + " GB";
+                return ((float)size / GIGABYTE).ToString("#.#") + " GB";
             }
         }
 
