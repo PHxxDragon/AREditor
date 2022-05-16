@@ -53,29 +53,21 @@ namespace EAR.Integration
             assetObject.url = "https://www.w3schools.com/html/mov_bbb.mp4";
             assetObject.predownload = false;
             assetInformation.assets.Add(assetObject);
-            /*AssetObject assetObject = new AssetObject();
-            assetObject.assetId = "alksdjfals;df";
-            assetObject.extension = "gltf";
-            assetObject.isZipFile = true;
-            assetObject.name = "Model 1";
-            assetObject.type = AssetObject.MODEL_TYPE;
-            assetObject.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip";
-            assetInformation.assets.Add(assetObject);*/
-/*            AssetObject assetObject5 = new AssetObject();
-            assetObject5.assetId = "adasfds5555";
-            assetObject5.extension = "ttf";
-            assetObject5.isZipFile = false;
-            assetObject5.name = "font 1";
-            assetObject5.type = AssetObject.FONT_TYPE;
-            assetObject5.url = "http://localhost:4000/BeVietnamPro-Light.ttf";
-            assetInformation.assets.Add(assetObject5);*/
+            /*            AssetObject assetObject5 = new AssetObject();
+                        assetObject5.assetId = "adasfds5555";
+                        assetObject5.extension = "ttf";
+                        assetObject5.isZipFile = false;
+                        assetObject5.name = "font 1";
+                        assetObject5.type = AssetObject.FONT_TYPE;
+                        assetObject5.url = "http://localhost:4000/BeVietnamPro-Light.ttf";
+                        assetInformation.assets.Add(assetObject5);*/
             AssetObject assetObject2 = new AssetObject();
             assetObject2.assetId = "akjsdflasvkcvhxvuiy";
             assetObject2.extension = "gltf";
             assetObject2.isZipFile = true;
             assetObject2.name = "Model wolf wolf";
             assetObject2.type = AssetObject.MODEL_TYPE;
-            assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/models/1/1646803972049_blender_chan.zip";
+            assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/4/1652711922113_enc_demo%20turtle.zip";
             assetInformation.assets.Add(assetObject2);
             AssetObject assetObject3 = new AssetObject();
             assetObject3.assetId = "lkjfioewuffewffdsf";
@@ -90,10 +82,16 @@ namespace EAR.Integration
             assetObject4.url = "https://www.w3schools.com/html/horse.mp3";
             assetObject4.extension = "mp3";
             assetInformation.assets.Add(assetObject4);
-            assetInformation.metadata = LocalStorage.Load("abcdef");
-            
+            AssetObject assetObject5 = new AssetObject();
+            assetObject5.assetId = "lakjdfadfdsafafvvvvv";
+            assetObject5.name = "Font 1111";
+            assetObject5.type = AssetObject.FONT_TYPE;
+            assetObject5.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/users/4/files/1652712275553_Roboto-Black.ttf";
+            assetObject5.extension = "ttf";
+            assetInformation.assets.Add(assetObject5);
+
             LoadModule(JsonUtility.ToJson(assetInformation));
-            SetMode(3);
+            SetMode(2);
             SetEnableScreenshot(0);
 #endif
         }
