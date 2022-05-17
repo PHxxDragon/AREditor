@@ -162,7 +162,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  key: TargetEntity
+  key: Animation
 --- !u!1 &1779416326108724376
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,12 +28,12 @@ namespace EAR.View
                 {
                     AddData(initObjectList[i], initNameList[i]);
                 }
-
-                dropdown.onValueChanged.AddListener((value) =>
-                {
-                    OnDropdownValueChanged?.Invoke(objectList[value]);
-                });
             }
+
+            dropdown.onValueChanged.AddListener((value) =>
+            {
+                OnDropdownValueChanged?.Invoke(objectList[value]);
+            });
         }
 
         public void ClearData()
