@@ -28,6 +28,9 @@ namespace EAR.View
                 {
                     AddData(initObjectList[i], initNameList[i]);
                 }
+            } else if (initNameList.Count != 0 || initNameList.Count != 0)
+            {
+                Debug.LogError("Cannot add initial value for dropdown because option count is not 0");
             }
 
             dropdown.onValueChanged.AddListener((value) =>
@@ -67,7 +70,11 @@ namespace EAR.View
 
         public string GetSelectedValue()
         {
-            return objectList[dropdown.value];
+            if (objectList.Count > dropdown.value)
+            {
+                return objectList[dropdown.value];
+            }
+            return null;
         }
 
         public void SelectValue(string value)

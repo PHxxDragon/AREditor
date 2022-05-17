@@ -25,18 +25,20 @@ namespace EAR.View
 
         [SerializeField]
         private GameObject animationIndexContainer;
+        [SerializeField]
+        private GameObject actionTypeContainer;
 
         void Awake()
         {
             actionTypeDropdown.OnDropdownValueChanged += (value) =>
             {
-                UpdateEntityList();
                 UpdateAnimationList();
                 OnButtonActionChanged?.Invoke(GetData());
             };
 
             entityIdDropdown.OnDropdownValueChanged += (value) =>
             {
+                UpdateActionList();
                 UpdateAnimationList();
                 OnButtonActionChanged?.Invoke(GetData());
             };
@@ -50,13 +52,49 @@ namespace EAR.View
             });
         }
 
+        private void AddType(ButtonActionData.ActionType actionType)
+        {
+            actionTypeDropdown.AddData(actionType.ToString(), ActionTypeToString(actionType));
+        }
+
         private void UpdateActionList()
         {
-            actionTypeDropdown.ClearData();
-            foreach (ButtonActionData.ActionType type in Enum.GetValues(typeof(ButtonActionData.ActionType)))
+            BaseEntity baseEntity = EntityContainer.Instance.GetEntity(entityIdDropdown.GetSelectedValue());
+            if (baseEntity)
             {
-                actionTypeDropdown.AddData(type.ToString(), ActionTypeToString(type));
+                actionTypeContainer.gameObject.SetActive(true);
+                actionTypeDropdown.ClearData();
+                if (baseEntity is ModelEntity modelEntity) 
+                {
+                    AddType(ButtonActionData.ActionType.Show);
+                    AddType(ButtonActionData.ActionType.Hide);
+                    if (modelEntity.GetComponentInChildren<AnimPlayer>() != null)
+                    {
+                        AddType(ButtonActionData.ActionType.PlayAnimation);
+                    }
+                } else if (baseEntity is NoteEntity)
+                {
+                    AddType(ButtonActionData.ActionType.Show);
+                    AddType(ButtonActionData.ActionType.Hide);
+                } else if (baseEntity is SoundEntity)
+                {
+                    AddType(ButtonActionData.ActionType.PlaySound);
+                    AddType(ButtonActionData.ActionType.StopSound);
+                } else if (baseEntity is VideoEntity)
+                {
+                    AddType(ButtonActionData.ActionType.Show);
+                    AddType(ButtonActionData.ActionType.Hide);
+                    AddType(ButtonActionData.ActionType.PlayVideo);
+                    AddType(ButtonActionData.ActionType.StopVideo);
+                } else if (baseEntity is ButtonEntity)
+                {
+                    Debug.LogError("No action for button");
+                }
+            } else
+            {
+                actionTypeContainer.gameObject.SetActive(false);
             }
+            
         }
 
         private string ActionTypeToString(ButtonActionData.ActionType actionType)
@@ -66,13 +104,12 @@ namespace EAR.View
 
         private void UpdateEntityList()
         {
-            ButtonActionData.ActionType actionType = (ButtonActionData.ActionType) Enum.Parse(typeof(ButtonActionData.ActionType), actionTypeDropdown.GetSelectedValue());
             entityIdDropdown.ClearData();
             entityIdDropdown.AddData(string.Empty, LocalizationManager.GetLocalizedText("ChooseEntity"));
             BaseEntity[] entities = EntityContainer.Instance.GetEntities();
             foreach (BaseEntity baseEntity in entities)
             {
-                if (IsEntitySelectable(actionType, baseEntity))
+                if (!(baseEntity is ButtonEntity))
                 {
                     entityIdDropdown.AddData(baseEntity.GetId(), baseEntity.GetEntityName());
                 }
@@ -81,15 +118,13 @@ namespace EAR.View
 
         private void UpdateAnimationList()
         {
-            ButtonActionData.ActionType actionType = (ButtonActionData.ActionType)Enum.Parse(typeof(ButtonActionData.ActionType), actionTypeDropdown.GetSelectedValue());
-            if (actionType != ButtonActionData.ActionType.PlayAnimation)
+            string value = actionTypeDropdown.GetSelectedValue();
+            if (!string.IsNullOrEmpty(value))
             {
-                animationIndexContainer.gameObject.SetActive(false);
-            } else
-            {
-                try
+                ButtonActionData.ActionType actionType = (ButtonActionData.ActionType)Enum.Parse(typeof(ButtonActionData.ActionType), value);
+                if (actionType == ButtonActionData.ActionType.PlayAnimation)
                 {
-                    ModelEntity modelEntity = EntityContainer.Instance.GetEntity((string)entityIdDropdown.GetSelectedValue()) as ModelEntity;
+                    ModelEntity modelEntity = EntityContainer.Instance.GetEntity(entityIdDropdown.GetSelectedValue()) as ModelEntity;
                     if (modelEntity)
                     {
                         AnimPlayer animPlayer = modelEntity.GetComponentInChildren<AnimPlayer>();
@@ -110,38 +145,15 @@ namespace EAR.View
                     else
                     {
                         animationIndexContainer.gameObject.SetActive(false);
-                    }
-                } catch (KeyNotFoundException)
+                    }  
+                }
+                else
                 {
                     animationIndexContainer.gameObject.SetActive(false);
                 }
-            }
-        }
-
-        private bool IsEntitySelectable(ButtonActionData.ActionType actionType, BaseEntity baseEntity)
-        {
-            switch (actionType)
+            } else
             {
-                case ButtonActionData.ActionType.Show:
-                case ButtonActionData.ActionType.Hide:
-                    return baseEntity.IsViewable();
-                case ButtonActionData.ActionType.PlayAnimation:
-                    ModelEntity modelEntity = baseEntity as ModelEntity;
-                    if (modelEntity)
-                    {
-                        return modelEntity.GetComponentInChildren<AnimPlayer>() != null;
-                    }
-                    return false;
-                case ButtonActionData.ActionType.PlaySound:
-                case ButtonActionData.ActionType.StopSound:
-                    SoundEntity soundEntity = baseEntity as SoundEntity;
-                    return soundEntity;
-                case ButtonActionData.ActionType.StopVideo:
-                case ButtonActionData.ActionType.PlayVideo:
-                    VideoEntity videoEntity = baseEntity as VideoEntity;
-                    return videoEntity;
-                default:
-                    return false;
+                animationIndexContainer.gameObject.SetActive(false);
             }
         }
 
@@ -157,17 +169,18 @@ namespace EAR.View
 
         public void PopulateData(ButtonActionData buttonActionData)
         {
-            UpdateActionList();
-            actionTypeDropdown.SelectValue(buttonActionData.actionType.ToString());
-
             UpdateEntityList();
             if (!string.IsNullOrEmpty(buttonActionData.targetEntityId))
             {
                 entityIdDropdown.SelectValue(buttonActionData.targetEntityId);
-            } else
+            }
+            else
             {
                 entityIdDropdown.SelectValue(string.Empty);
             }
+
+            UpdateActionList();
+            actionTypeDropdown.SelectValue(buttonActionData.actionType.ToString());
 
             UpdateAnimationList();
             animationIndexDropdown.SelectValue(buttonActionData.animationIndex.ToString());
