@@ -67,7 +67,7 @@ namespace EAR.Integration
             assetObject2.isZipFile = true;
             assetObject2.name = "Model wolf wolf";
             assetObject2.type = AssetObject.MODEL_TYPE;
-            assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/4/1652711922113_enc_demo%20turtle.zip";
+            assetObject2.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/4/1652290319091_enc_bullet_physics_demolition_animation_1.zip";
             assetInformation.assets.Add(assetObject2);
             AssetObject assetObject3 = new AssetObject();
             assetObject3.assetId = "lkjfioewuffewffdsf";
