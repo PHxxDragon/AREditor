@@ -104,6 +104,8 @@ namespace EAR.Selection
                 }
             }
 
+            selectables.Add(null);
+
             int minLastIndex = int.MaxValue;
             Selectable selectableWithMinLastIndex = null;
             foreach (Selectable selectable in selectables)
@@ -120,16 +122,22 @@ namespace EAR.Selection
                 }
             }
 
-            if (selectableWithMinLastIndex && selectableWithMinLastIndex != _currentSelection)
+            if (selectableWithMinLastIndex != _currentSelection)
             {
                 selectionHistory.Add(selectableWithMinLastIndex);
-                SelectObject(selectableWithMinLastIndex);
-            }
 
-            if (selectables.Count == 0)
-            {
-                selectionHistory.Clear();
-                DeselectObject();
+                if (selectionHistory.Count > 40)
+                {
+                    selectionHistory.RemoveRange(0, 20);
+                }
+
+                if (selectableWithMinLastIndex)
+                {
+                    SelectObject(selectableWithMinLastIndex);
+                } else
+                {
+                    DeselectObject();
+                }
             }
         }
 
