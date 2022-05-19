@@ -14,12 +14,8 @@ namespace EAR.Editor.Presenter
         void Start()
         {
             GlobalStates.CheckMouseRaycastBlocked += CheckIfMouseDraggingHandle;
-
-            if (selectionManager != null && runtimeTransformHandle != null)
-            {
-                selectionManager.OnObjectSelected += AddTarget;
-                selectionManager.OnObjectDeselected += RemoveTarget;
-            }
+            selectionManager.OnObjectSelected += AddTarget;
+            selectionManager.OnObjectDeselected += RemoveTarget;
         }
 
         private void CheckIfMouseDraggingHandle(ref bool isOver)

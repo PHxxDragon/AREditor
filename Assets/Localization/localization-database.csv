@@ -3,7 +3,7 @@ CameraMovementTitle,Camera movement tutorial,Hướng dẫn xoay camera
 LeftClick,Left-click and drag to move scene,Kéo chuột trái để di chuyển cảnh
 CtrlLeftClick,Ctrl + left-click to look around the scene,Giữ ctrl và kéo chuột trái để nhìn xung quanh
 AltLeftClick,Alt + left-click to rotate around the center,Giữ Alt và kéo chuột trái để thay đổi góc nhìn
-PressF,Press F to reset the camera angle,Nhấn phím F để thiết lập lại góc nhìn
+PressF,Press Ctrl + F to focus,Nhấn Ctrl + F để nhìn một thực thể
 ScrollToZoom,Scroll to zoom in or zoom out,Cuộn chuột để phóng to hoặc thu nhỏ
 Move,Move,Di chuyển
 Rotate,Rotate,Xoay

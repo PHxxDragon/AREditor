@@ -213,19 +213,6 @@ namespace EAR.Editor.Presenter
             };
             videoEditorWindow.OnInteractionEnded += EndModify;
 
-            cameraController.CheckKeyboardBlocked += (ref bool isBlocked) =>
-            {
-                if (noteEditorWindow.isActiveAndEnabled
-                || buttonEditorWindow.isActiveAndEnabled
-                || soundEditorWindow.isActiveAndEnabled
-                || modelEditorWindow.isActiveAndEnabled
-                || imageEditorWindow.isActiveAndEnabled
-                || videoEditorWindow.isActiveAndEnabled)
-                {
-                    isBlocked = true;
-                }
-            };
-
             toolbar.DuplicateButtonClicked += () =>
             {
                 if (currentEntity)

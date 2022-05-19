@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Linq;
+using System;
 
 namespace EAR.EARCamera
 {
@@ -7,7 +9,7 @@ namespace EAR.EARCamera
         [Header("Speed")]
         public float RotateSpeed = 2f;
         public float MoveSpeed = 2f;
-        public float ScrollSpeed = 10f;
+        public float ScrollSpeed = 20f;
         public float LookSpeed = 150f;
         public float ResetSpeed = 6f;
 
@@ -17,12 +19,12 @@ namespace EAR.EARCamera
         public float MoveDampening = 6f;
 
         [Header("Controls")]
-        public KeyCode RotateAroundKey = KeyCode.LeftAlt;
-        public KeyCode LookAroundKey = KeyCode.LeftControl;
+        public KeyCode[] RotateAroundKey = { KeyCode.LeftAlt, KeyCode.RightAlt};
+        public KeyCode[] LookAroundKey = { KeyCode.LeftControl, KeyCode.RightControl };
+        public KeyCode ResetKeyModifier = KeyCode.LeftControl;
         public KeyCode ResetKey = KeyCode.F;
 
-        public delegate void IsBlocked(ref bool isBlocked);
-        public event IsBlocked CheckKeyboardBlocked;
+        public event Action BeforeFocus;
 
         private Transform cameraTransform;
         private Transform cameraAnchorTransform;
@@ -60,6 +62,8 @@ namespace EAR.EARCamera
             _DefaultDistance = cameraTransform.position.magnitude;
             _Distance = _DefaultDistance;
             _camera = cameraTransform.GetComponent<Camera>();
+            SetFocus();
+            Focus();
         }
 
         void Update()
@@ -69,17 +73,33 @@ namespace EAR.EARCamera
             UpdateLocals();
         }
 
-        public void SetDefaultCameraPosition(Bounds bounds)
+        public void SetFocus(Bounds bounds)
         {
             float radius = bounds.extents.magnitude != 0 ? bounds.extents.magnitude : 1;
             float distance = radius / (Mathf.Sin(_camera.fieldOfView * Mathf.Deg2Rad / 2f));
             Vector3 position = bounds.center;
             Quaternion rotation = Quaternion.Euler(30, 0, 0);
 
+            _DefaultPosition = position;
+            _DefaultRotation = rotation;
+            _DefaultDistance = distance;
+        }
+
+        public void SetFocus()
+        {
+            Bounds bounds = new Bounds();
+            bounds.center = new Vector3(0, 0.5f, 0);
+            bounds.size = new Vector3(1, 1, 1);
+            SetFocus(bounds);
+        }
+
+        private void Focus()
+        {
+            BeforeFocus?.Invoke();
             _ResetT = 0f;
-            _StartResetPosition = _DefaultPosition = position;
-            _StartResetRotation = _DefaultRotation = rotation;
-            _StartResetDistance = _DefaultDistance = distance;
+            _StartResetPosition = cameraAnchorTransform.transform.position;
+            _StartResetRotation = cameraAnchorTransform.transform.rotation;
+            _StartResetDistance = _Distance;
             isReseting = true;
         }
 
@@ -89,14 +109,14 @@ namespace EAR.EARCamera
             {
                 if (!GlobalStates.IsMouseRaycastBlocked())
                 {
-                    if (Input.GetKey(RotateAroundKey))
+                    if (RotateAroundKey.Any((key) => Input.GetKey(key)))
                     {
                         _Rotation.y += Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * RotateSpeed;
                         _Rotation.x -= Mathf.Clamp(Input.GetAxis("Mouse Y"), -1, 1) * RotateSpeed;
                         _Rotation.x = ClampRotation(_Rotation.x, -90f, 90f);
                         isRotating = true;
                     }
-                    else if (Input.GetKey(LookAroundKey))
+                    else if (LookAroundKey.Any((key) => Input.GetKey(key)))
                     {
                         _LookRotationX = -Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * LookSpeed * Time.deltaTime;
                         _LookRotationY = Mathf.Clamp(Input.GetAxis("Mouse Y"), -1, 1) * LookSpeed * Time.deltaTime;
@@ -125,24 +145,14 @@ namespace EAR.EARCamera
                     ScrollAmount *= (_Distance * 0.3f);
 
                     _Distance += ScrollAmount * -1f;
-                    _Distance = Mathf.Clamp(_Distance, 0.015f, 100f);
+                    _Distance = Mathf.Clamp(_Distance, 0.015f, 300f);
                     isZooming = true;
                 }
             }
             
-            if (Input.GetKeyDown(ResetKey))
+            if (Input.GetKeyDown(ResetKey) && Input.GetKey(ResetKeyModifier))
             {
-                bool isKeyboardBlocked = false;
-                CheckKeyboardBlocked?.Invoke(ref isKeyboardBlocked);
-                if (!isKeyboardBlocked)
-                {
-                    _ResetT = 0f;
-                    _StartResetPosition = cameraAnchorTransform.transform.position;
-                    _StartResetRotation = cameraAnchorTransform.transform.rotation;
-                    _StartResetDistance = _Distance;
-                    isReseting = true;
-                }
-
+                Focus();
             }
         }
 
@@ -207,15 +217,16 @@ namespace EAR.EARCamera
 
             if (isReseting)
             {
-                cameraAnchorTransform.position = Vector3.Lerp(_StartResetPosition, _DefaultPosition, _ResetT);
-                cameraAnchorTransform.rotation = Quaternion.Lerp(_StartResetRotation, _DefaultRotation, _ResetT);
-                cameraTransform.localPosition = new Vector3(0f, 0f, Mathf.Lerp(_StartResetDistance * -1f, _DefaultDistance * -1f, _ResetT));
                 _ResetT += Time.deltaTime * ResetSpeed;
                 if (_ResetT >= 1)
                 {
                     isReseting = false;
                     _ResetT = 1;
                 }
+
+                cameraAnchorTransform.position = Vector3.Lerp(_StartResetPosition, _DefaultPosition, _ResetT);
+                cameraAnchorTransform.rotation = Quaternion.Lerp(_StartResetRotation, _DefaultRotation, _ResetT);
+                cameraTransform.localPosition = new Vector3(0f, 0f, Mathf.Lerp(_StartResetDistance * -1f, _DefaultDistance * -1f, _ResetT));
             }
         }
     }
