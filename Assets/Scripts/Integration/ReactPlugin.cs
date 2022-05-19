@@ -92,7 +92,7 @@ namespace EAR.Integration
             assetInformation.assets.Add(assetObject5);
             if (File.Exists(Path.Combine(Application.persistentDataPath, "metadata", "metadata.txt")))
             {
-                assetInformation.metadata = File.ReadAllText(Path.Combine(Application.persistentDataPath, "metadata", "metadata.txt"));
+                //assetInformation.metadata = File.ReadAllText(Path.Combine(Application.persistentDataPath, "metadata", "metadata.txt"));
             }
             LoadModule(JsonUtility.ToJson(assetInformation));
             SetMode(2);
@@ -108,11 +108,8 @@ namespace EAR.Integration
 #if UNITY_WEBGL == true && UNITY_EDITOR == false
                 SetUnsaved(isSavable != GlobalStates.SaveStatus.Saved ? 1 : 0);
 #endif
-#if UNITY_EDITOR == true
-                Debug.Log("set savable: " + isSavable);
-#endif
             };
-            }
+        }
 
         public void Save(string metadata)
         {
