@@ -53,14 +53,14 @@ namespace EAR.Integration
             assetObject.url = "https://www.w3schools.com/html/mov_bbb.mp4";
             assetObject.predownload = false;
             assetInformation.assets.Add(assetObject);
-            /*            AssetObject assetObject5 = new AssetObject();
-                        assetObject5.assetId = "adasfds5555";
-                        assetObject5.extension = "ttf";
-                        assetObject5.isZipFile = false;
-                        assetObject5.name = "font 1";
-                        assetObject5.type = AssetObject.FONT_TYPE;
-                        assetObject5.url = "http://localhost:4000/BeVietnamPro-Light.ttf";
-                        assetInformation.assets.Add(assetObject5);*/
+            AssetObject assetObject10 = new AssetObject();
+            assetObject10.assetId = "akjsdflasvkcvhxvuiy8888888";
+            assetObject10.extension = "gltf";
+            assetObject10.isZipFile = true;
+            assetObject10.name = "Model pyramid";
+            assetObject10.type = AssetObject.MODEL_TYPE;
+            assetObject10.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/4/1652290530546_enc_sierpinski.zip";
+            assetInformation.assets.Add(assetObject10);
             AssetObject assetObject2 = new AssetObject();
             assetObject2.assetId = "akjsdflasvkcvhxvuiy";
             assetObject2.extension = "gltf";

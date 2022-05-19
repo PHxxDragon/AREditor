@@ -41,40 +41,78 @@ namespace EAR.Editor.Presenter
 
         void Start()
         {
+            if (GlobalStates.GetMode() == GlobalStates.Mode.EditARModule || GlobalStates.GetMode() == GlobalStates.Mode.ViewARModule)
+            {
+                OnlyRunInARModule();
+            }
+
+            undoRedoManager.OnBeforeRedo += EndModify;
+            undoRedoManager.OnBeforeUndo += EndModify;
+
+            selectionManager.OnObjectSelected += (Selectable selectable) =>
+            {
+                BaseEntity entity = selectable.GetComponent<BaseEntity>();
+                currentEntity = entity;
+            };
+
+            selectionManager.OnObjectDeselected += (Selectable selectable) =>
+            {
+                EndModify();
+                currentEntity = null;
+            };
+
+            runtimeTransformHandle.OnStartInteraction += (GameObject gameObject) =>
+            {
+                BaseEntity baseEntity = gameObject.GetComponent<BaseEntity>();
+                if (baseEntity && baseEntity == currentEntity)
+                {
+                    StartModify();
+                }
+            };
+
+            runtimeTransformHandle.OnEndInteraction += (GameObject gameObject) =>
+            {
+                BaseEntity baseEntity = gameObject.GetComponent<BaseEntity>();
+                if (baseEntity && baseEntity == currentEntity)
+                {
+                    UpdateEntityTransformToEditor();
+                    EndModify();
+                }
+            };
+        }
+
+        private void OnlyRunInARModule()
+        {
             selectionManager.OnObjectSelected += (Selectable selectable) =>
             {
                 BaseEntity entity = selectable.GetComponent<BaseEntity>();
                 if (entity is ImageEntity imageEntity)
                 {
-                    currentEntity = imageEntity;
-                    imageEditorWindow.PopulateData((ImageData) imageEntity.GetData());
+                    imageEditorWindow.PopulateData((ImageData)imageEntity.GetData());
                     imageEditorWindow.OpenEditor();
-                } else if (entity is NoteEntity noteEntity)
+                }
+                else if (entity is NoteEntity noteEntity)
                 {
-                    currentEntity = noteEntity;
-                    noteEditorWindow.PopulateData((NoteData) noteEntity.GetData());
+                    noteEditorWindow.PopulateData((NoteData)noteEntity.GetData());
                     noteEditorWindow.OpenEditor();
-                } else if (entity is ModelEntity modelEntity)
+                }
+                else if (entity is ModelEntity modelEntity)
                 {
-                    currentEntity = modelEntity;
-                    modelEditorWindow.PopulateData((ModelData) modelEntity.GetData());
+                    modelEditorWindow.PopulateData((ModelData)modelEntity.GetData());
                     modelEditorWindow.OpenEditor();
                 }
                 else if (entity is ButtonEntity buttonEntity)
                 {
-                    currentEntity = buttonEntity;
-                    buttonEditorWindow.PopulateData((ButtonData) buttonEntity.GetData());
+                    buttonEditorWindow.PopulateData((ButtonData)buttonEntity.GetData());
                     buttonEditorWindow.OpenEditor();
                 }
                 else if (entity is SoundEntity soundEntity)
                 {
-                    currentEntity = soundEntity;
-                    soundEditorWindow.PopulateData((SoundData) soundEntity.GetData());
+                    soundEditorWindow.PopulateData((SoundData)soundEntity.GetData());
                     soundEditorWindow.OpenEditor();
                 }
                 else if (entity is VideoEntity videoEntity)
                 {
-                    currentEntity = videoEntity;
                     videoEditorWindow.PopulateData((VideoData)videoEntity.GetData());
                     videoEditorWindow.OpenEditor();
                 }
@@ -82,9 +120,6 @@ namespace EAR.Editor.Presenter
 
             selectionManager.OnObjectDeselected += (Selectable selectable) =>
             {
-                EndModify();
-                currentEntity = null;
-                BaseEntity entity = selectable.GetComponent<BaseEntity>();
                 if (imageEditorWindow) imageEditorWindow.CloseEditor();
                 if (noteEditorWindow) noteEditorWindow.CloseEditor();
                 if (modelEditorWindow) modelEditorWindow.CloseEditor();
@@ -180,9 +215,9 @@ namespace EAR.Editor.Presenter
 
             cameraController.CheckKeyboardBlocked += (ref bool isBlocked) =>
             {
-                if (noteEditorWindow.isActiveAndEnabled 
-                || buttonEditorWindow.isActiveAndEnabled 
-                || soundEditorWindow.isActiveAndEnabled 
+                if (noteEditorWindow.isActiveAndEnabled
+                || buttonEditorWindow.isActiveAndEnabled
+                || soundEditorWindow.isActiveAndEnabled
                 || modelEditorWindow.isActiveAndEnabled
                 || imageEditorWindow.isActiveAndEnabled
                 || videoEditorWindow.isActiveAndEnabled)
@@ -203,28 +238,6 @@ namespace EAR.Editor.Presenter
                     AddEntityCommand add = new AddEntityCommand(selectionManager, addedEntity.GetData());
                     undoRedoManager.AddCommand(add);
                     selectionManager.SelectObject(addedEntity.GetComponent<Selectable>());
-                }
-            };
-
-            undoRedoManager.OnBeforeRedo += EndModify;
-            undoRedoManager.OnBeforeUndo += EndModify;
-
-            runtimeTransformHandle.OnStartInteraction += (GameObject gameObject) =>
-            {
-                BaseEntity baseEntity = gameObject.GetComponent<BaseEntity>();
-                if (baseEntity && baseEntity == currentEntity)
-                {
-                    StartModify();
-                }
-            };
-
-            runtimeTransformHandle.OnEndInteraction += (GameObject gameObject) =>
-            {
-                BaseEntity baseEntity = gameObject.GetComponent<BaseEntity>();
-                if (baseEntity && baseEntity == currentEntity)
-                {
-                    UpdateEntityTransformToEditor();
-                    EndModify();
                 }
             };
         }
