@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using EAR.AnimationPlayer;
 using System;
-using System.Collections.Generic;
 using EAR.Entity;
 using EAR.Container;
 using EAR.Localization;

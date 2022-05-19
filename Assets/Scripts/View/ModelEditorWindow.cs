@@ -35,10 +35,10 @@ namespace EAR.View
         {
             assetDropdown.OnDropdownValueChanged += (obj) =>
             {
-                UpdateAnimationDropdown((string)obj);
+                UpdateAnimationDropdown(obj);
                 if (isPopulating) return;
                 ModelData modelData = new ModelData();
-                modelData.assetId = (string)obj;
+                modelData.assetId = obj;
                 OnModelChanged?.Invoke(modelData);
                 OnInteractionEnded?.Invoke();
             };
@@ -113,19 +113,28 @@ namespace EAR.View
                 animationPanel.gameObject.SetActive(false);
             } else
             {
-                AnimPlayer anim = AssetContainer.Instance.GetModel(assetId).GetComponent<AnimPlayer>();
-                if (!anim)
+                GameObject model = AssetContainer.Instance.GetModel(assetId);
+                if (!model)
                 {
                     animationPanel.gameObject.SetActive(false);
                 } else
                 {
-                    animationPanel.gameObject.SetActive(true);
-                    List<string> animationList = anim.GetAnimationList();
-                    for (int i = 0; i < animationList.Count; i++)
+                    AnimPlayer anim = model.GetComponent<AnimPlayer>();
+                    if (!anim)
                     {
-                        animationDropdown.AddData(i.ToString(), animationList[i]);
+                        animationPanel.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        animationPanel.gameObject.SetActive(true);
+                        List<string> animationList = anim.GetAnimationList();
+                        for (int i = 0; i < animationList.Count; i++)
+                        {
+                            animationDropdown.AddData(i.ToString(), animationList[i]);
+                        }
                     }
                 }
+                
             }
         }
 

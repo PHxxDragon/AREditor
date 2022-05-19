@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 using System;
+using System.IO;
 
 namespace EAR.Integration
 {
@@ -89,7 +90,10 @@ namespace EAR.Integration
             assetObject5.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/users/4/files/1652712275553_Roboto-Black.ttf";
             assetObject5.extension = "ttf";
             assetInformation.assets.Add(assetObject5);
-
+            if (File.Exists(Path.Combine(Application.persistentDataPath, "metadata", "metadata.txt")))
+            {
+                assetInformation.metadata = File.ReadAllText(Path.Combine(Application.persistentDataPath, "metadata", "metadata.txt"));
+            }
             LoadModule(JsonUtility.ToJson(assetInformation));
             SetMode(2);
             SetEnableScreenshot(0);
@@ -112,13 +116,16 @@ namespace EAR.Integration
 
         public void Save(string metadata)
         {
-            Debug.Log(metadata);
             GlobalStates.SetSavable(GlobalStates.SaveStatus.Saving);
 #if UNITY_WEBGL == true && UNITY_EDITOR == false
             SaveMetadata(metadata);
 #endif
 #if UNITY_EDITOR == true
-            LocalStorage.Save("abcdef", metadata);
+            if (!Directory.Exists(Path.Combine(Application.persistentDataPath, "metadata")))
+            {
+                Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, "metadata"));
+            }
+            File.WriteAllText(Path.Combine(Application.persistentDataPath, "metadata", "metadata.txt"), metadata);
             SetSaveStatus(SAVE_SUCCESS);
 #endif
         }
