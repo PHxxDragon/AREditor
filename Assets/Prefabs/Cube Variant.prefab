@@ -17,7 +17,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2989311072601590923, guid: c42050c4b28496f41a857817c9830d26, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2989311072601590923, guid: c42050c4b28496f41a857817c9830d26, type: 3}
       propertyPath: m_LocalPosition.z
@@ -53,7 +53,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7220186997747296568, guid: c42050c4b28496f41a857817c9830d26, type: 3}
       propertyPath: m_Name
-      value: Cube
+      value: Cube Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8701088673278710798, guid: c42050c4b28496f41a857817c9830d26, type: 3}
       propertyPath: m_Materials.Array.data[0]

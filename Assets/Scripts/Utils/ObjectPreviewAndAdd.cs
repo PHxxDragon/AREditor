@@ -14,14 +14,6 @@ namespace EAR.AddObject
         private GameObject previewObject;
         private Action<TransformData> callback;
 
-        void Start()
-        {
-            if (mainCamera == null)
-            {
-                mainCamera = Camera.main;
-            }
-        }
-
         public void StartPreviewAndAdd(GameObject previewPrefab, Action<TransformData> callback = null, Action<GameObject> previewInitCallback = null)
         {
             if (isPreviewOn)
@@ -55,10 +47,7 @@ namespace EAR.AddObject
                         previewObject.SetActive(true);
 
                     previewObject.gameObject.transform.position = hitInfo.point;
-/*                    Vector3 cameraPos = mainCamera.transform.position;
-                    Vector3 behindPos = 2 * previewObject.transform.position - cameraPos;
-                    behindPos.y = 0;
-                    previewObject.transform.LookAt(behindPos);*/
+
 
                     Bounds bounds = Utils.GetUIBounds(previewObject);
                     Bounds emptyBound = new Bounds();
@@ -70,6 +59,12 @@ namespace EAR.AddObject
                     Vector3 pos = previewObject.transform.position;
                     pos.y = pos.y + bounds.extents.y - bounds.center.y;
                     previewObject.transform.position = pos;
+
+                    float distance = Math.Abs(mainCamera.transform.localPosition.z);
+                    float expectedRadius = distance * Mathf.Sin(mainCamera.fieldOfView * Mathf.Deg2Rad / 2f);
+                    float currentRadius = bounds.extents.magnitude;
+
+                    previewObject.transform.localScale *= expectedRadius / currentRadius;
 
                     if (Input.GetMouseButtonDown(0))
                     {

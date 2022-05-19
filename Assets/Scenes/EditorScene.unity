@@ -9376,7 +9376,7 @@ MonoBehaviour:
   undoRedoManager: {fileID: 1531939897}
   objectPreviewAndAdd: {fileID: 1298660160}
   imagePreviewPrefab: {fileID: 264715914939091998, guid: 4b55b5556b946c447a4830ba223ea5c5, type: 3}
-  modelPreviewPrefab: {fileID: 4106945951540867609, guid: ba1bb430beb08174ca37a164e09e4d26, type: 3}
+  modelPreviewPrefab: {fileID: 130372504098612965, guid: 65a624fbf2d85cb44946310ae1821fa9, type: 3}
   soundPreviewPrefab: {fileID: 12542325405084731, guid: 269040724800aae46b32dcfab1bba7bb, type: 3}
   buttonPreviewPrefab: {fileID: 3476024287215271470, guid: fa61a98694c3aaa4a8ce25b81fd1fb8f, type: 3}
   videoPreviewPrefab: {fileID: 5819327501844640939, guid: 56e11c312fc315d4282b5901123a576f, type: 3}
@@ -14155,7 +14155,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 759844500}
   m_HandleRect: {fileID: 759844499}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0.99999905
   m_Size: 0.89724314
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -22997,7 +22997,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2c65736a0b40964bb8012d26a031c56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 55876964}
   raycastPlane: {fileID: 301106557}
 --- !u!1 &1304419443
 GameObject:
@@ -37703,7 +37703,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 29377873}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.5674759
+  m_Size: 0.56747586
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -39685,8 +39685,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 562709210332464684}
   m_HandleRect: {fileID: 562709210332464687}
   m_Direction: 2
-  m_Value: 1.0000002
-  m_Size: 0.75752455
+  m_Value: 0.9999997
+  m_Size: 0.7575245
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
