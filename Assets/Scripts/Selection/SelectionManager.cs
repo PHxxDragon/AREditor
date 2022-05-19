@@ -12,6 +12,11 @@ namespace EAR.Selection
         private Selectable _currentSelection;
         private List<Selectable> selectionHistory = new List<Selectable>();
 
+        private const float clickDuration = 0.2f;
+
+        private bool mouseDown;
+        private float remainTime;
+
         void Start()
         {
             OnObjectSelected += AddSelectedOutline;
@@ -64,45 +69,67 @@ namespace EAR.Selection
         {
             if (Input.GetMouseButtonDown(0) && !GlobalStates.IsPlayMode() && !GlobalStates.IsMouseRaycastBlocked())
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit[] hits = Physics.RaycastAll(ray);
-                HashSet<Selectable> selectables = new HashSet<Selectable>();
-                foreach (RaycastHit hit in hits)
-                {
-                    Selectable selectable = hit.transform.GetComponentInParent<Selectable>();
-                    if (selectable) 
-                    {
-                        selectables.Add(selectable);
-                    }
-                }
+                mouseDown = true;
+                remainTime = clickDuration;
+            }
 
-                int minLastIndex = int.MaxValue;
-                Selectable selectableWithMinLastIndex = null;
-                foreach (Selectable selectable in selectables)
-                {
-                    int currentLastIndex = selectionHistory.LastIndexOf(selectable);
-                    if (minLastIndex > currentLastIndex)
-                    {
-                        minLastIndex = currentLastIndex;
-                        selectableWithMinLastIndex = selectable;
-                    }
-                    if (minLastIndex == -1)
-                    {
-                        break;
-                    }
-                }
+            if (mouseDown)
+            {
+                remainTime -= Time.deltaTime;
 
-                if (selectableWithMinLastIndex && selectableWithMinLastIndex != _currentSelection)
+                if (remainTime < 0)
                 {
-                    selectionHistory.Add(selectableWithMinLastIndex);
-                    SelectObject(selectableWithMinLastIndex);
+                    mouseDown = false;
+                    remainTime = 0;
+                } else if (Input.GetMouseButtonUp(0))
+                {
+                    mouseDown = false;
+                    remainTime = 0;
+                    HandleClick();
                 }
+            }
+        }
 
-                if (selectables.Count == 0)
+        private void HandleClick()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit[] hits = Physics.RaycastAll(ray);
+            HashSet<Selectable> selectables = new HashSet<Selectable>();
+            foreach (RaycastHit hit in hits)
+            {
+                Selectable selectable = hit.transform.GetComponentInParent<Selectable>();
+                if (selectable)
                 {
-                    selectionHistory.Clear();
-                    DeselectObject();
+                    selectables.Add(selectable);
                 }
+            }
+
+            int minLastIndex = int.MaxValue;
+            Selectable selectableWithMinLastIndex = null;
+            foreach (Selectable selectable in selectables)
+            {
+                int currentLastIndex = selectionHistory.LastIndexOf(selectable);
+                if (minLastIndex > currentLastIndex)
+                {
+                    minLastIndex = currentLastIndex;
+                    selectableWithMinLastIndex = selectable;
+                }
+                if (minLastIndex == -1)
+                {
+                    break;
+                }
+            }
+
+            if (selectableWithMinLastIndex && selectableWithMinLastIndex != _currentSelection)
+            {
+                selectionHistory.Add(selectableWithMinLastIndex);
+                SelectObject(selectableWithMinLastIndex);
+            }
+
+            if (selectables.Count == 0)
+            {
+                selectionHistory.Clear();
+                DeselectObject();
             }
         }
 
