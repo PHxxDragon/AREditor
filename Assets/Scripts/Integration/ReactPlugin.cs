@@ -95,7 +95,7 @@ namespace EAR.Integration
                 //assetInformation.metadata = File.ReadAllText(Path.Combine(Application.persistentDataPath, "metadata", "metadata.txt"));
             }
             LoadModule(JsonUtility.ToJson(assetInformation));
-            SetMode(2);
+            SetMode(0);
             SetEnableScreenshot(0);
 #endif
         }

@@ -3,7 +3,7 @@ CameraMovementTitle,Camera movement tutorial,Hướng dẫn xoay camera
 LeftClick,Left-click and drag to move scene,Kéo chuột trái để di chuyển cảnh
 CtrlLeftClick,Ctrl + left-click to look around the scene,Giữ ctrl và kéo chuột trái để nhìn xung quanh
 AltLeftClick,Alt + left-click to rotate around the center,Giữ Alt và kéo chuột trái để thay đổi góc nhìn
-PressF,Press Ctrl + F to focus,Nhấn Ctrl + F để nhìn một thực thể
+PressF,Press Shift + F to focus,Nhấn Shift + F để nhìn vật thể
 ScrollToZoom,Scroll to zoom in or zoom out,Cuộn chuột để phóng to hoặc thu nhỏ
 Move,Move,Di chuyển
 Rotate,Rotate,Xoay
@@ -51,11 +51,11 @@ EditImage,Edit image,Sửa hình ảnh
 Image,Image,Hình ảnh
 Play,Play,Phát
 EditButton,Edit button,Sửa nút bấm
-Listener,Listener,Đối tượng
+Listener,Listener,Đối tượng nhấn
 Actions,Actions,Hành động
 Action,Action,Hành động
 ActionType,Action type,Loại hành động
-TargetEntity,Target entity,Mục tiêu
+TargetEntity,Target entity,Áp dụng cho
 AddButton,Add button,Thêm nút bấm
 Animation,Animation,Chuyển động
 AddSound,Add sound,Thêm âm thanh

@@ -41,11 +41,8 @@ namespace EAR.Editor.Presenter
 
         void Start()
         {
-            if (GlobalStates.GetMode() == GlobalStates.Mode.EditARModule || GlobalStates.GetMode() == GlobalStates.Mode.ViewARModule)
-            {
-                OnlyRunInARModule();
-            }
-
+            OnlyRunInARModule();
+            
             undoRedoManager.OnBeforeRedo += EndModify;
             undoRedoManager.OnBeforeUndo += EndModify;
 
@@ -83,6 +80,7 @@ namespace EAR.Editor.Presenter
 
         private void OnlyRunInARModule()
         {
+            Debug.Log("OnlyRunInARModule");
             selectionManager.OnObjectSelected += (Selectable selectable) =>
             {
                 BaseEntity entity = selectable.GetComponent<BaseEntity>();

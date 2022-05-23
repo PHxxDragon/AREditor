@@ -4,6 +4,7 @@ using EAR.Container;
 using EAR.AnimationPlayer;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using TMPro;
 
 namespace EAR.View
@@ -28,8 +29,13 @@ namespace EAR.View
         private DropdownHelper animationDropdown;
         [SerializeField]
         private Button deleteButton;
+        [SerializeField]
+        private GameObject[] hideWhenInEditModel;
+        [SerializeField]
+        private RectTransform[] heightSum;
 
         private bool isPopulating;
+        private bool needResize;
 
         void Awake()
         {
@@ -91,7 +97,56 @@ namespace EAR.View
                 AssetContainer.OnInstanceCreated += SetAssetListener;
             }
 
+            ApplyMode(GlobalStates.GetMode());
+            GlobalStates.OnModeChange += ApplyMode;
+
             CloseEditor();
+        }
+
+        void OnEnable()
+        {
+            if (needResize)
+            {
+                StartCoroutine(FitWindow());
+                needResize = false;
+            }
+        }
+
+        private void ApplyMode(GlobalStates.Mode mode)
+        {
+            switch(mode)
+            {
+                case GlobalStates.Mode.EditARModule:
+                case GlobalStates.Mode.ViewARModule:
+                    foreach (GameObject gameObject in hideWhenInEditModel)
+                    {
+                        gameObject.SetActive(true);
+                    }
+                    if (gameObject.activeSelf) StartCoroutine(FitWindow());
+                    else needResize = true;
+                    break;
+                case GlobalStates.Mode.EditModel:
+                case GlobalStates.Mode.ViewModel:
+                    foreach (GameObject gameObject in hideWhenInEditModel)
+                    {
+                        gameObject.SetActive(false);
+                    }
+                    if (gameObject.activeSelf) StartCoroutine(FitWindow());
+                    else needResize = true;
+                    break;
+            }
+        }
+
+        private IEnumerator FitWindow()
+        {
+            yield return new WaitForEndOfFrame();
+            float height = 50;
+            foreach (RectTransform rect in heightSum)
+            {
+                height += rect.rect.height;
+            }
+            RectTransform rectTransform = transform as RectTransform;
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, height);
         }
 
         private void SetAssetListener(AssetContainer instance)

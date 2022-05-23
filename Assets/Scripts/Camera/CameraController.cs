@@ -21,7 +21,6 @@ namespace EAR.EARCamera
         [Header("Controls")]
         public KeyCode[] RotateAroundKey = { KeyCode.LeftAlt, KeyCode.RightAlt};
         public KeyCode[] LookAroundKey = { KeyCode.LeftControl, KeyCode.RightControl };
-        public KeyCode ResetKeyModifier = KeyCode.LeftControl;
         public KeyCode ResetKey = KeyCode.F;
 
         public event Action BeforeFocus;
@@ -150,7 +149,7 @@ namespace EAR.EARCamera
                 }
             }
             
-            if (Input.GetKeyDown(ResetKey) && Input.GetKey(ResetKeyModifier))
+            if (Input.GetKeyDown(ResetKey) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
             {
                 Focus();
             }

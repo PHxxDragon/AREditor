@@ -12,7 +12,7 @@ namespace EAR.Selection
         private Selectable _currentSelection;
         private List<Selectable> selectionHistory = new List<Selectable>();
 
-        private const float clickDuration = 0.2f;
+        private const float clickDuration = 0.5f;
 
         private bool mouseDown;
         private float remainTime;
