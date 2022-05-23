@@ -88,6 +88,10 @@ namespace EAR.View
                 } else if (baseEntity is ButtonEntity)
                 {
                     Debug.LogError("No action for button");
+                } else if (baseEntity is ImageEntity)
+                {
+                    AddType(ButtonActionData.ActionType.Show);
+                    AddType(ButtonActionData.ActionType.Hide);
                 }
             } else
             {
