@@ -54,14 +54,14 @@ namespace EAR.Integration
             assetObject.url = "https://www.w3schools.com/html/mov_bbb.mp4";
             assetObject.predownload = false;
             assetInformation.assets.Add(assetObject);
-            AssetObject assetObject10 = new AssetObject();
+/*            AssetObject assetObject10 = new AssetObject();
             assetObject10.assetId = "akjsdflasvkcvhxvuiy8888888";
             assetObject10.extension = "gltf";
             assetObject10.isZipFile = true;
             assetObject10.name = "Model pyramid";
             assetObject10.type = AssetObject.MODEL_TYPE;
             assetObject10.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/models/4/1652290530546_enc_sierpinski.zip";
-            assetInformation.assets.Add(assetObject10);
+            assetInformation.assets.Add(assetObject10);*/
             AssetObject assetObject2 = new AssetObject();
             assetObject2.assetId = "akjsdflasvkcvhxvuiy";
             assetObject2.extension = "gltf";
@@ -74,7 +74,7 @@ namespace EAR.Integration
             assetObject3.assetId = "lkjfioewuffewffdsf";
             assetObject3.name = "image 1112";
             assetObject3.type = AssetObject.IMAGE_TYPE;
-            assetObject3.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/test/users/1/files/1650808671357_Pricing-Background.png";
+            assetObject3.url = "https://ear-storage.s3.ap-southeast-1.amazonaws.com/users/21/files/1653308533072_2312_Gross_Anatomy_of_the_Lungs.jpg";
             assetInformation.assets.Add(assetObject3);
             AssetObject assetObject4 = new AssetObject();
             assetObject4.assetId = "lakjdfadfdsafaf";
@@ -95,7 +95,7 @@ namespace EAR.Integration
                 //assetInformation.metadata = File.ReadAllText(Path.Combine(Application.persistentDataPath, "metadata", "metadata.txt"));
             }
             LoadModule(JsonUtility.ToJson(assetInformation));
-            SetMode(2);
+            SetMode(1);
             SetEnableScreenshot(0);
 #endif
         }

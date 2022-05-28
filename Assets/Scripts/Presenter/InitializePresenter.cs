@@ -11,8 +11,6 @@ namespace EAR.Editor.Presenter
         [SerializeField]
         private ReactPlugin reactPlugin;
         [SerializeField]
-        private CameraController cameraController;
-        [SerializeField]
         private ProgressBar progressBar;
 
         [SerializeField]

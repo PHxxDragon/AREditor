@@ -162,6 +162,11 @@ namespace EAR.View
 
         private void UpdateAnimationDropdown(string assetId)
         {
+            if (GlobalStates.GetMode() == GlobalStates.Mode.EditModel || GlobalStates.GetMode() == GlobalStates.Mode.ViewModel)
+            {
+                return;
+            }
+
             animationDropdown.ClearData();
             if (string.IsNullOrEmpty(assetId))
             {
